@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns="http://www.springframework.org/schema/beans" xmlns:aop="http://www.springframework.org/schema/aop"
+	   xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	   xmlns:cache="http://www.springframework.org/schema/cache" xmlns:p="http://www.springframework.org/schema/p"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-4.0.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+       http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache-4.0.xsd">
+
+	<context:component-scan base-package="com.trackray.scanner.controller"></context:component-scan>
+	<context:component-scan base-package="com.trackray.scanner.service"></context:component-scan>
+	<context:component-scan base-package="com.trackray.scanner.attack"></context:component-scan>
+	<context:component-scan base-package="com.trackray.scanner.exploit"></context:component-scan>
+
+	<context:property-placeholder location="classpath:config.properties"/>
+
+	<bean name="coreThreadPool" class="com.trackray.scanner.handle.CoreThreadMap" ></bean>
+
+	<bean name="pluginPool" class="java.util.concurrent.ConcurrentHashMap" ></bean>
+
+	<!--	<bean name="threadMonitor" class="com.trackray.scanner.handle.ThreadMonitor" init-method="monitor" >
+            <property name="coreThreadPool" ref="coreThreadPool"/>
+            <property name="maxTime" value="${monitor.maxTime}"/>
+            <property name="sleepTime" value="${monitor.sleepTime}"/>
+        </bean>-->
+
+	<bean name="systemInit" class="com.trackray.scanner.handle.SystemInit" init-method="init"></bean>
+
+
+</beans>

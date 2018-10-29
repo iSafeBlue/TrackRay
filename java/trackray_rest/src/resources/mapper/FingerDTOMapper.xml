@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trackray.rest.dao.FingerDTOMapper">
+  <resultMap id="BaseResultMap" type="com.trackray.rest.dto.FingerDTO">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="enum_key" jdbcType="VARCHAR" property="enumKey" />
+    <result column="finger_name" jdbcType="VARCHAR" property="fingerName" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="regex" jdbcType="VARCHAR" property="regex" />
+    <result column="md5" jdbcType="VARCHAR" property="md5" />
+    <result column="finger_type" jdbcType="INTEGER" property="fingerType" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, enum_key, finger_name, url, regex, md5, finger_type
+  </sql>
+  <select id="selectByExample" parameterType="com.trackray.rest.dto.FingerDTOExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from finger_cms
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from finger_cms
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from finger_cms
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.trackray.rest.dto.FingerDTOExample">
+    delete from finger_cms
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.trackray.rest.dto.FingerDTO">
+    insert into finger_cms (id, enum_key, finger_name, 
+      url, regex, md5, finger_type
+      )
+    values (#{id,jdbcType=INTEGER}, #{enumKey,jdbcType=VARCHAR}, #{fingerName,jdbcType=VARCHAR}, 
+      #{url,jdbcType=VARCHAR}, #{regex,jdbcType=VARCHAR}, #{md5,jdbcType=VARCHAR}, #{fingerType,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.trackray.rest.dto.FingerDTO">
+    insert into finger_cms
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="enumKey != null">
+        enum_key,
+      </if>
+      <if test="fingerName != null">
+        finger_name,
+      </if>
+      <if test="url != null">
+        url,
+      </if>
+      <if test="regex != null">
+        regex,
+      </if>
+      <if test="md5 != null">
+        md5,
+      </if>
+      <if test="fingerType != null">
+        finger_type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="enumKey != null">
+        #{enumKey,jdbcType=VARCHAR},
+      </if>
+      <if test="fingerName != null">
+        #{fingerName,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null">
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="regex != null">
+        #{regex,jdbcType=VARCHAR},
+      </if>
+      <if test="md5 != null">
+        #{md5,jdbcType=VARCHAR},
+      </if>
+      <if test="fingerType != null">
+        #{fingerType,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.trackray.rest.dto.FingerDTOExample" resultType="java.lang.Long">
+    select count(*) from finger_cms
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update finger_cms
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.enumKey != null">
+        enum_key = #{record.enumKey,jdbcType=VARCHAR},
+      </if>
+      <if test="record.fingerName != null">
+        finger_name = #{record.fingerName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.url != null">
+        url = #{record.url,jdbcType=VARCHAR},
+      </if>
+      <if test="record.regex != null">
+        regex = #{record.regex,jdbcType=VARCHAR},
+      </if>
+      <if test="record.md5 != null">
+        md5 = #{record.md5,jdbcType=VARCHAR},
+      </if>
+      <if test="record.fingerType != null">
+        finger_type = #{record.fingerType,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update finger_cms
+    set id = #{record.id,jdbcType=INTEGER},
+      enum_key = #{record.enumKey,jdbcType=VARCHAR},
+      finger_name = #{record.fingerName,jdbcType=VARCHAR},
+      url = #{record.url,jdbcType=VARCHAR},
+      regex = #{record.regex,jdbcType=VARCHAR},
+      md5 = #{record.md5,jdbcType=VARCHAR},
+      finger_type = #{record.fingerType,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.trackray.rest.dto.FingerDTO">
+    update finger_cms
+    <set>
+      <if test="enumKey != null">
+        enum_key = #{enumKey,jdbcType=VARCHAR},
+      </if>
+      <if test="fingerName != null">
+        finger_name = #{fingerName,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null">
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="regex != null">
+        regex = #{regex,jdbcType=VARCHAR},
+      </if>
+      <if test="md5 != null">
+        md5 = #{md5,jdbcType=VARCHAR},
+      </if>
+      <if test="fingerType != null">
+        finger_type = #{fingerType,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.trackray.rest.dto.FingerDTO">
+    update finger_cms
+    set enum_key = #{enumKey,jdbcType=VARCHAR},
+      finger_name = #{fingerName,jdbcType=VARCHAR},
+      url = #{url,jdbcType=VARCHAR},
+      regex = #{regex,jdbcType=VARCHAR},
+      md5 = #{md5,jdbcType=VARCHAR},
+      finger_type = #{fingerType,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
