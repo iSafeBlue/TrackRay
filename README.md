@@ -21,7 +21,7 @@
 
 ### 如何使用
 * 运行SQL文件并修改数据库配置
-* 安装NMAP
+* 安装NMAP，写入环境变量
 * 启动SQLMAP API
 * 修改config.properties中的NMAP路径、sqlmapAPI的URL、本项目的地址、CENSYS的secret
 * 编译项目并运行
