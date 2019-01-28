@@ -7,87 +7,85 @@
    | | | | (_| | (__|    | | \ \ (_| | |_| |
    |_|_|  \__,_|\___|_|\_\_|  \_\__,_|\__, |
                                        __/ |
-                                      |___/ 
+                                      |___/   v2.0
 </pre>
-
-```
-欢迎各位提交插件
-```
-## 介绍
-做这个初衷只是为了实现自己在朋友圈立下的Flag，供自己在渗透测试过程中提升工作效率，方便于记录与分析。该框架使用Java语言编写，数据库使用MySQL。项目为接口式服务，可以通过调用WEB接口或Websocket等方式完成模块调用，此为最初版本。
-该项目分为三个模块base、rest、module。rest与module需继承自base。
+![](https://img.shields.io/github/stars/iSafeBlue/Trackray.svg)
+![](https://img.shields.io/github/forks/iSafeBlue/Trackray.svg)
+![](https://img.shields.io/github/license/iSafeBlue/Trackray.svg)
+![](https://img.shields.io/github/issues/iSafeBlue/Trackray.svg)
 
 
+## 关于溯光
+该框架使用Java语言编写，自更新 2.0 版本后，项目数据库采用嵌入式数据库hsqldb，使用 SpringBoot 框架开发。
 
-### 如何使用
-* 运行SQL文件并修改数据库配置
-* 安装NMAP，写入环境变量
+如有任何使用上的问题可发送邮件或联系我的私人微信，BUG请提交issue。
+
+[官方网站](https://trackray.cn)
+
+## 如何使用
+* 安装nmap，写入环境变量
 * 启动SQLMAP API
-* 修改config.properties中的NMAP路径、sqlmapAPI的URL、本项目的地址、CENSYS的secret
-* 编译项目并运行
+* 启动msfrpc服务 ```msfrpcd -U msf -P msf -S -f```
+* 启动AWVS
+* 在application.properties配置文件中修改 ```database.dir```及以上有变更的配置参数
+* 编译并运行
 
-### 插件
-插件分为"基于爬虫的插件"与"普通插件"。
-基于爬虫的插件在扫描任务时的爬虫阶段执行，需继承CrawlerPlugin类，并使用@Plugin注解，具体可参考：SQLinjectAndXss类
+## 功能展示
 
-普通插件可以通过Websocket界面或直接调用http接口的方式执行，分别需要继承WebSocketPlugin和CommonPlugin类，并使用@Plugin与@Rule注解，具体可参考：NetCat与ECShop001类
+#### 交互式插件控制台
+![](img/netcat.gif)
 
-### EXP
-exploit在任务基本信息探测完成后执行，用于对已知漏洞完成自动化攻击，需继承AbstractExploit类，并使用@Exploit与@Rule注解，具体可参考：DedecmsSQLi类
+#### MSF 控制台
+![](img/msf.gif)
+
+#### 无交互插件调用
+![Image text](img/5.png)
+![Image text](img/2.gif)
+
+#### 扫描器展示
+![](img/6.gif)
 
 
-### 截图
-![Image text](https://github.com/iSafeBlue/Trackray/blob/master/demo/4.png)
+## 插件
 
-![Image text](https://github.com/iSafeBlue/Trackray/blob/master/demo/5.png)
+[plugin.md](plugin.md)
 
-![Image text](https://github.com/iSafeBlue/Trackray/blob/master/demo/1.gif)
 
-![Image text](https://github.com/iSafeBlue/Trackray/blob/master/demo/2.gif)
+## 功能简介
 
-![Image text](https://github.com/iSafeBlue/Trackray/blob/master/demo/3.gif)
+[functions.md](functions.md)
 
-## 功能
-### 基本检测
-* 扫描端口
-* 扫描同服网站
-* 扫描子域名
-* 扫描C段
-* 网页爬虫
-
-### 指纹识别
-* 识别WAF
-* 识别CDN
-* 识别CMS&框架&系统
-* 识别语言
-
-### 暴力破解(不支持初版)
-* 暴力破解(21,22等)根据端口识别结果
-* 扫描敏感文件(根据WEB端口&子域)
-
-### 信息收集
-* EMAIL & 手机号
-* WHOIS信息
-* 域名历史解析IP
-* 域名在FOFA、zoomeye等平台上的结果
-* 域名注册者邮箱
-* 域名注册者注册的其他域名
-
-### 攻击检测
-* SQL注入检测（基于爬虫）
-* XSS检测（基于爬虫）
-* exploit
 
 ## 贡献者
 项目由[浅蓝](https://github.com/iSafeBlue)发起并主导
+
 核心开发者：
 * [浅蓝](https://github.com/iSafeBlue)
 * ...
 
-## 写在最后
-如果对你有一定帮助可以star、follow一下，感谢支持。
-在使用上遇到问题可发送邮件到blue@ixsec.org。
 
-本项目只可用于安全研究，禁止进行未授权攻击行为。
+## 赞助
 
-禁止用于商业用途，违者必究。
+#### 您的捐助将被用于
+
+* 持续开发溯光渗透测试框架
+* ```trackray.cn```  域名续费
+* 社区活动
+* 奖励杰出贡献者
+
+![微信](img/wx.png) ![支付宝](img/ali.png)
+
+
+## 申明
+
+溯光遵循 GPL 开源协议，请务必了解。
+
+溯光开发的初衷是方便企业的安全研究者研究漏洞，检测漏洞。
+
+我们严格禁止一切通过本程序进行的违反任何国家法律行为。
+
+我们不会上传未公开的漏洞插件，也不允许插件中存在破坏性的语句，目前module模块只写了几个有代表性的模块供开发者参考。
+
+使用本程序则默认视为你同意我们的规则，请您务必遵守道德与法律准则。
+
+如不遵守，后果自负，开发者将不承担任何责任！
