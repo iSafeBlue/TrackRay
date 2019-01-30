@@ -14,13 +14,24 @@
 ![](https://img.shields.io/github/license/iSafeBlue/Trackray.svg)
 ![](https://img.shields.io/github/issues/iSafeBlue/Trackray.svg)
 
-
 ## 关于溯光
-该框架使用Java语言编写，自更新 2.0 版本后，项目数据库采用嵌入式数据库hsqldb，使用 SpringBoot 框架开发。
+
+溯光是一个由Java语言编写的服务式插件化渗透测试框架，项目是一个WEB服务，提供了调用插件和扫描的接口，并且使用了 Websocket 技术实现命令行风格交互，启动后只需要通过浏览器即可访问，是其他开源渗透测试框架不具备的特点。
+
+自更新 2.0 版本后，项目数据库采用嵌入式数据库hsqldb，使用 SpringBoot 框架开发，用maven管理依赖，使开发和使用更为简单方便。
 
 如有任何使用上的问题可发送邮件或联系我的私人微信，BUG请提交issue。
 
+如果你具备插件开发的能力，希望你也能一起来维护这个项目。
+
 [官方网站](https://trackray.cn)
+
+## 特点
+
+- 提供WEB服务接口
+- 使用只需要一个浏览器
+- 第一个使用Java集成MSF & AWVS的开源项目
+- 内置插件式扫描器
 
 ## 如何使用
 * 安装nmap，写入环境变量
@@ -28,7 +39,7 @@
 * 启动msfrpc服务 ```msfrpcd -U msf -P msf -S -f```
 * 启动AWVS
 * 在application.properties配置文件中修改 ```database.dir```及以上有变更的配置参数
-* 编译并运行
+* 编译并运行SpringBoot启动类WebApplication.java
 
 ## 功能展示
 
@@ -57,9 +68,9 @@
 
 
 ## 贡献者
-项目由[浅蓝](https://github.com/iSafeBlue)发起并主导
+项目由[浅蓝](https://github.com/iSafeBlue)发起并主导开发。
 
-核心开发者：
+致谢列表：
 * [浅蓝](https://github.com/iSafeBlue)
 * ...
 
@@ -75,17 +86,22 @@
 
 ![微信](img/wx.png) ![支付宝](img/ali.png)
 
-
 ## 申明
 
 溯光遵循 GPL 开源协议，请务必了解。
 
-溯光开发的初衷是方便企业的安全研究者研究漏洞，检测漏洞。
+溯光开发的初衷是方便企业的安全研究者检测漏洞以及教育学习使用。
 
-我们严格禁止一切通过本程序进行的违反任何国家法律行为。
+我们严格禁止一切通过本程序进行的违反任何国家法律行为，请在合法范围内使用本程序。
 
 我们不会上传未公开的漏洞插件，也不允许插件中存在破坏性的语句，目前module模块只写了几个有代表性的模块供开发者参考。
 
 使用本程序则默认视为你同意我们的规则，请您务必遵守道德与法律准则。
 
 如不遵守，后果自负，开发者将不承担任何责任！
+
+
+
+## 联系作者
+
+email: blue#ixsec.org
