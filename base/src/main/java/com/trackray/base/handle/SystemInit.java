@@ -28,6 +28,18 @@ public class SystemInit
 
     public void init(){
 
+        new Thread(){
+            @Override
+            public void run() {
+
+                check();
+
+            }
+        }.start();
+
+    }
+
+    private void check() {
         String domain = PropertyUtil.getProperty("dict.domain");
         String dir = PropertyUtil.getProperty("dict.dir");
 
@@ -36,12 +48,14 @@ public class SystemInit
         SQLMap.API = PropertyUtil.getProperty("sqlmap.root");
 
         try {
+            SysLog.info("正在检测sqlmap api 服务");
             ResponseStatus resp = new HttpClient().get(SQLMap.API);
         } catch (Exception e) {
             SysLog.warn("检测到sqlmap api 服务未开启");
         }
 
         try {
+            SysLog.info("正在检测网络服务");
             ResponseStatus resp = new HttpClient().get("http://www.baidu.com");
         } catch (Exception e) {
             SysLog.warn("网络连接异常，本程序运行需要连接连接互联网。");
@@ -50,6 +64,7 @@ public class SystemInit
 
         Shell pyshell = new Shell();
         try {
+            SysLog.info("正在检测python环境");
             pyshell.target("python").exec("--version");
             if (!pyshell.readAll().contains("Python ")){
                 SysLog.warn("未检测到python环境，本程序部分插件依赖于python，请保证已安装python。");
@@ -61,6 +76,7 @@ public class SystemInit
         }
 
         try {
+            SysLog.info("正在检测nmap");
             Shell shell = new Shell();
             shell.target("nmap").exec();
             if (!shell.readAll().contains("nmap.org")){
@@ -71,7 +87,6 @@ public class SystemInit
         }
 
 
-        Constant.Vuln.VULN_ADD_API = PropertyUtil.getProperty("vuln.root").concat("/task/vuln/put");
         Constant.NmapComm.NMAP_DIR = PropertyUtil.getProperty("nmap.path");
 
         try {
