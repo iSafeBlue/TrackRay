@@ -39,17 +39,22 @@ public class DomainServiceImpl implements DomainService {
             task.getResult().setIpInfo(ipinfo);//存储ipinfo
             if (null != ipinfo){
                 if (task.getRule().sense) {
+                    SysLog.info("正在查询WHOIS信息...");
                     String whois = ApiUtils.tooluWhois(host);
                     ipinfo.setWhois(whois);
 
+                    SysLog.info("正在反查域名资产");
                     List<String> domains = ApiUtils.chinazReverse(domain);//反查域名资产
 
                     task.getResult().getAssets().setHoldSite(domains);//存储域名资产
 
+                    SysLog.info("正在扫描备案者持有域名");
                     Map<String, String> icpMap = ApiUtils.aizhanIcp(domain);//备案者的其他域名资产
+
 
                     task.getResult().getAssets().setIcpSite(icpMap);//存储备案域名资产
 
+                    SysLog.info("正在扫描同服网站");
                     List<String> sameSite = ApiUtils.chinazSame(ReUtils.isIp(ipinfo.getIp()) ? ipinfo.getIp() : host);//同服网站
 
                     task.getResult().getAssets().setServerSite(sameSite);//存储同服网站资产

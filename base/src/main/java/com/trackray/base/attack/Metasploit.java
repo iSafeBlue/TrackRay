@@ -11,6 +11,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.*;
 
@@ -23,7 +24,7 @@ import java.util.*;
 @Component
 @Scope("prototype")
 @Data
-public class Metasploit implements InitializingBean{
+public class Metasploit {
 
     private static final Map header = Collections.singletonMap("Content-type", "binary/message-pack");
 
@@ -36,7 +37,7 @@ public class Metasploit implements InitializingBean{
 
     private String token;
 
-    private boolean isLogin;
+    private static boolean isLogin;
 
     private int consoleID;
 
@@ -164,12 +165,10 @@ public class Metasploit implements InitializingBean{
             SysLog.error("MSF RPC远程调用认证失败，请检查！如未开启服务请参考命令：msfrpcd -U msf -P msf -S -f");
         }
     }*/
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        if (login(username,password)){
+    @PostConstruct
+    public void after()  {
+        if (login(username,password) && isLogin){
             int console = createConsole();
-            isLogin = true;
         }else{
             SysLog.error("MSF RPC远程调用认证失败，请检查！如未开启服务请参考命令：msfrpcd -U msf -P msf -S -f");
         }
@@ -180,6 +179,7 @@ public class Metasploit implements InitializingBean{
             Map send = sendList(list(Command.AuthLogin, username, password));
             if (send.containsKey("token")){
                 this.token = send.get("token").toString();
+                isLogin = true;
                 return true;
             }
         }catch (Exception e){

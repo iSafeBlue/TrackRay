@@ -38,12 +38,7 @@ public class DispatchController {
     @Autowired
     private WebApplicationContext webApplicationConnect;
     public void init(Task task){
-        {
-            if (new HttpClient().getContent(SQLMap.API).equals("error"))
-            {
-                SysLog.info("SQLMAP服务未启动");
-            }
-        }
+
 
         String targetStr = task.getTargetStr();
         Task.Target target = new Task.Target();
@@ -61,10 +56,13 @@ public class DispatchController {
     }
     public ResultCode dispatch(Task task){
         if (task.getTarget().type == Constant.IP_TYPE){
+            SysLog.info("目标是IP类型，准备扫描中...");
             return ipController.scan(task);
         }
         if (task.getTarget().type == Constant.URL_TYPE){
+            SysLog.info("目标是域名类型，准备扫描中...");
             if (task.getRule().childdomain && task.getTarget().type == Constant.URL_TYPE){
+                SysLog.info("正在扫描子域名...");
                 FuzzDomain.fuzz(task);
             }
             return domainController.scan(task);
@@ -100,6 +98,7 @@ public class DispatchController {
         WebApplicationContext context = getAppContext();
         Map<String, AbstractExploit> beans = context.getBeansOfType(AbstractExploit.class);
         AbstractPlugin simpleVul = (AbstractPlugin) context.getBean("simpleVulRule");
+        SysLog.info("开始漏洞检测");
 
         for (String targeturl : task.getTargets()) {
 
@@ -111,7 +110,7 @@ public class DispatchController {
                 exp.setTask(task);
                 exp.setTarget(targeturl);
                 String bean = entry.getKey();
-                SysLog.info(bean+" start executeing...");
+                SysLog.info(bean+" exploit executeing...");
                 exec.execute(exp);
             }
         }

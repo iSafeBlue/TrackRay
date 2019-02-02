@@ -1,6 +1,7 @@
 package com.trackray.web.service.impl;
 
 import com.trackray.base.attack.Awvs;
+import com.trackray.base.httpclient.HttpClient;
 import com.trackray.web.dto.*;
 import com.trackray.web.query.TaskQuery;
 import com.trackray.web.query.VulnQuery;
@@ -14,13 +15,16 @@ import com.trackray.base.plugin.AbstractPlugin;
 import com.trackray.base.utils.CheckUtils;
 import com.trackray.base.utils.SysLog;
 import com.trackray.base.utils.TaskUtils;
+import net.dongliu.requests.Requests;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Base64Utils;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -107,6 +111,14 @@ public class TaskServiceImpl implements TaskService {
 
         Task task = this.initTaskFromDTO(taskDTO);
 
+        try {
+            new HttpClient().get(task.getTargetStr());
+        } catch (Exception e) {
+            SysLog.error("访问目标出现异常，请检测，已结束此任务"+e.getMessage());
+            this.saveData(task , 2);
+            return false;
+        }
+
         dispatchController.init(task);
 
         ThreadPoolExecutor exec = new ThreadPoolExecutor(task.getThreadPool(), task.getThreadPool() + 5, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
@@ -139,6 +151,7 @@ public class TaskServiceImpl implements TaskService {
         }
         SysLog.info("信息探测结束！");
         for (String target : task.getTargets()) {
+            SysLog.info("开始扫描目标："+target);
 
             if (task.getRule().thorough){
                 SysLog.info("开始深度扫描");
@@ -149,13 +162,16 @@ public class TaskServiceImpl implements TaskService {
             }
             if(task.getRule().port){
                 //Nmap.nmap(task , target ,  exec);
+                SysLog.info("开始扫描端口");
                 nmap(task,target);
             }
             if (task.getRule().finger){
+                SysLog.info("开始指纹探测");
                 finger(task,target);
             }
             if (task.getRule().fuzzdir){
                 //FuzzDir.fuzz(task , target ,exec);
+                SysLog.info("开始目录扫描");
                 fuzzdir(task,target);
             }
 
@@ -345,6 +361,10 @@ public class TaskServiceImpl implements TaskService {
 
     public int saveData(Task task , int status) {
         String taskMD5 = task.getTaskMD5();
+
+        SysLog.info(taskMD5+"：正在保存数据 状态："+status);
+
+
         Result result = task.getResult();
         JSONObject json = JSONObject.fromObject(result);
 

@@ -54,14 +54,6 @@ public class SystemInit
             SysLog.warn("检测到sqlmap api 服务未开启");
         }
 
-        try {
-            SysLog.info("正在检测网络服务");
-            ResponseStatus resp = new HttpClient().get("http://www.baidu.com");
-        } catch (Exception e) {
-            SysLog.warn("网络连接异常，本程序运行需要连接连接互联网。");
-        }
-
-
         Shell pyshell = new Shell();
         try {
             SysLog.info("正在检测python环境");

@@ -24,14 +24,8 @@ public class SystemServiceImpl implements SystemService{
     public ResultCode scan(Task task) {
         this.scanLanguage(task);
         this.scanServer(task);
-        if (task.getRule().port)
-           this.nmap(task);
-        
+
         return ResultCode.SUCCESS;
-    }
-
-    private void nmap(Task task) {
-
     }
 
     private void scanServer(Task task) {

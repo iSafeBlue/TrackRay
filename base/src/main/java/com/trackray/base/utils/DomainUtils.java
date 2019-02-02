@@ -1,6 +1,7 @@
 package com.trackray.base.utils;
 
 import com.trackray.base.bean.IPInfo;
+import com.trackray.base.handle.Shell;
 import com.trackray.base.httpclient.HttpClient;
 import com.trackray.base.httpclient.ResponseStatus;
 
@@ -32,12 +33,12 @@ public class DomainUtils {
 			ipInfo =ipInfo1;
 		}
 		ipInfo.setIp(ip);
-		IPInfo ipInfo2 = getDNS(domain);
+		//IPInfo ipInfo2 = getDNS(domain);
 		
 	//	BeanUtils.copyProperties(ipInfo2, ipInfo);  垃圾工具类
-		ipInfo.setDomain(ipInfo2.getDomain());
-		ipInfo.setDNS(ipInfo2.getDNS());
-		ipInfo.setDNSList(ipInfo2.getDNSList());
+		ipInfo.setDomain(ipInfo.getDomain());
+		ipInfo.setDNS(ipInfo.getDNS());
+		ipInfo.setDNSList(ipInfo.getDNSList());
 		
 		
 		return ipInfo;
@@ -129,7 +130,11 @@ public class DomainUtils {
 			return null;
 		}
 		IPInfo ipInfo = new IPInfo();
-		String commandStr = "cmd /C nslookup -qt=ns "+b+" 8.8.8.8";
+		String commandStr = "nslookup -qt=ns "+b+" 8.8.8.8";
+
+		Shell shell = new Shell();
+
+
 		String execShell = execShell(commandStr);	//获取command命令的返回信息
 		
 		ipInfo = StrUtils.getDNSDomain(execShell);
