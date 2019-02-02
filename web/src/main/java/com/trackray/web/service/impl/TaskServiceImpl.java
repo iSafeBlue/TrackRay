@@ -2,7 +2,6 @@ package com.trackray.web.service.impl;
 
 import com.trackray.base.attack.Awvs;
 import com.trackray.web.dto.*;
-import com.trackray.web.module.TaskData;
 import com.trackray.web.query.TaskQuery;
 import com.trackray.web.query.VulnQuery;
 import com.trackray.web.repository.TaskRepository;
@@ -11,7 +10,6 @@ import com.trackray.web.service.TaskService;
 import com.trackray.base.bean.*;
 import com.trackray.base.controller.DispatchController;
 import com.trackray.base.handle.CoreThreadMap;
-import com.trackray.base.handle.SystemInit;
 import com.trackray.base.plugin.AbstractPlugin;
 import com.trackray.base.utils.CheckUtils;
 import com.trackray.base.utils.SysLog;
@@ -22,15 +20,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Base64Utils;
 import org.springframework.web.context.WebApplicationContext;
-import sun.misc.BASE64Encoder;
 
-import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.*;
 
-import static org.apache.logging.log4j.ThreadContext.containsKey;
 
 
 @Service

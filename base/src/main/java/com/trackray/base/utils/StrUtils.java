@@ -1,8 +1,6 @@
 package com.trackray.base.utils;
 
 import com.trackray.base.bean.IPInfo;
-import com.trackray.base.handle.SystemInit;
-import sun.misc.BASE64Encoder;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -48,14 +46,6 @@ public class StrUtils {
 		return ipInfo;
 	}
 
-
-	public static String base64(byte[] b){
-		BASE64Encoder base64Encoder = new BASE64Encoder();
-		String base64 = null;
-		base64 = base64Encoder.encode(b);
-		base64 = base64.replaceAll(SystemInit.LINE,"");
-		return base64;
-	}
 
 
 	/**
