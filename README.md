@@ -41,6 +41,10 @@
 * 在application.properties配置文件中修改 ```database.dir```及以上有变更的配置参数
 * 编译并运行SpringBoot启动类WebApplication.java
 
+[详细教程](https://github.com/iSafeBlue/TrackRay/wiki/%E5%AE%89%E8%A3%85%E8%AF%B4%E6%98%8E)
+
+
+
 ## 功能展示
 
 #### 交互式插件控制台
@@ -70,9 +74,7 @@
 ## 贡献者
 项目由[浅蓝](https://github.com/iSafeBlue)发起并主导开发。
 
-致谢列表：
-* [浅蓝](https://github.com/iSafeBlue)
-* ...
+[致谢名单](https://github.com/iSafeBlue/TrackRay/wiki/%E8%87%B4%E8%B0%A2%E5%90%8D%E5%8D%95)
 
 
 ## 赞助
