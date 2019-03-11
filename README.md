@@ -72,6 +72,15 @@
 
 [functions.md](functions.md)
 
+## ChangeLog
+
+| 日期 | 描述  |
+| ---- | ---- |
+| 2019-03-11 | 新增jython支持，可通过`PyScript.java`插件调用python脚本 |
+| 2019-02-02 | 修复在linux环境下相关bug |
+| 2019-01-30 | 溯光2更新 |
+| 2018-10-29 | 溯光渗透测试框架开源 |
+
 
 ## 贡献者
 项目由[浅蓝](https://github.com/iSafeBlue)发起并主导开发。

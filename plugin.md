@@ -136,3 +136,38 @@ e.g
             //...
         }
     }
+
+### python 插件
+
+1. 通过系统命令调用python脚本
+
+可参考`MS17010.java`
+
+2. 通过jython调用python脚本
+
+首先在`application.properties`中配置如下参数
+
+`python.script.path` python脚本存放目录
+
+`python.package.path` python第三方库site-packages目录
+
+`maven.repository.path` maven仓库根目录
+
+然后在python脚本存放目录中编写如下格式的脚本
+
+```python
+import requests
+
+def params():
+    return {"url":"请求地址"}
+
+def verify(dict):
+    text = requests.get(dict["url"]).text
+    return text
+```
+
+> 必须有 params() 和 verify() 函数
+> params() 函数必须返回字典类型对象 {"参数名":"参数说明"}
+> verify() 函数必须有一个参数，为字典类型，用于接收从trackray中传入的参数。
+> verify() 函数要写返回值
+> 尽量使用 python2.7 原生模块
