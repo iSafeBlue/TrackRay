@@ -1,18 +1,22 @@
 
-<pre>
- _______             _    _____             
-|__   __|           | |  |  __ \            
-   | |_ __ __ _  ___| | _| |__) |__ _ _   _ 
-   | | '__/ _` |/ __| |/ /  _  // _` | | | |
-   | | | | (_| | (__|    | | \ \ (_| | |_| |
-   |_|_|  \__,_|\___|_|\_\_|  \_\__,_|\__, |
-                                       __/ |
-                                      |___/   v2.0
-</pre>
+<div align="center">
+
+
+![](img/logo.png)
+
+<br/>
+
 ![](https://img.shields.io/github/stars/iSafeBlue/Trackray.svg)
 ![](https://img.shields.io/github/forks/iSafeBlue/Trackray.svg)
 ![](https://img.shields.io/github/license/iSafeBlue/Trackray.svg)
-![](https://img.shields.io/github/issues/iSafeBlue/Trackray.svg)
+![](https://img.shields.io/github/issues/iSafeBlue/Trackray.svg)    
+
+<br/>
+
+[TRACKRAY.CN](https://trackray.cn)
+
+</div>
+
 
 ## 关于溯光
 
@@ -24,9 +28,9 @@
 
 如果你具备插件开发的能力，希望你也能一起来维护这个项目。
 
-项目开发不易，你的 star 就是我们坚持的动力。
+项目开发不易，你的 star 就是我坚持的动力。
 
-[官方网站](https://trackray.cn)
+
 
 ## 特点
 
@@ -34,6 +38,7 @@
 - 使用只需要一个浏览器
 - 第一个使用Java集成MSF & AWVS的开源项目
 - 内置插件式扫描器
+
 
 ## 如何使用
 * 安装nmap，写入环境变量
@@ -71,6 +76,7 @@
 ## 功能简介
 
 [functions.md](functions.md)
+
 
 ## ChangeLog
 
