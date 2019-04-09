@@ -121,30 +121,14 @@
 			<version>5.0.4</version>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/org.javaweb/javaweb-utils -->
+		<dependency>
+			<groupId>org.javaweb</groupId>
+			<artifactId>javaweb-utils</artifactId>
+			<version>1.1.0</version>
+		</dependency>
+
 	</dependencies>
-
-<!--
-	<build>
-
-		<resources>
-			<resource>
-				<directory>src/main/java</directory>
-				<includes>
-					<include>**/*.xml</include>
-				</includes>
-			</resource>
-			<resource>
-				<directory>src/main/resources</directory>
-				<includes>
-					<include>**.*</include>
-					<include>**/*.*</include>&lt;!&ndash; i18n能读取到 &ndash;&gt;
-					<include>**/*/*.*</include>
-				</includes>
-			</resource>
-		</resources>
-
-
-	</build>-->
 
 
 </project>

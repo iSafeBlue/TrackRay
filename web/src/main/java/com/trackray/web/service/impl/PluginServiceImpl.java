@@ -1,6 +1,7 @@
 package com.trackray.web.service.impl;
 
 import com.trackray.base.annotation.Param;
+import com.trackray.base.plugin.MVCPlugin;
 import com.trackray.web.service.PluginService;
 import com.trackray.base.annotation.Plugin;
 import com.trackray.base.annotation.Rule;
@@ -19,8 +20,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.socket.WebSocketSession;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
@@ -33,6 +36,11 @@ public class PluginServiceImpl implements PluginService {
     private ConcurrentHashMap<String,Future<AbstractPlugin>> pluginPool;
     @Autowired
     private DispatchController dispatchController;
+
+    /**
+     * 查找插件方法
+     * @return
+     */
     @Override
     public JSONArray findPlugins(){
         WebApplicationContext context = getContext();
@@ -78,6 +86,12 @@ public class PluginServiceImpl implements PluginService {
         return arr;
     }
 
+    /**
+     * 使用插件方法（接口）
+     * @param map 参数
+     * @param response
+     * @throws IOException
+     */
     @Override
     public void usePlugin(Map<String, String> map, HttpServletResponse response) throws IOException {
 
@@ -195,6 +209,12 @@ public class PluginServiceImpl implements PluginService {
 
     }
 
+    /**
+     * 通过多线程插件任务id获取插件执行结果
+     * @param task
+     * @param response
+     * @throws IOException
+     */
     @Override
     public void getPlugin(String task, HttpServletResponse response) throws IOException {
 
@@ -224,6 +244,13 @@ public class PluginServiceImpl implements PluginService {
 
     }
 
+    /**
+     * 使用插件处理方法(websocket)
+     * @param session websocket会话对象
+     * @param key 插件KEY
+     * @return
+     * @throws IOException
+     */
     @Override
     public boolean usePlugin(WebSocketSession session, String key) throws IOException {
         if (!getContext().containsBean(key)){
@@ -259,7 +286,13 @@ public class PluginServiceImpl implements PluginService {
         return true;
     }
 
-
+    /**
+     * 构建websocket插件
+     * @param session websocket会话对象
+     * @param map 插件参数
+     * @param key 插件KEY
+     * @return
+     */
     @Override
     public WebSocketPlugin buildPlugin(WebSocketSession session, Map<String, String> map, String key) {
 
@@ -307,6 +340,11 @@ public class PluginServiceImpl implements PluginService {
         return bean;
     }
 
+    /**
+     * 杀死多线程插件插件
+     * @param task 线程插件任务ID
+     * @return
+     */
     @Override
     public ResultCode killPlugin(String task) {
         if (!this.pluginPool.containsKey(task)){
@@ -331,14 +369,70 @@ public class PluginServiceImpl implements PluginService {
         }
     }
 
+    /**
+     * 执行可视化页面类型插件
+     * @param plugin 插件名
+     * @param function 功能名
+     * @param map   参数集合
+     * @param model 页面对象
+     * @param request   请求对象
+     * @param response  响应对象
+     */
+    @Override
+    public ModelAndView fetchPlugin(String plugin, String function, Map<String, String> map, ModelAndView model, HttpServletRequest request, HttpServletResponse response) {
+
+        if (!getContext().containsBean(plugin)){
+            model.setViewName("common/error");
+            model.addObject("msg","插件未找到");
+        }else{
+
+            MVCPlugin mvcPlugin = (MVCPlugin) this.getBean(plugin);
+
+            if (mvcPlugin!=null && mvcPlugin.currentRule().enable()){
+
+                mvcPlugin.setParam(map);
+
+                mvcPlugin.setModel(model);
+
+                mvcPlugin.request = request;
+
+                mvcPlugin.response = response;
+
+                mvcPlugin.setFunction(function);
+
+                AbstractPlugin<ModelAndView> executor = mvcPlugin.executor();
+
+                model = executor.result();
+            }
+
+        }
+
+        return model;
+    }
+
+    /**
+     * 获取当前spring容器上下文对象
+     * @return
+     */
     private WebApplicationContext getContext(){
         //WebApplicationContext context = ContextLoader.getCurrentWebApplicationContext();
         return dispatchController.getAppContext();
     }
+
+    /**
+     * 通过 beanname 获取插件对象
+     * @param bean
+     * @return
+     */
     private Object getBean(String bean){
         return  getContext().getBean(bean,AbstractPlugin.class);
     }
 
+    /**
+     * 获取插件规则，转换为JSON对象
+     * @param bean
+     * @return
+     */
     public JSONObject rule(String bean){
         JSONObject result = new JSONObject();
         if (!getContext().containsBean(bean)){
@@ -387,6 +481,11 @@ public class PluginServiceImpl implements PluginService {
         return obj;
     }
 
+    /**
+     * 插件规则转换为制表格式输出
+     * @param rule
+     * @return
+     */
     private String pluginToTable(JSONObject rule) {
         List<String> headersList = Arrays.asList("key", "value");
         Map plugin = rule;

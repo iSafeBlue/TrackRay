@@ -4,6 +4,7 @@ import com.trackray.base.attack.Crawler;
 import com.trackray.base.bean.Vulnerable;
 import com.trackray.base.httpclient.CrawlerPage;
 import com.trackray.base.httpclient.Fetcher;
+import org.javaweb.core.net.HttpURLRequest;
 
 /**
  * 爬虫插件类
@@ -16,6 +17,7 @@ public abstract class CrawlerPlugin {
     public Crawler crawler;
     public CrawlerPage crawlerPage;
     public Fetcher fetcher = new Fetcher();
+    protected HttpURLRequest request = new HttpURLRequest();
     public String target;
     public abstract boolean check();
     public abstract void process();

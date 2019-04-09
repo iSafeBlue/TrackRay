@@ -2,6 +2,7 @@ package com.trackray.base.plugin;
 
 import org.apache.commons.lang.StringUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -12,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public abstract class CommonPlugin<E> extends AbstractPlugin<E> {
 
-
+    public HttpServletRequest request;
     public HttpServletResponse response;
 
     public boolean isNone(String o){

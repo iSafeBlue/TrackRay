@@ -5,9 +5,10 @@ import com.trackray.base.bean.ResultCode;
 import net.sf.json.JSONArray;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,12 +16,13 @@ import java.io.IOException;
 import java.util.Map;
 
 @RequestMapping("/plugin")
-@RestController
+@Controller
 public class PluginApi {
 
     @Autowired
     private PluginService pluginService;
 
+    @ResponseBody
     @RequestMapping(value = "list" )
     public ResultCode list(){
         JSONArray plugins = pluginService.findPlugins();
@@ -39,6 +41,20 @@ public class PluginApi {
         }
     }
 
+    @RequestMapping(value = "/fetch/{plugin}/{function}")
+    public ModelAndView fetch(
+            @PathVariable String plugin,
+            @PathVariable(required = false) String function,
+            @RequestParam Map<String,String> map ,
+            ModelAndView model,
+            HttpServletRequest request ,
+            HttpServletResponse response) throws IOException {
+
+        ModelAndView modelAndView = pluginService.fetchPlugin(plugin, function, map, model, request, response);
+
+        return modelAndView;
+    }
+
 
     /* @RequestMapping(value = "use")
     public ResultCode use(@RequestParam Map<String,String> map){
@@ -52,6 +68,7 @@ public class PluginApi {
         return ResultCode.ERROR("参数不可为空");
     }
 */
+    @ResponseBody
     @RequestMapping(value = "result")
     public void result(String task , HttpServletRequest request , HttpServletResponse response) throws IOException {
         switch (request.getParameter("type")) {
@@ -67,6 +84,9 @@ public class PluginApi {
         }
     }
 
+
+
+    @ResponseBody
     @RequestMapping(value = "stop")
     public ResultCode stop(String task){
 
