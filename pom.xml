@@ -18,15 +18,17 @@
 
 	<groupId>com.trackray</groupId>
 	<artifactId>framework</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>2.0.0</version>
 	<name>trackray framework</name>
-	<description>trackray framework</description>
+	<description>trackray pentest framework</description>
 
 	<properties>
 		<java.version>1.8</java.version>
+		<trackray.version>2.0.0</trackray.version>
 	</properties>
 
-	<dependencyManagement>
+
+	<!--<dependencyManagement>
 		<dependencies>
 			<dependency>
 				<groupId>com.trackray</groupId>
@@ -47,7 +49,7 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-
+-->
 	<dependencies>
 
 		<dependency>
@@ -130,5 +132,14 @@
 
 	</dependencies>
 
+	<build>
+
+		<plugins>
+
+
+
+		</plugins>
+
+	</build>
 
 </project>
