@@ -1,0 +1,5 @@
+<track></track>
+'';!--"<XSS>=&{()}
+\";alert('XSS');//
+<script>alert(1)</script>
+<h1>XSS</h1>
