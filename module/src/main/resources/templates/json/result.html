@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Result</title>
+</head>
+<body>
+
+
+<div>
+    <ul>
+        <li th:each="r : ${results}">
+
+            <p  th:text="${r}" ></p>
+        </li>
+    </ul>
+
+    <h2 th:if="${results.size() == 0}">没有找到漏洞</h2>
+
+
+</div>
+
+</body>
+</html>
