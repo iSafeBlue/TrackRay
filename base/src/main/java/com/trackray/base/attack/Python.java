@@ -23,6 +23,7 @@ public class Python {
 
     @Value("${python.script.path}")
     private String scripts;
+    
     @Value("${maven.repository.path}")
     private String repository;
 

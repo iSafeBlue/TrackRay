@@ -10,10 +10,11 @@ import java.util.Map;
  */
 public class Constant {
 
-    public static String RESOURCES_PATH ="";
+    public static String USER_DIR = System.getProperty("user.dir"); // 当前程序工作目录
 
-    /* command命令前缀 */
-    public static final String COMM_PREFIX = "cmd /c ";
+    public static String RESOURCES_PATH = USER_DIR.concat("/resources/");
+
+    public static String RESOURCES_INCLUDE_PATH; //插件包含资源文件路径
 
     /* Task任务目标类型 */
     public static final int URL_TYPE = 1;
@@ -41,7 +42,7 @@ public class Constant {
     }
 
     public static class NmapComm{
-        public static String NMAP_DIR = "D:/nmap/";
+        public static String NMAP_DIR = "";
         public static String NMAP_COMM_SCAN = "nmap -O ";
     }
 }

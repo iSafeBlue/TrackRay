@@ -32,7 +32,7 @@ import java.util.jar.JarFile;
  * @since 2019/3/1 17:44
  */
 @Rule(sync = true,websocket = true)
-@Plugin(value="python" , title = "python 插件集",author = "blue")
+@Plugin(value="python" , title = "python 插件集",author = "浅蓝")
 public class PyScript extends WebSocketPlugin {
 
     private File file;

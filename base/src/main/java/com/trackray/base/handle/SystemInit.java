@@ -40,8 +40,8 @@ public class SystemInit
     }
 
     private void check() {
-        String domain = PropertyUtil.getProperty("dict.domain");
-        String dir = PropertyUtil.getProperty("dict.dir");
+
+        String includePath = PropertyUtil.getProperty("include.path");
 
         Constant.CENSYS_APPID = PropertyUtil.getProperty("censys.appid");
         Constant.CENSYS_SECRET = PropertyUtil.getProperty("censys.secret");
@@ -82,23 +82,20 @@ public class SystemInit
         Constant.NmapComm.NMAP_DIR = PropertyUtil.getProperty("nmap.path");
 
         try {
-            String filepath = new File(this.getClass().getClassLoader().getResource(PropertyUtil.getProperty("include.path")).getPath()).getPath();
-            Constant.RESOURCES_PATH = filepath;
-            Payload.domainPayload = FileUtils.readLines(new File(this.getClass().getClassLoader().getResource(domain).getFile()));
-            Payload.dirPayload = FileUtils.readLines(new File(this.getClass().getClassLoader().getResource(dir).getFile()));
+
+            Constant.RESOURCES_INCLUDE_PATH = includePath;
+            Payload.domainPayload = FileUtils.readLines(new File(includePath.concat("dicts/domain.txt")));
+            Payload.dirPayload = FileUtils.readLines(new File((includePath.concat("dicts/dir.txt"))));
+            Payload.xssPayload = FileUtils.readLines(new File(includePath.concat("dicts/xss.txt")));
+
+
         } catch (Exception e) {
 
         }
 
-        String p = "'';!--\"<XSS>=&{()}\n" +
-                "\\\";alert('XSS');//\n" +
-                "<script>alert(1)</script>\n"+
-                "<h1>XSS</h1>";
 
-        Payload.xssPayload = Arrays.asList(p.split("\n"));
 
         System.gc(); //垃圾回收
     }
-
 
 }
