@@ -11,15 +11,21 @@ import com.trackray.base.enums.VulnLevel;
 import com.trackray.base.httpclient.Response;
 import com.trackray.base.httpclient.ResponseStatus;
 import com.trackray.base.plugin.CommonPlugin;
+import lombok.Builder;
+import lombok.Data;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.Header;
+import org.javaweb.core.net.HttpRequest;
+import org.javaweb.core.net.HttpResponse;
+import org.javaweb.core.net.HttpURLRequest;
 
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 @Rule(enable = false)
-@Plugin(value = "simpleVulRule" ,title = "简单CMS漏洞检测规则" , author = "blue")
+@Plugin(value = "simpleVulRule" ,title = "简单CMS漏洞检测规则" , author = "浅蓝")
 public class SimpleVulRule extends CommonPlugin<List<Vulnerable>> {
     private String target;
     private Task task;
@@ -29,14 +35,49 @@ public class SimpleVulRule extends CommonPlugin<List<Vulnerable>> {
         List<Payloader> loaders = new ArrayList<>();
         switch (finger) {
             case $phpcms:
-                loaders.add(new Payloader("/api.php?op=get_menu&act=ajax_getlist&callback=aaaaa&parentid=0&key=authkey&cachefile=..\\..\\..\\phpsso_server\\caches\\caches_admin\\caches_data\\applist&path=admin", new Custom() {
-                    public boolean fun(Response response) throws Exception {
-                        return StringUtils.length(response.getStatus().getContentString())>10&&response.getStatus().getContentString().contains("aaaaa")?true:false;
-                    }},Vulnerable.builder().level(VulnLevel.DANGER.getLevel()).vulName("phpcms authkey泄漏").build()));
+
+                loaders.add(
+                        Payloader.builder()
+                                .url("/api.php?op=get_menu&act=ajax_getlist&callback=aaaaa&parentid=0&key=authkey&cachefile=..\\..\\..\\phpsso_server\\caches\\caches_admin\\caches_data\\applist&path=admin")
+                                .custom(
+                                        new Custom() {
+                                            @Override
+                                            public boolean fun( HttpResponse response) throws Exception {
+                                                return response.body().contains("aaaaa")?true:false;//如果响应体包含aaaaa则存在漏洞
+                                            }
+                                        }
+                                ).vuln(Vulnerable.builder().level(VulnLevel.DANGER.getLevel()).vulName("phpcms authkey泄漏").build())
+                                .build()
+                );
+
+                loaders.add(
+                        Payloader.builder()
+                                .url("/api.php?op=get_menu&act=ajax_getlist&callback=aaaaa&parentid=0&key=authkey&cachefile=..\\..\\..\\phpsso_server\\caches\\caches_admin\\caches_data\\applist&path=admin")
+                                .method(HttpRequest.Method.GET)
+                                .containsStr("aaaaa")
+                                .vuln(Vulnerable.builder().level(VulnLevel.DANGER.getLevel()).vulName("phpcms authkey泄漏").build()) //另一种实现方式
+                                .build()
+                );
+
                 break;
             case $Discuz:
                 break;
             default:
+                /**
+                 * 以上都没有匹配时执行
+                 */
+
+                loaders.add(
+                        Payloader.builder()
+                        .url("/crossdomain.xml")
+                        .containsStr("domain=\"*\"")
+                        .vuln(
+                                Vulnerable.
+                                        builder().
+                                        level(VulnLevel.DANGER.getLevel()).
+                                        vulName("crossdomain.xml 配置不当").build()
+                        ).build()
+                );
 
                 break;
         }
@@ -67,41 +108,59 @@ public class SimpleVulRule extends CommonPlugin<List<Vulnerable>> {
 
     private void test(List<Payloader> payloaders) {
         for (Payloader payloader : payloaders) {
-            crawlerPage.getRequest().setUrl(payloader.url);
-            crawlerPage.getRequest().setHttpMethod(payloader.method);
-            if (StringUtils.isNotBlank(payloader.data)){
-                crawlerPage.getRequest().setParamStr(payloader.data);
-            }
-            if (payloader.headers!=null && payloader.headers.length>0){
-                for (Header header : payloader.headers) {
-                    crawlerPage.getRequest().addHttpHeader(header);
-                }
-            }
+
+            HttpURLRequest req = payloader.getRequest();
             try {
-                fetcher.run(crawlerPage);
-            }catch (Exception e){
-                continue;
-            }
-
-
-            if (payloader.getCustom()!=null){
-                try {
-                    if (payloader.custom.fun(crawlerPage.getResponse())){
-                        addVul(payloader);
+                HttpResponse resp = null;
+                if (req == null) {
+                    req = new HttpURLRequest()
+                            .url(payloader.url)
+                            .method(payloader.method);
+                    if (StringUtils.isNotBlank(payloader.data)) {
+                        req.data(payloader.data);
                     }
-                } catch (Exception e) {
-                    continue;
+
+                    if (payloader.header != null) {
+                        req.header(payloader.header);
+                    }
+
+                    if (payloader.method == HttpRequest.Method.GET)
+                        resp = req.get();
+                    else
+                        resp = req.post();
+
+                }else{
+                    resp = req.request();
                 }
-            }else{
 
-                ResponseStatus status = crawlerPage.getResponse().getStatus();
 
-                if (status.getStatusCode() == payloader.respCode){
-                    if (StringUtils.contains(status.getContentString() , payloader.matchStr)){
-                        addVul(payloader);
+                if (payloader.getCustom()!=null){
+                    try {
+                        if (payloader.custom.fun( resp )){
+                            addVul(payloader);
+                        }
+                    } catch (Exception e) {
+                        continue;
+                    }
+                }else{
+
+
+                    if (StringUtils.isNotBlank(payloader.containsStr)){
+                        if (StringUtils.contains(resp.body() , payloader.containsStr)){
+                            addVul(payloader);
+                        }
+
+                    }else if(StringUtils.isNotBlank(payloader.matche)){
+                        if (resp.body().matches(payloader.containsStr)){
+                            addVul(payloader);
+                        }
                     }
                 }
-            }
+
+
+            }catch (Exception e){}
+
+
         }
     }
     private void addVul(Payloader payloader){
@@ -111,180 +170,24 @@ public class SimpleVulRule extends CommonPlugin<List<Vulnerable>> {
         payloader.vuln.setAffectsUrl(payloader.url);
         payloader.vuln.setRequest(payloader.data);
         vulns.add(payloader.vuln);
-
     }
 
     interface Custom{
-        public boolean fun(Response response) throws Exception;
+        public boolean fun(HttpResponse response) throws Exception;
     }
 
-    class Payloader{
+    @Data
+    @Builder
+    static class Payloader{
+        private HttpURLRequest request;
         private String url="";
-        private HttpMethod method = HttpMethod.GET;
+        private HttpRequest.Method method = HttpRequest.Method.GET;
         private String data="";
-        private Header[] headers;
-        private String matchStr="";
-        private int respCode = 200;
+        private Map<String,String > header;
+        private String containsStr="";  //文字包含匹配
+        private String matche = ""; //正则表达式匹配
         private Vulnerable vuln;
         private Custom custom;
 
-        public Payloader() {
-        }
-
-        public Payloader(String url, Custom custom) {
-            this.url = url;
-            this.custom = custom;
-        }
-
-        public Payloader(String url, String data, Custom custom) {
-            this.url = url;
-            this.data = data;
-            this.custom = custom;
-        }
-        public Payloader(String url, Custom custom , Vulnerable vuln) {
-            this.url = url;
-            this.custom = custom;
-            this.vuln = vuln;
-        }
-        public Payloader(String url, String matchStr, Vulnerable vuln) {
-            this.url = url;
-            this.matchStr = matchStr;
-            this.vuln = vuln;
-        }
-
-        public Payloader(String url, HttpMethod method, String data, String matchStr, int respCode, Vulnerable vuln) {
-            this.url = url;
-            this.method = method;
-            this.data = data;
-            this.matchStr = matchStr;
-            this.respCode = respCode;
-            this.vuln = vuln;
-        }
-
-        public Payloader(String url, HttpMethod method, String data, Header[] headers, String matchStr, int respCode, Vulnerable vuln) {
-            this.url = url;
-            this.method = method;
-            this.data = data;
-            this.headers = headers;
-            this.matchStr = matchStr;
-            this.respCode = respCode;
-            this.vuln = vuln;
-        }
-
-        public Payloader(String url, HttpMethod method, String data, String matchStr, int respCode) {
-            this.url = url;
-            this.method = method;
-            this.data = data;
-            this.matchStr = matchStr;
-            this.respCode = respCode;
-        }
-
-        public Payloader(String url, String matchStr, int respCode) {
-            this.url = url;
-            this.matchStr = matchStr;
-            this.respCode = respCode;
-        }
-
-        public Payloader(String url, HttpMethod method, String data, Header[] headers, String matchStr, int respCode) {
-            this.url = url;
-            this.method = method;
-            this.data = data;
-            this.headers = headers;
-            this.matchStr = matchStr;
-            this.respCode = respCode;
-        }
-        public Payloader post(String post){
-            data = post;
-            method=HttpMethod.POST;
-            return this;
-        }
-
-        public Payloader url(String url){
-            setUrl(url);
-            return this;
-        }
-        public Payloader custom(Custom custom){
-            setCustom(custom);
-            return this;
-        }
-        public Payloader matcher(String matche){
-            setMatchStr(matche);
-            return this;
-        }
-        public Payloader vulnerable(Vulnerable v){
-            setVuln(v);
-            return this;
-        }
-        public Payloader code(int code){
-            setRespCode(code);
-            return this;
-        }
-        public Payloader header(Header[] headers){
-            setHeaders(headers);
-            return this;
-        }
-        public String getUrl() {
-            return url;
-        }
-
-        public void setUrl(String url) {
-            this.url = url;
-        }
-
-        public HttpMethod getMethod() {
-            return method;
-        }
-
-        public void setMethod(HttpMethod method) {
-            this.method = method;
-        }
-
-        public String getData() {
-            return data;
-        }
-
-        public void setData(String data) {
-            this.data = data;
-        }
-
-        public Header[] getHeaders() {
-            return headers;
-        }
-
-        public void setHeaders(Header[] headers) {
-            this.headers = headers;
-        }
-
-        public String getMatchStr() {
-            return matchStr;
-        }
-
-        public void setMatchStr(String matchStr) {
-            this.matchStr = matchStr;
-        }
-
-        public int getRespCode() {
-            return respCode;
-        }
-
-        public void setRespCode(int respCode) {
-            this.respCode = respCode;
-        }
-
-        public Vulnerable getVuln() {
-            return vuln;
-        }
-
-        public void setVuln(Vulnerable vuln) {
-            this.vuln = vuln;
-        }
-
-        public Custom getCustom() {
-            return custom;
-        }
-
-        public void setCustom(Custom custom) {
-            this.custom = custom;
-        }
     }
 }
