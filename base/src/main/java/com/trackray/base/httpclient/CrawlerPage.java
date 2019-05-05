@@ -10,6 +10,7 @@ import java.util.Map;
 /**
  * HttpClient 请求封装类
  */
+@Deprecated
 public class CrawlerPage implements Cloneable{
 
     private String base = "";

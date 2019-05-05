@@ -13,6 +13,7 @@ import java.util.Random;
  * @email blue@ixsec.org
  * @since 2019/1/8 12:28
  */
+@Deprecated
 public class Fetcher extends HttpClient{
 
     public void run(CrawlerPage page){
