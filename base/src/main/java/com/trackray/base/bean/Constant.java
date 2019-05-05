@@ -16,11 +16,26 @@ public class Constant {
 
     public static String RESOURCES_INCLUDE_PATH; //插件包含资源文件路径
 
+
+    public static final String WINDOWS = "WINDOWS";
+    public static final String LINUX = "LINUX";
+
     /* Task任务目标类型 */
     public static final int URL_TYPE = 1;
     public static final int IP_TYPE = 2;
     public static String CENSYS_APPID = "";
     public static String CENSYS_SECRET = "";
+    public static String SQLMAP_HOST = "";
+
+    public static boolean AVAILABLE_SQLMAP = false;
+    public static boolean AVAILABLE_NMAP = false;
+    public static boolean AVAILABLE_PYTHON = false;
+    public static boolean AVAILABLE_AWVS = false;
+    public static boolean AVAILABLE_NESSUS = false;
+    public static boolean AVAILABLE_HYDRA = false;
+    public static boolean AVAILABLE_METASPLOIT = false;
+
+    public static String LINE = System.getProperty("line.separator");
 
 
     public static final int VULN_TYPE_XSS = 1;
@@ -41,8 +56,4 @@ public class Constant {
         public static String VULN_ADD_API;
     }
 
-    public static class NmapComm{
-        public static String NMAP_DIR = "";
-        public static String NMAP_COMM_SCAN = "nmap -O ";
-    }
 }
