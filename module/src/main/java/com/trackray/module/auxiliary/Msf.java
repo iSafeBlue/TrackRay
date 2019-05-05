@@ -15,7 +15,7 @@ import java.util.Map;
  * @since 2019/1/16 15:56
  */
 @Rule(websocket = true , sync = true)
-@Plugin(title = "Metasploit" , author = "blue", desc = "metasploit websocket插件" , time = 1547625524)
+@Plugin(title = "Metasploit" , author = "浅蓝", desc = "metasploit websocket插件" , time = 1547625524)
 public class Msf extends WebSocketPlugin {
 
     @Autowired
@@ -23,7 +23,7 @@ public class Msf extends WebSocketPlugin {
 
     @Override
     public boolean check(Map param) {
-        if (metasploit==null || StringUtils.isEmpty(metasploit.getToken())) {
+        if (metasploit.login() || StringUtils.isEmpty(metasploit.getToken())) {
             errorMsg = "metasploit 认证未通过";
             return false;
         }
@@ -48,7 +48,7 @@ public class Msf extends WebSocketPlugin {
 
     @Override
     public void onClose() {
-        if (metasploit!=null && StringUtils.isNotEmpty(metasploit.getToken())) {
+        if (metasploit.isLogind() && StringUtils.isNotEmpty(metasploit.getToken())) {
             metasploit.close();
         }
     }

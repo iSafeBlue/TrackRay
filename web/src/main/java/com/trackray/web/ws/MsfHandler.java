@@ -1,6 +1,7 @@
 package com.trackray.web.ws;
 
 import com.trackray.base.attack.Metasploit;
+import com.trackray.base.bean.Constant;
 import com.trackray.base.utils.Message;
 import com.trackray.base.utils.StrUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -35,8 +36,10 @@ public class MsfHandler extends TextWebSocketHandler {
     @Override
     public  void afterConnectionEstablished(WebSocketSession session)
             throws Exception {
-        if (StringUtils.isNotEmpty(metasploit.getToken())){
+
+        if (Constant.AVAILABLE_METASPLOIT && metasploit.login()){
             flag = true;
+            int console = metasploit.createConsole();
             String banner = metasploit.banner();
             session.sendMessage(Message.RED(banner));
         }else{

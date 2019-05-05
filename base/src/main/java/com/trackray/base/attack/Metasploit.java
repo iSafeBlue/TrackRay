@@ -37,7 +37,7 @@ public class Metasploit {
 
     private String token;
 
-    private static boolean isLogin;
+    private  boolean logind;
 
     private int consoleID;
 
@@ -156,30 +156,12 @@ public class Metasploit {
         public final static String SessionCompatibleModules = "session.compatible_modules";
     }
 
-
-    /*@PostConstruct
-    private void init(){
-        if (login(username,password)){
-            int console = createConsole();
-        }else{
-            SysLog.error("MSF RPC远程调用认证失败，请检查！如未开启服务请参考命令：msfrpcd -U msf -P msf -S -f");
-        }
-    }*/
-    @PostConstruct
-    public void after()  {
-        if (login(username,password) && isLogin){
-            int console = createConsole();
-        }else{
-            SysLog.error("MSF RPC远程调用认证失败，请检查！如未开启服务请参考命令：msfrpcd -U msf -P msf -S -f");
-        }
-    }
-
-    public boolean login(String username ,String password){
+    public boolean login(){
         try {
             Map send = sendList(list(Command.AuthLogin, username, password));
             if (send.containsKey("token")){
                 this.token = send.get("token").toString();
-                isLogin = true;
+                logind = true;
                 return true;
             }
         }catch (Exception e){
@@ -190,13 +172,10 @@ public class Metasploit {
 
 
     public void close(){
-        /*
-        * destroyConsole();
         logout();
-        isLogin = false;
-        * */
     }
     public void logout(){
+        destroyConsole();
         Map map = sendList(list(Command.AuthLogout, token));
     }
 
@@ -298,11 +277,10 @@ public class Metasploit {
 
     @Override
     protected void finalize() throws Throwable {
-        if (isLogin)
+        if (logind)
         {
-            destroyConsole();
             logout();
-            isLogin = false;
+            logind = false;
         }
         super.finalize();
     }
