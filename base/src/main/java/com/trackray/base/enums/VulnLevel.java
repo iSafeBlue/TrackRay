@@ -5,6 +5,7 @@ package com.trackray.base.enums;
  * @email blue@ixsec.org
  * @since 2019/1/8 12:28
  */
+@Deprecated
 public enum VulnLevel {
     INFO(1,"低危"),
     WARNING(2,"中危"),
