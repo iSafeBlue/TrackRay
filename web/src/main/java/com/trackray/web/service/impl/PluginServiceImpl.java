@@ -44,14 +44,18 @@ public class PluginServiceImpl implements PluginService {
     @Override
     public JSONArray findPlugins(){
         WebApplicationContext context = getContext();
-        Map<String, AbstractPlugin> bean = context.getBeansOfType(AbstractPlugin.class);
+        Map<String, CommonPlugin> bean = context.getBeansOfType(CommonPlugin.class);
         JSONArray arr = new JSONArray();
-        for (Map.Entry<String, AbstractPlugin> entry : bean.entrySet()) {
+        for (Map.Entry<String, CommonPlugin> entry : bean.entrySet()) {
             JSONObject obj = new JSONObject();
             AbstractPlugin plugin =  entry.getValue();
             Rule rule = plugin.currentRule();
             Plugin p = plugin.currentPlugin();
 
+            if (p==null || rule == null)
+                continue;
+            if (plugin instanceof MVCPlugin)
+                continue;
             obj.put("plugin_key",entry.getKey());
 
             JSONObject base = new JSONObject();
