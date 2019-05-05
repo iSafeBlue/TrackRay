@@ -3,6 +3,7 @@ package com.trackray.web.ws;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.trackray.base.bean.Banner;
 import com.trackray.base.utils.Message;
 import com.trackray.web.service.PluginService;
 import com.trackray.base.annotation.Rule;
@@ -42,19 +43,14 @@ public class PluginHandler extends TextWebSocketHandler {
     private Map<String,Map<String,String>> sets = new ConcurrentHashMap<>();
     private Map<String,Map<String,Object>> plugins = new ConcurrentHashMap<>();
 
-    public static String banner = "\n _______             _    _____             \n" +
-            "|__   __|           | |  |  __ \\            \n" +
-            "   | |_ __ __ _  ___| | _| |__) |__ _ _   _ \n" +
-            "   | | '__/ _` |/ __| |/ /  _  // _` | | | |\n" +
-            "   | | | | (_| | (__|    | | \\ \\ (_| | |_| |\n" +
-            "   |_|_|  \\__,_|\\___|_|\\_\\_|  \\_\\__,_|\\__, |\n" +
-            "                                       __/ |\n" +
-            "                                      |___/    v2.0\n";
-
+    @Autowired
+    private Banner banner;
     @Override
     public  void afterConnectionEstablished(WebSocketSession session)
             throws Exception {
-        session.sendMessage(Message.RED(banner));
+
+
+        session.sendMessage(Message.RED(banner.generate()));
         session.sendMessage(Message.GREEN("Tips:你可以尝试输入help来获取命令帮助文档"));
         //session.sendMessage(Message.NORMAL(StrUtils.formatJson(pluginService.findPlugins().toString())));
         super.afterConnectionEstablished(session);
