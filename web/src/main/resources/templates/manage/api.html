@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>API Plugin - TrackRay</title>
+
+        <#include "header.html"/>
+
+        <script>
+
+            $(function () {
+                var list = "plugin/list";
+                $.get(
+                    list,
+                    function (text) {
+                        if (text.code==200){
+                            for(i in text.data)
+                            {
+                                var data = text.data[i];
+
+                                var tab = "<a class=\"nav-link\"  data-toggle=\"pill\" href=\"#"+data.plugin_key+"\" role=\"tab\" aria-controls=\"v-pills-profile\" aria-selected=\"false\">\n" +
+                                    "                                                        <i class=\"mdi mdi-account-circle d-lg-none d-block mr-1\"></i>\n" +
+                                    "                                                        <span class=\"d-none d-lg-block\">"+data.base_info.title+"</span>\n" +
+                                    "                                                    </a>"
+
+                                //var tab= "<li><a href='#"+data.plugin_key+"' data-toggle='tab'>"+data.base_info.title+"</a></li>";
+                                var c = "<p>插件描述："+data.base_info.desc+"</p>"
+                                    +"<p>插件作者："+data.base_info.author+"</p>"
+                                    +"<p>相关链接："+data.base_info.link+"</p>"
+                                    +"<p>是否异步："+data.plugin_rule.sync+"</p>"
+                                    +"<p>websocket："+data.plugin_rule.websocket+"</p>";
+
+                                c+='<form  target="_blank" class="form-horizontal" action="/plugin/use">\n';
+                                c+="<input type='hidden' name='key' value='"+data.plugin_key+"'>";
+                                var def = data.plugin_rule.def_params;
+                                var desc = data.plugin_rule.desc_params;
+                                var params = data.plugin_rule.params;
+                                for (j in params){
+                                    var param = params[j];
+                                    var defv = params.length == def.length ? def[j] : "";
+                                    var descv = params.length == desc.length ? desc[j] : "";
+
+                                    c+= '    <div class="form-group mb-3">\n' +
+                                        '        <label>'+param+'('+descv+')</label>\n' +
+                                        '            <input class="form-control" name="'+param+'" type="text" value="'+defv+'" />\n' +
+                                        '    </div>\n';
+                                }
+                                c+="<div class=\"col-auto\">\n" +
+                                    "                                                    <button type=\"submit\" class=\"btn btn-primary mb-2\">Submit</button>\n" +
+                                    "                                                </div></form>";
+
+                                //var content = "<div class='tab-pane' id='"+data.plugin_key+"'>"+c+"</div>";
+                                var content = '<div <div class="tab-pane fade" role="tabpanel" id="'+data.plugin_key+'" >'+c+'</div>';
+                                $("#v-pills-tab").append(tab);
+                                $("#v-pills-tabContent").append(content);
+                            }
+                        }
+                    },
+                    "json");
+
+
+            });
+
+        </script>
+    </head>
+    <body>
+
+        <!-- Begin page -->
+        <div class="wrapper">
+
+            <#include "menu.html"/>
+
+
+            <!-- ============================================================== -->
+            <!-- Start Page Content here -->
+            <!-- ============================================================== -->
+
+            <div class="content-page">
+                <div class="content">
+
+                    <!-- Topbar Start -->
+                    <#include "topbar.html"/>
+                    <!-- end Topbar -->
+                    
+                    <!-- Start Content-->
+                    <div class="container-fluid">
+
+                        <!-- start page title -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="page-title-box">
+                                    
+                                    <h4 class="page-title">API Plugin</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end page title -->
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+
+                                        <h4 class="header-title mb-3">Tabs Vertical Left</h4>
+
+                                        <div class="row">
+                                            <div class="col-sm-3 mb-2 mb-sm-0">
+                                                <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+
+                                                </div>
+                                            </div> <!-- end col-->
+
+                                            <div class="col-sm-9">
+                                                <div class="tab-content" id="v-pills-tabContent">
+
+                                                </div> <!-- end tab-content-->
+                                            </div> <!-- end col-->
+                                        </div>
+                                        <!-- end row-->
+                                    </div> <!-- end card-body-->
+                                </div> <!-- end card-->
+                            </div> <!-- end col -->
+
+                        </div>
+
+                    </div>
+                    <!-- container -->
+
+                </div>
+                <!-- content -->
+
+                <!-- Footer Start -->
+                <footer class="footer">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-6">
+                                2018 - 2019 © TrackRay
+                            </div>
+                           
+                        </div>
+                    </div>
+                </footer>
+                <!-- end Footer -->
+
+            </div>
+
+            <!-- ============================================================== -->
+            <!-- End Page content -->
+            <!-- ============================================================== -->
+
+
+        </div>
+        <!-- END wrapper -->
+
+        <#include "footer.html"/>
+
+
+</body>
+</html>

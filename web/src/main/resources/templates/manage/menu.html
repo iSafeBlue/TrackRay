@@ -1,0 +1,112 @@
+<!-- ========== Left Sidebar Start ========== -->
+<div class="left-side-menu">
+
+    <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 469.6px;"><div class="slimscroll-menu active" id="left-side-menu-container" style="overflow: hidden; width: auto; height: 469.6px;">
+
+        <!-- LOGO -->
+        <a href="#" class="logo text-center">
+                        <span class="logo-lg">
+                            <img src="assets/images/logo.png" alt="" height="16">
+                        </span>
+            <span class="logo-sm">
+                            <img src="assets/images/logo_sm.png" alt="" height="16">
+                        </span>
+        </a>
+
+        <!--- Sidemenu -->
+        <ul class="metismenu side-nav in">
+
+            <li class="side-nav-title side-nav-item">Navigation</li>
+
+
+            <li class="side-nav-item active">
+                <a href="javascript:void(0)" class="side-nav-link active" aria-expanded="true">
+                    <i class="dripicons-meter"></i>
+                    <span> 漏洞扫描</span>
+                </a>
+                <ul class="side-nav-second-level collapse in" aria-expanded="true" style="">
+                    <li class="active">
+                        <a href="/manage/createTask" class="active">创建任务</a>
+                    </li>
+                    <li>
+                        <a href="/manage/listTask">任务列表</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="side-nav-item ">
+                <a href="/console" class="side-nav-link active" aria-expanded="false">
+                    <i class="dripicons-browser"></i>
+                    <span> 控制台</span>
+                </a>
+            </li>
+
+            <li class="side-nav-item ">
+                <a href="/msf" class="side-nav-link active" aria-expanded="false">
+                    <i class="dripicons-browser"></i>
+                    <span> MSF控制台</span>
+                </a>
+            </li>
+
+            <li class="side-nav-item ">
+                <a href="/api" class="side-nav-link active" aria-expanded="false">
+                    <i class="mdi mdi-xaml"></i>
+                    <span> 无交互插件</span>
+                </a>
+            </li>
+
+            <li class="side-nav-item">
+                <a href="javascript: void(0);" class="side-nav-link" aria-expanded="false">
+                    <i class="dripicons-view-apps"></i>
+                    <span> Apps </span>
+
+                    <span class="menu-arrow"></span>
+                </a>
+                <ul class="side-nav-second-level collapse" aria-expanded="false">
+
+
+
+                    <#if menu?exists>
+                        <#list menu?keys as key>
+                            <tr>
+                                <li>
+                                    <a href="/plugin/mvc/${key}/index">${menu[key]}</a>
+                                </li>
+                            </tr>
+                        </#list>
+                    </#if>
+
+                </ul>
+            </li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        </ul>
+
+        <!-- Help Box -->
+
+        <!-- end Help Box -->
+        <!-- End Sidebar -->
+
+        <div class="clearfix"></div>
+
+    </div><div class="slimScrollBar" style="background: rgb(158, 165, 171) none repeat scroll 0% 0%; width: 8px; position: absolute; top: -290.4px; opacity: 0.382281; display: block; border-radius: 7px; z-index: 99; right: 1px; height: 469.2px;"></div><div class="slimScrollRail" style="width: 8px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 7px; background: rgb(51, 51, 51) none repeat scroll 0% 0%; opacity: 0.2; z-index: 90; right: 1px;"></div></div>
+    <!-- Sidebar -left -->
+
+</div>
+<!-- Left Sidebar End -->
