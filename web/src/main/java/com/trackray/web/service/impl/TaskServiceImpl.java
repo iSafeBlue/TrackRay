@@ -186,7 +186,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public boolean startTask(String taskMd5) {
-        List<TaskDTO> tasks = this.selectTaskByMd5(taskMd5);
+        /*List<TaskDTO> tasks = this.selectTaskByMd5(taskMd5);
         if (tasks.size()!=1){
             return false;
         }
@@ -223,12 +223,12 @@ public class TaskServiceImpl implements TaskService {
         value.put("task",task);
         coreThreadPool.put(taskMD5,value);
         this.scanTargets(task);
-
+*/
         return true;
     }
 
     private void scanTargets(Task task) {
-        ThreadPoolExecutor exec = (ThreadPoolExecutor) task.getExecutor();
+       /* ThreadPoolExecutor exec = (ThreadPoolExecutor) task.getExecutor();
         while (exec.getTaskCount() != exec.getCompletedTaskCount()){
             //...
         }
@@ -263,7 +263,7 @@ public class TaskServiceImpl implements TaskService {
         if (task.getRule().attack){
             dispatchController.attack(task,exec);
         }
-
+*/
     }
 
     private void awvs(Task task, String target) {

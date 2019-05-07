@@ -68,7 +68,7 @@ public class PluginHandler extends TextWebSocketHandler {
             }else if (payload.startsWith("search ")){
                 String ex = payload.substring(payload.indexOf(" ") + 1, payload.length());
                 if (ex.equals("*")){
-                    session.sendMessage(Message.WHITE(formatPluginsToTable(pluginService.findPlugins())));
+                    session.sendMessage(Message.WHITE(formatPluginsToTable(pluginService.findWebsocketPlugins())));
                 }else{
                     JSONArray plugin = pluginService.findPlugins();
                     JSONArray temp = new JSONArray();
