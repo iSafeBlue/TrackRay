@@ -16,19 +16,19 @@ public class VulnDTO implements Serializable {
     @GeneratedValue
     private Integer id; //数据库ID
 
-    private String taskMd5; //任务ID
+    private String taskMd5 = ""; //任务ID
 
-    private String address; //风险地址
+    private String address = ""; //风险地址
 
-    private String title;   //漏洞标题
+    private String title = "";   //漏洞标题
 
-    private Integer level;  //漏洞等级
+    private Integer level =0;  //漏洞等级
 
     private String payload = ""; //攻击载荷
 
     private String message = ""; //响应信息
 
-    private String repair;  //修复建议
+    private String repair  = "";  //修复建议
 
     private String risk[];    //存在的风险
 
@@ -36,7 +36,7 @@ public class VulnDTO implements Serializable {
 
     private String reference[]; //参考链接
 
-    private Integer type;   //漏洞类型
+    private Integer type = 0;   //漏洞类型
 
     private Date createTime = new Date();
 
