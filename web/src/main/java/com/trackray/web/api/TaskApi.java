@@ -7,6 +7,8 @@ import com.trackray.web.service.TaskService;
 import com.trackray.base.bean.ResultCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 @RequestMapping("/task")
@@ -33,9 +35,15 @@ public class TaskApi {
         return code;
     }
 
+    @RequestMapping(value = "process" , method = RequestMethod.POST )
+    public ResultCode process(String task){
+        taskService.processTask(task);
+        return ResultCode.SUCCESS;
+    }
+
     @RequestMapping(value = "create", method = RequestMethod.POST)
-    public ResultCode create(TaskQuery query){
-        ResultCode task = taskService.createTask(query);
+    public ResultCode create(TaskQuery query , HttpSession session){
+        ResultCode task = taskService.createTask(query , session);
         return task;
     }
 
@@ -48,9 +56,18 @@ public class TaskApi {
             return ResultCode.ERROR;
     }
 
-    @RequestMapping(value = "destroy"  , method = RequestMethod.POST)
-    public ResultCode destroy(String task){
-        boolean flag = taskService.taskDestroy(task);
+    @RequestMapping(value = "destroy"  )
+    public ResultCode destroy(String task , HttpSession session){
+        boolean flag = taskService.taskDestroy(task , session);
+        if (flag)
+            return ResultCode.SUCCESS;
+        else
+            return ResultCode.ERROR;
+    }
+
+    @RequestMapping(value = "delete")
+    public ResultCode destroy(String task ){
+        boolean flag = taskService.taskDelete(task);
         if (flag)
             return ResultCode.SUCCESS;
         else
