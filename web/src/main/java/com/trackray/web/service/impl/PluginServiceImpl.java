@@ -38,7 +38,7 @@ public class PluginServiceImpl implements PluginService {
     private DispatchController dispatchController;
 
     /**
-     * 查找插件方法
+     * 查找普通插件方法
      * @return
      */
     @Override
@@ -89,6 +89,71 @@ public class PluginServiceImpl implements PluginService {
         }
         return arr;
     }
+
+    /**
+     * 查找WEBSOCKET插件方法
+     * @return
+     */
+    @Override
+    public JSONArray findWebsocketPlugins(){
+        WebApplicationContext context = getContext();
+        Map<String, WebSocketPlugin> bean = context.getBeansOfType(WebSocketPlugin.class);
+        JSONArray arr = new JSONArray();
+        for (Map.Entry<String, WebSocketPlugin> entry : bean.entrySet()) {
+            JSONObject obj = new JSONObject();
+            AbstractPlugin plugin =  entry.getValue();
+            Rule rule = plugin.currentRule();
+            Plugin p = plugin.currentPlugin();
+
+            if (p==null || rule == null)
+                continue;
+            obj.put("plugin_key",entry.getKey());
+
+            JSONObject base = new JSONObject();
+            base.put("author",p.author());
+            base.put("title",p.title());
+            base.put("desc",p.desc());
+            base.put("link",p.link());
+            base.put("time",p.time());
+            obj.put("base_info",base);
+
+            JSONObject rules = new JSONObject();
+            rules.put("sync",rule.sync());
+
+            ArrayList<String> ruleparam = new ArrayList<>();
+            ArrayList<String> defparam = new ArrayList<>();
+            ArrayList<String> descparam = new ArrayList<>();
+            for (Param param : rule.params()) {
+                ruleparam.add(param.key());
+                defparam.add(param.defaultValue());
+                descparam.add(param.desc());
+            }
+
+            rules.put("params",ruleparam);
+            rules.put("def_params",defparam);
+            rules.put("desc_params",descparam);
+
+            rules.put("enable",rule.enable());
+            rules.put("websocket",rule.websocket());
+            obj.put("plugin_rule",rules);
+            arr.add(obj);
+        }
+        return arr;
+    }
+
+    public Map<String,MVCPlugin> findMVCPlugins(){
+        HashMap<String, MVCPlugin> map = new HashMap<>();
+        WebApplicationContext context = getContext();
+        Map<String, MVCPlugin> bean = context.getBeansOfType(MVCPlugin.class);
+        for (Map.Entry<String, MVCPlugin> entry : bean.entrySet()) {
+            MVCPlugin plugin =  entry.getValue();
+            Rule rule = plugin.currentRule();
+            Plugin p = plugin.currentPlugin();
+            map.put(p.value(),plugin);
+        }
+        return map;
+    }
+
 
     /**
      * 使用插件方法（接口）
@@ -207,7 +272,8 @@ public class PluginServiceImpl implements PluginService {
         }else{
             AbstractPlugin executor = bean.executor();
             Object obj = executor.result();
-            response.getWriter().print(obj==null?ResultCode.WARN(executor.errorMsg):obj);
+            if (!response.isCommitted())
+                response.getWriter().print(obj==null?ResultCode.WARN(executor.errorMsg):obj);
             return;
         }
 

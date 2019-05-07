@@ -20,7 +20,7 @@ public class TaskDTO implements Serializable {
 
     private String taskMd5;
 
-    private String uid = "";
+    private String user = "";
 
     private String taskName = "";
 
@@ -37,6 +37,8 @@ public class TaskDTO implements Serializable {
     private String cookie= "";
 
     private String rule = "";
+
+    private Integer level = 0;  //0 Low 1 Medium 2 HIGH;
 
     private Integer status = 0; // 0 未开始 1 扫描中 2 已结束
 

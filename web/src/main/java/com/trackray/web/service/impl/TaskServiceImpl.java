@@ -2,11 +2,11 @@ package com.trackray.web.service.impl;
 
 import com.trackray.base.attack.Awvs;
 import com.trackray.base.httpclient.HttpClient;
+import com.trackray.base.quartz.QuartzManager;
+import com.trackray.web.handle.ScannerJob;
 import com.trackray.web.dto.*;
 import com.trackray.web.query.TaskQuery;
-import com.trackray.web.query.VulnQuery;
 import com.trackray.web.repository.TaskRepository;
-import com.trackray.web.repository.VulnRepository;
 import com.trackray.web.service.TaskService;
 import com.trackray.base.bean.*;
 import com.trackray.base.controller.DispatchController;
@@ -15,16 +15,14 @@ import com.trackray.base.plugin.AbstractPlugin;
 import com.trackray.base.utils.CheckUtils;
 import com.trackray.base.utils.SysLog;
 import com.trackray.base.utils.TaskUtils;
-import net.dongliu.requests.Requests;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.HttpException;
+import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Base64Utils;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.io.IOException;
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,41 +32,52 @@ import java.util.concurrent.*;
 
 @Service
 public class TaskServiceImpl implements TaskService {
+
     @Autowired
     private DispatchController dispatchController;
+
     @Autowired
     private CoreThreadMap coreThreadPool;
 
     @Autowired
     private TaskRepository taskRepository;
-    @Autowired
-    private VulnRepository vulnRepository;
 
     @Autowired
     private Awvs awvs;
 
-    @Override
-    public ResultCode createTask(TaskQuery query) {
-        TaskDTO dto = new TaskDTO();
+    @Autowired
+    private QuartzManager quartzManager;
 
-        if (query.getRule() ==null){
+    /**
+     * 创建任务
+     * @param query
+     * @return
+     */
+    @Override
+    public ResultCode createTask(TaskQuery query , HttpSession session) {
+        TaskDTO dto = new TaskDTO();
+        dto.setUser(session.getAttribute("user").toString());
+        if (query.getRule() == null){
             query.setRule(new Rule());
         }
-
 
         if (CheckUtils.isJson(query.getProxy())){
             dto.setProxy(query.getProxy());
         }
-        String key = TaskUtils.genTaskKey(query.getTarget());
+
+        String key = TaskUtils.genTaskKey(query.getTarget());   // 任务id
+
         dto.setTaskMd5(key);
 
         if (StringUtils.isNotBlank(query.getCookie()))
             dto.setCookie(query.getCookie());
 
+
         if (StringUtils.isNotBlank(query.getName()))
             dto.setTaskName(query.getName());
 
         JSONObject proxyObj = new JSONObject();
+
         if(StringUtils.isNotBlank(query.getProxy())){
             if(query.getProxy().matches("\\d+\\.\\d+\\.\\d+\\.\\d+:\\d+(,\\d+\\.\\d+\\.\\d+\\.\\d+:\\d+)*")) {
                 if (query.getProxy().contains(",")){
@@ -84,21 +93,95 @@ public class TaskServiceImpl implements TaskService {
         }
 
         JSONObject rule = JSONObject.fromObject(query.getRule());
+
         dto.setRule(rule.toString());
+
         if (!proxyObj.isEmpty())
             dto.setProxy(proxyObj.toString());
+
         dto.setTaskName(query.getName());
+
         dto.setTarget(query.getTarget());
+
         dto.setThread(query.getThread());
+
         dto.setSpiderDeep(query.getSpiderDeep());
+
         dto.setSpiderMax(query.getSpiderMax());
+
         dto.setTimeMax(query.getTimeMax());
 
         TaskDTO saveobj = taskRepository.save(dto);
+
         if (saveobj==null)
             return ResultCode.ERROR;
 
-        return ResultCode.getInstance(200,"成功",key);
+        return ResultCode.getInstance(200,"任务创建成功",key);
+    }
+
+    /**
+     * 启动任务
+     */
+    public void processTask(String taskKey){
+
+        TaskDTO task = taskRepository.findTaskDTOByTaskMd5(taskKey);
+
+        String taskName = task.getTaskName();
+
+        String taskMd5 = task.getTaskMd5();
+
+        String userName = task.getUser();
+
+        Scheduler scheduler = quartzManager.getScheduler();
+
+        //默认只执行一次 不重复
+        SimpleScheduleBuilder builder = SimpleScheduleBuilder.
+                simpleSchedule();
+
+        //构建Job
+        JobDetail jobDetail = JobBuilder.
+                newJob(ScannerJob.class).
+                withIdentity(taskMd5,userName).
+                build();
+
+        jobDetail.getJobDataMap().put("taskKey" , taskMd5);
+
+        //构建触发器
+        Trigger trigger = TriggerBuilder.newTrigger().
+                withIdentity(taskMd5,userName).
+                withSchedule(builder).
+                startNow().
+                build();
+
+        //TODO 根据任务对象的最大任务时间计算出任务的结束日期
+
+        try {
+            // 交由Scheduler安排触发
+            scheduler.scheduleJob(jobDetail,trigger);
+
+            //如果没有关闭就去启动任务
+            if (!scheduler.isShutdown()) {
+                scheduler.start();
+                SysLog.debug("任务已交给quartz处理");
+            }
+
+        } catch (SchedulerException e) {
+            SysLog.error("任务创建失败"+e);
+        }
+
+
+
+    }
+
+    @Override
+    public boolean taskDelete(String task) {
+        try {
+            TaskDTO t = taskRepository.findTaskDTOByTaskMd5(task);
+            taskRepository.delete(t);
+            return true;
+        }catch (Exception e){
+            return false;
+        }
     }
 
     @Override
@@ -216,10 +299,10 @@ public class TaskServiceImpl implements TaskService {
 
                                 SysLog.info("深度任务已初始化完成，即将开始深度扫描");
 
-                                Map<String, Object> temp = task.getResult().getItems().get(target).getTemp();
+                                /*Map<String, Object> temp = task.getResult().getItems().get(target).getTemp();
                                 temp.put("target_id",targetId);
                                 temp.put("scan_id",scanId);
-                                temp.put("session_id",scanSessionId);
+                                temp.put("session_id",scanSessionId);*/
 
                                 break out;//结束外层循环
                             }
@@ -333,30 +416,14 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public boolean taskDestroy(String task) {
-        if (coreThreadPool.containsKey(task)){
-            Map<String, Object> obj = coreThreadPool.get(task);
-            ThreadPoolExecutor pool = (ThreadPoolExecutor) obj.get("thread_pool");
-            pool.shutdownNow();
-            SysLog.info("Task="+task+" 已结束剩余任务");
-
-            /*
-                同时结束awvs扫描任务
-             */
-            Task t = (Task) obj.get("task");
-            for (ResultItem resultItem : t.getResult().getItems().values()) {
-                String scan_id = resultItem.getTemp().get("scan_id").toString();
-                if (scan_id!=null && !scan_id.isEmpty()){
-                    awvs.stopScan(scan_id);
-                }
-            }
-
-
-            //this.saveData((Task)obj.get("task") , 2);
-            //coreThreadPool.remove(task);
-            return true;
+    public boolean taskDestroy(String task, HttpSession session) {
+        try {
+            String user = session.getAttribute("user").toString();
+            quartzManager.removeJob(task,user,task,user);
+        }catch (Exception e){
+            return false;
         }
-        return false;
+        return true;
     }
 
     public int saveData(Task task , int status) {
@@ -421,43 +488,7 @@ public class TaskServiceImpl implements TaskService {
         }
     }
 
-    @Override
-    public ResultCode putVuln(VulnQuery query) {
-        List<TaskDTO> tasks = selectTaskByMd5(query.getMd5());
-        if (tasks.isEmpty()){
-            return ResultCode.getInstance(500,"task不存在");
-        }
-        TaskDTO tk = tasks.get(0);
-        Integer status = tk.getStatus();
-        switch (status){
-            case 0:return ResultCode.getInstance(400,"扫描未开始");
-            case 1:break;
-            case 2:return ResultCode.getInstance(400,"扫描已结束");
-        }
-        VulnDTO vulnDTO = this.initVulnFromQuery(query);
-        VulnDTO saveobj = vulnRepository.save(vulnDTO);
-        if (saveobj!=null){
-            return ResultCode.SUCCESS;
-        }else {
-            return ResultCode.ERROR;
-        }
-    }
 
-    private VulnDTO initVulnFromQuery(VulnQuery query) {
-        VulnDTO vulnDTO = new VulnDTO();
-        vulnDTO.setVulnId(query.getVulnid());
-        vulnDTO.setAboutLink(query.getAboutLink());
-        vulnDTO.setLevel(query.getLevel());
-        vulnDTO.setVulnType(query.getVulnType());
-        vulnDTO.setMessage(query.getMessage());
-        vulnDTO.setTaskMd5(query.getMd5());
-        vulnDTO.setResponse(query.getResponse());
-        vulnDTO.setPayload(query.getPayload());
-        JSONObject request = JSONObject.fromObject(query);
-        String req = Base64Utils.encodeToString(request.toString().getBytes());
-        vulnDTO.setRequest(req);
-        return vulnDTO;
-    }
 
     private Task initTaskFromDTO(TaskDTO taskDTO) {
         Task task = new Task();
@@ -477,7 +508,6 @@ public class TaskServiceImpl implements TaskService {
         task.setMaxSpider(taskDTO.getSpiderMax());
         task.setSpiderDeep(taskDTO.getSpiderDeep());
         task.getTargets().add(taskDTO.getTarget());
-        task.getResult().getItems().put(taskDTO.getTarget(),new ResultItem());
         return task;
     }
 
