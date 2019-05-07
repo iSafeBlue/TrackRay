@@ -20,6 +20,9 @@ public class Constant {
     public static final String WINDOWS = "WINDOWS";
     public static final String LINUX = "LINUX";
 
+    public static String SYSTEM_ACCOUNT = "";
+    public static String SYSTEM_PASSWORD = "";
+
     /* Task任务目标类型 */
     public static final int URL_TYPE = 1;
     public static final int IP_TYPE = 2;
