@@ -11,6 +11,7 @@ import com.trackray.base.httpclient.Fetcher;
 import org.javaweb.core.net.HttpURLRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
@@ -61,7 +62,7 @@ public abstract class AbstractPlugin<E> implements Callable<AbstractPlugin<E>> {
         }
     }
 
-    protected final static String BASE = Constant.RESOURCES_PATH;   // resource外部资源文件的绝对路径
+    protected final static String BASE = Constant.RESOURCES_INCLUDE_PATH;   // resource外部资源文件的绝对路径
 
     protected E result;                     // 插件返回对象
 
@@ -72,11 +73,11 @@ public abstract class AbstractPlugin<E> implements Callable<AbstractPlugin<E>> {
 
     protected HttpURLRequest requests = new HttpURLRequest();    //请求类
 
-    public Map<String,Object> param;                            // 从前端传来的参数
+    public Map<String,Object> param = new HashMap<>();                            // 从前端传来的参数
     public String errorMsg = "未通过校验";                       // 错误响应信息
 
     @Autowired
-    private HackKit hackKit ; //工具包
+    private HackKit hackKit = new HackKit() ; //工具包
 
     public int step = 1;
 
@@ -84,7 +85,7 @@ public abstract class AbstractPlugin<E> implements Callable<AbstractPlugin<E>> {
 
     public void before(){}                                      // 执行插件主代码前执行
 
-    public Object after(Object... args){return null;}           // 执行插件主代码后执行
+    public void after(Object... args){}           // 执行插件主代码后执行
 
     public abstract E start();                                  // 插件代码实现方法
 
@@ -100,6 +101,12 @@ public abstract class AbstractPlugin<E> implements Callable<AbstractPlugin<E>> {
     public Map<String, Object> getParam() {
         return param;
     }
+
+    public AbstractPlugin<E> addParam(String key ,Object value){
+        this.param.put(key , value);
+        return this;
+    }
+
 
     public E result() {
         return result;
