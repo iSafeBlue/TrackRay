@@ -1,5 +1,6 @@
 package com.trackray.base.handle;
 
+import com.trackray.base.bean.Constant;
 import com.trackray.base.utils.IOUtils;
 
 import java.io.*;
@@ -22,9 +23,12 @@ public class Shell {
     private Process process;
     private boolean block = false;
     private String target = "";
+    private boolean enable = false;
     public Shell(){
     }
-
+    public Shell(boolean enable){
+        this.enable = enable;
+    }
     public Shell block(boolean b){
         this.block = b;
         return this;
@@ -41,7 +45,9 @@ public class Shell {
         base.add(target);
         if (c!=null&&c.length>0)
             base.addAll(Arrays.asList(c));
-        process = runtime.exec(base.toArray(new String[]{}));
+        String path = System.getenv().get("Path");
+        String[] bases = base.toArray(new String[]{});
+        process = runtime.exec(bases,new String[]{"Path="+path});
     }
 
     public void echo(String s){
@@ -123,7 +129,7 @@ public class Shell {
             String in = IOUtils.analysisStream(inputStream);
             String err = IOUtils.analysisStream(errorStream);
             str.append(in);
-            str.append(SystemInit.LINE);
+            str.append(Constant.LINE);
             str.append(err);
         } catch (IOException e) {
             e.printStackTrace();
