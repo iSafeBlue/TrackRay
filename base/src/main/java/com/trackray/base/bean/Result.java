@@ -13,11 +13,17 @@ import java.util.Map;
 @Data
 public class Result {
 
-    private IPInfo ipInfo = new IPInfo();//IP和域名的一些基本信息
-    private Assets assets = new Assets();//目标的所有资产
-    private SenseInfo senseInfo = new SenseInfo();//敏感信息
+    private HostInfo hostInfo = new HostInfo();   //主机基本信息
+
+    private Assets assets = new Assets();       //目标的所有资产
+
+    private SenseInfo senseInfo = new SenseInfo();  //敏感信息
+
+    private SystemInfo systemInfo = new SystemInfo();   //操作系统和运行环境的基本信息
 
     private Map<String,ResultItem> items = new HashMap<>();
+
+    private Map<String,String> additional = new HashMap<>();    //附加信息
 
 
 }

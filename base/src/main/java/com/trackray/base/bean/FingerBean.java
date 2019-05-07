@@ -1,5 +1,7 @@
 package com.trackray.base.bean;
 
+import lombok.Builder;
+import lombok.Data;
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -7,8 +9,9 @@ import org.apache.commons.lang.StringUtils;
  * @email blue@ixsec.org
  * @since 2019/1/8 12:28
  */
+@Data
+@Builder(toBuilder = true)
 public class FingerBean {
-
     private String version;
     private String match;
     private String url;
