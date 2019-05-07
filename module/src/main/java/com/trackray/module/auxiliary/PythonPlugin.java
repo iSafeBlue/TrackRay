@@ -27,7 +27,7 @@ import java.util.jar.JarFile;
  * @since 2019/3/1 17:44
  */
 //@Rule(sync = true,websocket = true)
-//@Plugin(value="python" , title = "python 插件集",author = "blue")
+//@Plugin(value="python" , title = "python 插件集",author = "浅蓝")
 public class PythonPlugin extends WebSocketPlugin {
     private static final String PATH = BASE+"\\python\\";
 

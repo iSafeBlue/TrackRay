@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Plugin(value = "netcat", title = "NetCat 简易版" , author = "blue")
+@Plugin(value = "netcat", title = "NetCat 简易版" , author = "浅蓝")
 @Rule(params = {@Param(key = "port",defaultValue = "10010" , desc = "监听的端口，尽量避免小于10000的端口"),},
         sync = true,  websocket = true )
 public class NetCat extends WebSocketPlugin {

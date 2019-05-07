@@ -2,34 +2,32 @@ package com.trackray.module.crawler;
 
 import com.trackray.base.annotation.Plugin;
 import com.trackray.base.attack.Payload;
-import com.trackray.base.attack.SQLMap;
 import com.trackray.base.bean.Constant;
 import com.trackray.base.bean.Vulnerable;
-import com.trackray.base.enums.HttpMethod;
-import com.trackray.base.enums.VulnLevel;
-import com.trackray.base.enums.VulnType;
 import com.trackray.base.plugin.CrawlerPlugin;
 import com.trackray.base.utils.PageUtils;
 import com.trackray.base.utils.SysLog;
+import org.apache.commons.lang3.StringUtils;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 import java.util.Set;
 
-@Plugin(title = "基于爬虫的XSS & SQLI检测插件" , author = "blue")
-public class SQLinjectAndXss extends CrawlerPlugin {
+@Plugin(title = "基于爬虫的 XSS 检测插件" , author = "浅蓝")
+public class XssByCrawler extends CrawlerPlugin {
     @Override
     public boolean check() {
-        if (crawlerPage.getRequest().getUrl().matches(".*\\?.*=.*"))
+        if (target.toString().matches(".*\\?.*=.*"))
         {
-            String url = crawlerPage.getRequest().getUrl();
-            URL u = PageUtils.getURL(url);
+            /*URL u = PageUtils.getURL(url);
             String urlstring = this.urltoString(u);
             for (String s : crawler.hasVul) {
                 if (s.contains(urlstring)){
                     return false;
                 }
-            }
+            }*/
+
 
             return true;
         }
@@ -38,28 +36,21 @@ public class SQLinjectAndXss extends CrawlerPlugin {
 
     @Override
     public void process() {
-        String url = crawlerPage.getRequest().getUrl();
-        URL u = PageUtils.getURL(url);
+        String url = target.toString();
+        URL u = target;
         String urlstring = this.urltoString(u);
 
-        /*if (hasVul.contains(urlstring)){
-            return;
-        }*/
-        crawler.hasVul.add(url);
-
-        SQLMap sqlMap = new SQLMap(url);//sql注入检测
-        if (sqlMap.start()){
-            log("start sql injection scan sqlmap taskid="+sqlMap.getTaskid());
-            crawler.sqlmaps.add(sqlMap);
-        }
-
         if (url.matches(Constant.Vuln.FILE_READ_VULN_REGEX)){
-            Vulnerable build = Vulnerable.builder().vulName(VulnType.FILE_OPERATION.getName())
-                    .affectsUrl(url).description("该链接可能会存在文件读取/包含等漏洞")
-                    .level(VulnLevel.DANGER.getLevel()).vulType(VulnType.FILE_OPERATION.getType())
+            Vulnerable build = Vulnerable.builder()
+                    .title(Vulnerable.Type.FILE_OPERATION.getName())
+                    .address(url)
+                    .detail("该链接可能会存在文件读取/包含等漏洞")
+                    .level(Vulnerable.Level.HIGH.getLevel())
+                    .type(Vulnerable.Type.FILE_OPERATION.getType())
                     .build();
-            addVul(build);
+            addVulnerable(build);
         }
+
         Map<String, String> param = PageUtils.getParam(u);
         Set<String> keys = param.keySet();
         Object[] karr = keys.toArray();
@@ -81,23 +72,24 @@ public class SQLinjectAndXss extends CrawlerPlugin {
                 }
 
                 path.delete(path.lastIndexOf("&"),path.length());
-                crawlerPage.getRequest().setUrl(path.toString());
-                crawlerPage.getRequest().setHttpMethod(HttpMethod.GET);
+                String content = "";
                 try {
-                    fetcher.run(crawlerPage);
-                }catch (Exception e){
-                    log("ERROR "+url);
-                    continue;
+                    requests.url(path.toString());
+                    content = requests.get().body();
+                } catch (MalformedURLException e) {
+
                 }
-                String content = PageUtils.getContent(crawlerPage);
-                if (content.contains(payload)){
+
+                if (StringUtils.contains(content,payload)){
                     //存在漏洞
                     log("xss vulnerable "+path.toString());
-                    Vulnerable build = Vulnerable.builder().affectsDetail("通过爬虫检测出来该链接存在XSS漏洞 param=" + key)
-                            .affectsUrl(path.toString())
-                            .vulType(VulnType.XSS.getType())
-                            .level(VulnLevel.DANGER.getLevel()).build();
-                    addVul(build);
+                    Vulnerable build = Vulnerable.builder()
+                            .detail("通过爬虫检测出来该链接存在XSS漏洞 param=" + key)
+                            .address(path.toString())
+                            .type(Vulnerable.Type.XSS.getType())
+                            .title("反射型XSS漏洞")
+                            .level(Vulnerable.Level.HIGH.getLevel()).build();
+                    addVulnerable(build);
                     return;
 
                 }

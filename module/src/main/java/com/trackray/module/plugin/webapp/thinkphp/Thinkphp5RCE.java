@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@Plugin(title = "Thinkphp <= 5.1 远程代码执行漏洞" ,link = "https://www.t00ls.net/thread-48931-1-1.html", author = "blue")
+@Plugin(title = "Thinkphp <= 5.1 远程代码执行漏洞" ,link = "https://www.t00ls.net/thread-48931-1-1.html", author = "浅蓝")
 @Rule(params = {
                 @Param(key = "target", desc = "目标地址"),
                 @Param(key = "func",defaultValue = "phpinfo" , desc = "执行函数"),
@@ -66,12 +66,11 @@ public class Thinkphp5RCE extends CommonPlugin<String>{
     }
 
     @Override
-    public Object after(Object... args) {
+    public void after(Object... args) {
         if (result!=null){
             System.out.print("[+]");
             System.out.println(target);
         }
-        return super.after(args);
     }
 
 }

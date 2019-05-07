@@ -14,7 +14,7 @@ import java.util.Map;
 @Plugin(value = "wordpress001",
         title = "CVE-2017-8295: WordPress 2.3-4.8.3 任意密码重置/HOST头注入漏洞利用",
         desc = "需要提供目标，和邮箱域名以及需要重置的用户名，利用前提是要让管理员邮箱服务器拒绝服务",
-        author = "blue", link = "http://www.freebuf.com/vuls/133816.html")
+        author = "浅蓝", link = "http://www.freebuf.com/vuls/133816.html")
 @Rule(params = {
         @Param(key = "target", desc = "目标"),
         @Param(key = "host", desc = "HOST头"),

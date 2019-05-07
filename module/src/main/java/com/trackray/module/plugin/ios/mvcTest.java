@@ -13,7 +13,7 @@ import com.trackray.base.plugin.MVCPlugin;
 @Rule
 @Plugin(value = "mvcTest",
         title = "mvc类插件测试",
-        author = "blue")
+        author = "浅蓝")
 public class mvcTest extends MVCPlugin{
 
     @Function("test.html")

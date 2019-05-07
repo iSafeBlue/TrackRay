@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit;
  * @email blue@ixsec.org
  * @since 2019/1/13 15:36
  */
-@Plugin(title = "暴力破解密码模块",author = "blue"  )
+@Plugin(title = "暴力破解密码模块",author = "浅蓝"  )
 @Rule(params = {@Param(key = "thread",defaultValue = "5" , desc = "线程数")} , websocket = true , sync = true)
 public class CrackPassword extends WebSocketPlugin {
 

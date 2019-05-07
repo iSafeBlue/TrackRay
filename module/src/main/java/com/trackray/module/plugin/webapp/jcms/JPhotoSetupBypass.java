@@ -10,7 +10,7 @@ import com.trackray.base.plugin.CommonPlugin;
 import java.util.Map;
 
 @Rule(params = {@Param(key = "target", desc = "目标地址"),} , type = AbstractPlugin.Type.HTML)
-@Plugin(title = "大汉jbook、jget、jvideo、source、jphoto越权修改" , link = "http://www.anquan.us/static/bugs/wooyun-2014-052747.html", author = "blue" )
+@Plugin(title = "大汉jbook、jget、jvideo、source、jphoto越权修改" , link = "http://www.anquan.us/static/bugs/wooyun-2014-052747.html", author = "浅蓝" )
 public class JPhotoSetupBypass extends CommonPlugin{
 
     String str = "<html>\n" +

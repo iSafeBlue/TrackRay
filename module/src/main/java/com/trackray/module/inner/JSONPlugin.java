@@ -1,4 +1,4 @@
-package com.trackray.module.auxiliary;
+package com.trackray.module.inner;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.trackray.base.annotation.Function;
@@ -9,7 +9,6 @@ import com.trackray.base.plugin.MVCPlugin;
 import com.trackray.base.utils.CheckUtils;
 import org.apache.commons.io.FileUtils;
 
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,7 +26,6 @@ import org.javaweb.core.net.HttpResponse;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 /**
  * @author 浅蓝
@@ -35,10 +33,10 @@ import java.util.List;
  * @since 2019/4/4 17:51
  */
 @Rule
-@Plugin(value = "json", title = "kunpeng JSON格式类插件调用" ,author = "浅蓝")
+@Plugin(value = "json", title = "kunpeng插件调用" ,author = "浅蓝")
 public class JSONPlugin extends MVCPlugin{
 
-    private static String jsonPath = Constant.RESOURCES_PATH.concat("json/");
+    public static String jsonPath = Constant.RESOURCES_PATH.concat("json/");
 
     @Override
     public void index() {
@@ -86,7 +84,7 @@ public class JSONPlugin extends MVCPlugin{
 
     }
 
-    private boolean execute(String url , JSONVul jsonVul) {
+    public boolean execute(String url , JSONVul jsonVul) {
         try {
             Request request = jsonVul.getRequest();
 
@@ -116,7 +114,7 @@ public class JSONPlugin extends MVCPlugin{
         }
         return false;
     }
-    private HashMap<String, String> fuckJsonList(){
+    public HashMap<String, String> fuckJsonList(){
         HashMap<String, String> map = new HashMap<>();
         File file = new File(jsonPath);
         if (file.isDirectory()){
@@ -152,7 +150,7 @@ public class JSONPlugin extends MVCPlugin{
         "request",
         "verify"
 })
- class JSONVul {
+class JSONVul {
 
     @JsonProperty("target")
     private String target;
@@ -289,7 +287,7 @@ public class JSONPlugin extends MVCPlugin{
         "author",
         "references"
 })
- class Meta {
+class Meta {
 
     @JsonProperty("name")
     private String name;
@@ -466,7 +464,7 @@ public class JSONPlugin extends MVCPlugin{
         "cve",
         "kpid"
 })
- class References {
+class References {
 
     @JsonProperty("url")
     private String url;
@@ -577,7 +575,7 @@ public class JSONPlugin extends MVCPlugin{
         "path",
         "postData"
 })
- class Request {
+class Request {
 
     @JsonProperty("path")
     private String path;
@@ -665,7 +663,7 @@ public class JSONPlugin extends MVCPlugin{
         "type",
         "match"
 })
- class Verify {
+class Verify {
 
     @JsonProperty("type")
     private String type;

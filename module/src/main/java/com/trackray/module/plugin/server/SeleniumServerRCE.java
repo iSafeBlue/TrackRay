@@ -11,7 +11,7 @@ import java.util.Map;
 
 
 @Rule(websocket = true, params = {@Param(key = "target", desc = "目标地址")})
-//@Plugin(title = "Selenium Server 远程命令执行" , author = "blue" )
+//@Plugin(title = "Selenium Server 远程命令执行" , author = "浅蓝" )
 public class SeleniumServerRCE extends WebSocketPlugin{
 
 

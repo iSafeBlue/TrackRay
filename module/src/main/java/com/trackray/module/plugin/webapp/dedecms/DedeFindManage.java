@@ -15,7 +15,7 @@ import java.util.Map;
 
 @Rule(params = {@Param(key = "target", desc = "猜解的目标"),},
        websocket = true )
-@Plugin(title = "dedecms windows下后台暴力猜解" , author = "blue")
+@Plugin(title = "dedecms windows下后台暴力猜解" , author = "浅蓝")
 public class DedeFindManage extends WebSocketPlugin {
     private String characters = "abcdefghijklmnopqrstuvwxyz0123456789_!#";
     private String url;

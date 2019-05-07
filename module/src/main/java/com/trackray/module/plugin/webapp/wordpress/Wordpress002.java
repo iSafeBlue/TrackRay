@@ -15,7 +15,7 @@ import java.util.concurrent.Executors;
 
 @Plugin(value = "wordpress002",
         title = "CVE-2018-6389: WordPress <= 4.9.x 拒绝服务(DOS)漏洞",
-        author = "blue", link = "http://www.freebuf.com/vuls/133816.html",
+        author = "浅蓝", link = "http://www.freebuf.com/vuls/133816.html",
         desc = "target是目标，count是攻击次数")
 @Rule(  params = {
                 @Param(key = "target",desc = "目标"),

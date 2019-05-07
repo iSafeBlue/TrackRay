@@ -8,8 +8,10 @@ import com.trackray.base.enums.HttpMethod;
 import com.trackray.base.httpclient.CrawlerPage;
 import com.trackray.base.plugin.WebSocketPlugin;
 import com.trackray.base.utils.DomainUtils;
+import com.trackray.base.utils.ExtractUtils;
 import com.trackray.base.utils.ReUtils;
 import com.trackray.base.utils.RegexUtil;
+import com.trackray.module.inner.Nmap;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.nodes.Document;
@@ -20,13 +22,14 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Plugin(title = "资产扫描" , author = "blue")
-@Rule(params = {
+@Plugin(title = "资产扫描" , author = "浅蓝")
+@Rule(enable = false , params = {
                 @Param(key = "domain",defaultValue = "baidu.com" , desc = "目标域名"),
                 @Param(key = "port",defaultValue = "true" , desc = "是否扫描端口"),
                 @Param(key = "thread",defaultValue = "3" , desc = "线程数"),}
                 , websocket = true)
 public class AssetsScan extends WebSocketPlugin{
+
     private String domain;
     private boolean isScanPort;
     private List<Asset> assets  = new ArrayList<>();
@@ -47,17 +50,11 @@ public class AssetsScan extends WebSocketPlugin{
         return true;
     }
 
-    public static void main(String[] args) {
-        AssetsScan assetsScan = new AssetsScan();
-        assetsScan.setParam(new HashMap<String,String>(){{put("domain","www.zzfda.gov.cn");put("port","true");put("thread","5");}});
-        Payload.domainPayload.add("www");
-        assetsScan.executor().executor();
 
-    }
 
     @Override
     public Object start() {
-        String root = ReUtils.getDomain(domain);
+        String root = ExtractUtils.extract(domain , ExtractUtils.DOMAIN);
         send("扫描初始化中，你的目标是："+root);
         for (String prefix : Payload.domainPayload) {
             if (StringUtils.isNotBlank(prefix)) {

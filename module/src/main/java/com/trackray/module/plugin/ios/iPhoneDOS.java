@@ -9,7 +9,7 @@ import java.util.Map;
 
 @Plugin(value = "iphoneDOS",
         title = "iPhone <= IOS11.4.1 拒绝服务漏洞",
-        author = "blue")
+        author = "浅蓝")
 @Rule(type = AbstractPlugin.Type.HTML )
 public class iPhoneDOS extends CommonPlugin<String> {
     @Override

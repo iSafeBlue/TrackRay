@@ -16,7 +16,7 @@ import java.util.Map;
 
 @Plugin(value = "phpmyadmin001",
         title = "phpMyAdmin 4.8.x 本地文件包含漏洞",
-        author = "blue",
+        author = "浅蓝",
         desc = "需要目标是 Linux 环境。target是目标地址，username和password是mysql用户名密码，code是需要执行的代码，默认是PHPinfo",
         link = "http://www.vulnspy.com/cn-phpmyadmin-4.8.1-lfi-to-rce/phpmyadmin_4.8.x_%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8/")
 @Rule(params = {

@@ -23,7 +23,7 @@ import java.util.Map;
         })
 @Plugin(title = "Thinkphp 5.1-5.2 远程代码执行" ,
         desc = "" ,
-        author = "blue" ,
+        author = "浅蓝" ,
         link = {"https://www.secpulse.com/archives/95248.html",
                 "http://115.198.56.141:19300/wordpress/index.php/2019/01/15/thinkphp5-1-5-2-rec/"})
 public class Thinkphp51and52RCE extends CommonPlugin<String> {

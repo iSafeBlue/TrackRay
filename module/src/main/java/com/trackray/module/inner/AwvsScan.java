@@ -1,17 +1,17 @@
-package com.trackray.module.auxiliary;
+package com.trackray.module.inner;
 
 import com.trackray.base.annotation.Plugin;
 import com.trackray.base.annotation.Rule;
 import com.trackray.base.attack.Awvs;
-import com.trackray.base.bean.Task;
 import com.trackray.base.bean.Vulnerable;
-import com.trackray.base.plugin.AbstractPlugin;
+import com.trackray.base.plugin.InnerPlugin;
 import com.trackray.base.utils.SysLog;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -23,13 +23,15 @@ import java.util.concurrent.LinkedBlockingQueue;
  * @since 2019/1/25 15:14
  */
 @Rule(enable = false)
-@Plugin(value="awvsScan",title = "awvs扫描插件" , author = "blue" )
-public class AwvsScan extends AbstractPlugin {
+@Plugin(value="awvsScan",title = "awvs扫描插件" , author = "浅蓝" )
+public class AwvsScan extends InnerPlugin {
+
+
     private String target;
-    private Task task;
     private String targetid;
     private String sessionid;
     private String scanId;
+
 
     private List<Awvs.Vulnerabilities> vulnQueue = new ArrayList<>();
 
@@ -38,11 +40,9 @@ public class AwvsScan extends AbstractPlugin {
 
     @Override
     public boolean check(Map param) {
-
         try {
-            target = param.get("target").toString();
-            task = (Task)param.get("task");
-            Map<String, Object> temp = task.getResult().getItems().get(target).getTemp();
+            target = task.getTargetStr();
+            Map<String, Object> temp = (Map<String, Object>) param.get("map");
             if (temp.containsKey("target_id") && awvs.ok){
                 targetid = temp.get("target_id").toString();
                 sessionid = temp.get("session_id").toString();
@@ -53,23 +53,6 @@ public class AwvsScan extends AbstractPlugin {
             return false;
         }
         return false;
-
-    }
-
-    @Override
-    public Object start() {
-        while (true) {
-            if (this.monitor())
-                break;
-
-            try {
-                Thread.sleep(60000);
-            } catch (InterruptedException e) {
-                break;
-            }
-
-        }
-        return null;
     }
 
     private boolean monitor() {
@@ -85,17 +68,19 @@ public class AwvsScan extends AbstractPlugin {
                         vulnQueue.add(vuln);
 
                         Awvs.Vulndetail vulndetail = awvs.vuln(scanId, sessionid, vuln.getVulnId());
+
                         vuln.setVuln(vulndetail);
 
-                        Vulnerable vulnerable = Vulnerable.builder().affectsUrl(vulndetail.getAffectsUrl())
+                        Vulnerable vulnerable = Vulnerable.builder()
+                                .address(vulndetail.getAffectsUrl())
                                 .level(vulndetail.getSeverity())
-                                .vulName(vulndetail.getVtName())
-                                .affectsDetail(vulndetail.getAffectsDetail())
-                                .request(vulndetail.getRequest())
+                                .title(vulndetail.getVtName())
+                                .detail(vulndetail.getAffectsDetail())
+                                .payload(vulndetail.getRequest())
                                 .build();
 
-                        task.getResult().getItems().get(target).getVulns().add(vulnerable);
-
+                        //task.getResult().getItems().get(target).getVulns().add(vulnerable);
+                        addVulnerable(vulnerable);
 
                     }
 
@@ -114,5 +99,22 @@ public class AwvsScan extends AbstractPlugin {
         }
 
         return false;
+    }
+
+    @Override
+    public void process() {
+
+        while (true) {
+            if (this.monitor())
+                break;
+
+            try {
+                Thread.sleep(30000);
+            } catch (InterruptedException e) {
+                break;
+            }
+
+        }
+
     }
 }

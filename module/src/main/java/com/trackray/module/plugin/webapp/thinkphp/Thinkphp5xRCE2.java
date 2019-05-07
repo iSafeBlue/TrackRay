@@ -23,7 +23,7 @@ import java.util.Map;
         })
 @Plugin(title = "Thinkphp 5.0.23-RCE" ,
         desc = "(2019-01-12) code 不写默认执行phpinfo" ,
-        author = "blue" ,
+        author = "浅蓝" ,
         link = {"https://github.com/vulhub/vulhub/tree/master/thinkphp/5.0.23-rce",
                 "https://mp.weixin.qq.com/s?__biz=MzU2NDc2NDYwMA==&mid=2247483692&idx=1&sn=af58e424cb1df6d13d73e73e66d175d0&chksm=fc474bfbcb30c2ede9defa57dfb6d0237f19811e7863c822a1fe6e30ee5e26a51729228cbd1d",
                 "https://github.com/top-think/framework/commit/4a4b5e64fa4c46f851b4004005bff5f3196de003",

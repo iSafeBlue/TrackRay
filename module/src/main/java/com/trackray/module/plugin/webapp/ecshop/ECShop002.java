@@ -13,7 +13,7 @@ import java.util.Map;
 
 @Plugin(value = "ecshop002",
         title = "ECShop <= 2.x/3.6.x/3.0.x 版本远程代码执行高危漏洞利用",
-        author = "blue",
+        author = "浅蓝",
         desc = "url=http://xx.com/&code=phpinfo();exit;&isShell=false",
         link = "http://dwz.cn/XZN5HMBN")
 @Rule(params = {
