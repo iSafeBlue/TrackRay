@@ -79,32 +79,32 @@ public class PageUtils {
                         {
                             for (String k : webServer.getKeywords()) {
                                 if (server.contains(k.toLowerCase())){
-                                    task.getResult().getItems().get(target).getSystemInfo().setWebServer(webServer);
+                                    task.getResult().getSystemInfo().setWebServer(webServer);
                                 }
                             }
 
                         }
                     }
-                    if (task.getResult().getItems().get(target).getSystemInfo().getWebServer() == null){
-                        task.getResult().getItems().get(target).getSystemInfo().setWebServer(WEBServer.OTHER);
+                    if (task.getResult().getSystemInfo().getWebServer() == null){
+                        task.getResult().getSystemInfo().setWebServer(WEBServer.OTHER);
                     }
                 }
                 if (header.getName().contains("X-Powered-By")) {
                     String script = header.getValue().toLowerCase();
                     for (Language l : Language.values()) {
                         if (script.contains(l.name().toLowerCase()))
-                            task.getResult().getItems().get(target).getSystemInfo().setLanguage(l);
+                            task.getResult().getSystemInfo().setLanguage(l);
                     }
 
                 }
                 if (header.getValue().contains("PHPSESSID") || header.getValue().contains(".php")) {
-                    task.getResult().getItems().get(target).getSystemInfo().setLanguage(Language.PHP);
+                    task.getResult().getSystemInfo().setLanguage(Language.PHP);
                 }
                 if (header.getValue().contains("JSESSIONID") || header.getValue().contains(".jsp")) {
-                    task.getResult().getItems().get(target).getSystemInfo().setLanguage(Language.JAVA);
+                    task.getResult().getSystemInfo().setLanguage(Language.JAVA);
                 }
                 if (header.getValue().contains("ASP.NET") || header.getValue().contains(".asp")) {
-                    task.getResult().getItems().get(target).getSystemInfo().setLanguage(Language.NET);
+                    task.getResult().getSystemInfo().setLanguage(Language.NET);
                 }
             }
 
@@ -113,18 +113,18 @@ public class PageUtils {
 
     public static void fingerLang(String str ,String target , Task task){
         if (str.contains(".php")){
-            task.getResult().getItems().get(target).getSystemInfo().setLanguage(Language.PHP);
+            task.getResult().getSystemInfo().setLanguage(Language.PHP);
             SysLog.info("已识别到脚本语言为PHP");
         }else
         if (str.contains(".jsp") || str.contains(".action") || str.contains(".do")){
-            task.getResult().getItems().get(target).getSystemInfo().setLanguage(Language.JAVA);
+            task.getResult().getSystemInfo().setLanguage(Language.JAVA);
             SysLog.info("已识别到脚本语言为JAVA");
         }else
         if (str.contains(".asp")){
-            task.getResult().getItems().get(target).getSystemInfo().setLanguage(Language.NET);
+            task.getResult().getSystemInfo().setLanguage(Language.NET);
             SysLog.info("已识别到脚本语言为.NET");
         }else{
-            task.getResult().getItems().get(target).getSystemInfo().setLanguage(Language.OTHER);
+            task.getResult().getSystemInfo().setLanguage(Language.OTHER);
             SysLog.info("未识别出脚本语言");
         }
 

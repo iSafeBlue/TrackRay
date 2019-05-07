@@ -6,9 +6,7 @@ import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -18,9 +16,18 @@ public class RegexUtil {
     public static String extractStr(String source, String regex) {
         return extractStr(source, regex, true);
     }
-
+    public static List<String> getMatchers(String regex, String source){
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(source);
+        List<String> list = new ArrayList<>();
+        while (matcher.find()) {
+            list.add(matcher.group(1));
+        }
+        return list;
+    }
     public static String extractStr(String source, String regex, boolean isEscapeHtmlTag) {
         if (source == null || regex == null) {
+
             return null;
         } else {
             Matcher matcher = RegExpUtil.getMatcher(source, regex);

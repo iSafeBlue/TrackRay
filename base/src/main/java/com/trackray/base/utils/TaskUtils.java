@@ -4,7 +4,11 @@ import java.util.Date;
 
 public class TaskUtils {
 
-
+    /**
+     * 生成任务ID
+     * @param target
+     * @return
+     */
     public static String genTaskKey(String target){
         return MD5.getMD5Code(new Date().getTime()+target);
     }

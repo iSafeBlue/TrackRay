@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
  * */
 public class ReUtils {
 
-	private static String TARGET ; //目标字符串
+	private transient static String TARGET ; //目标字符串
 	private static String REG ;	//规则
 	private static Pattern PAT ;
 	private static Matcher MAT ;
@@ -126,6 +126,7 @@ public class ReUtils {
 	 * */
 	public static String getTel(String target){
 		TARGET = target;
+
 		REG = "(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\\d{8}";
 		return publicGet();
 	}

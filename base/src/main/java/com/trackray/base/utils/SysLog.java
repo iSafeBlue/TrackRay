@@ -8,6 +8,7 @@ import java.io.StringWriter;
 
 
 public class SysLog {
+
     private static final Logger log = LoggerFactory.getLogger(SysLog.class);
 
     /**
@@ -59,6 +60,34 @@ public class SysLog {
                 log.info(location + str);
             } else {
                 log.info(location + obj.toString());
+            }
+        }catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 打印debug
+     *
+     * @param obj
+     */
+    public static void debug(Object obj) {
+        try{
+            /*** 获取输出信息的代码的位置 ***/
+            String location = "";
+            StackTraceElement[] stacks = Thread.currentThread().getStackTrace();
+            location = stacks[2].getClassName() + "." + stacks[2].getMethodName()
+                    + "(" + stacks[2].getLineNumber() + ")";
+            /*** 是否是异常  ***/
+            if (obj instanceof Exception) {
+                Exception e = (Exception) obj;
+                StringWriter sw = new StringWriter();
+                e.printStackTrace(new PrintWriter(sw, true));
+                String str = sw.toString();
+                log.debug(location + str);
+            } else {
+                log.debug(location + obj.toString());
             }
         }catch (Exception e) {
             // TODO: handle exception

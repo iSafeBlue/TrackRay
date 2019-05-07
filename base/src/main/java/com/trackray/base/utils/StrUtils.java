@@ -1,6 +1,5 @@
 package com.trackray.base.utils;
 
-import com.trackray.base.bean.IPInfo;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -15,36 +14,6 @@ import java.util.regex.Pattern;
  * @author fre1Ray
  * */
 public class StrUtils {
-
-	/**
-	 * 解析DNS字符串的专用方法
-	 * */
-	public static IPInfo getDNSDomain(String execShell){
-		String[] split = execShell.split("\n");
-		IPInfo ipInfo = new IPInfo();
-		List<String> list = new ArrayList<String>();
-		if (execShell.contains("timed out")){
-			return ipInfo;
-		}
-		try {
-
-		ipInfo.setDomain(split[3].split("	")[0]);
-		}catch (Exception e){
-			return ipInfo;
-		}
-
-		for(int i = 3 ; i < split.length ; i ++){
-			if(!split[i].contains("	")){//非法
-				ipInfo.setDomain("Non-exist");
-				break;
-			}
-			String s1 = split[i].split("	")[1];
-			String s2 = s1.split(" = ")[1];
-			list.add(s2);
-		}
-		ipInfo.setDNSList(list);
-		return ipInfo;
-	}
 
 
 
