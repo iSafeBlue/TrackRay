@@ -6,10 +6,10 @@
         <!-- LOGO -->
         <a href="#" class="logo text-center">
                         <span class="logo-lg">
-                            <img src="assets/images/logo.png" alt="" height="16">
+                            <img src="/assets/images/logo.png" alt="" height="16">
                         </span>
             <span class="logo-sm">
-                            <img src="assets/images/logo_sm.png" alt="" height="16">
+                            <img src="/assets/images/logo_sm.png" alt="" height="16">
                         </span>
         </a>
 
@@ -22,42 +22,42 @@
             <li class="side-nav-item active">
                 <a href="javascript:void(0)" class="side-nav-link active" aria-expanded="true">
                     <i class="dripicons-meter"></i>
-                    <span> 漏洞扫描</span>
+                    <span> SCANNER</span>
                 </a>
                 <ul class="side-nav-second-level collapse in" aria-expanded="true" style="">
                     <li class="active">
-                        <a href="/manage/createTask" class="active">创建任务</a>
+                        <a href="/manage/create" class="active">NEW TASK</a>
                     </li>
                     <li>
-                        <a href="/manage/listTask">任务列表</a>
+                        <a href="/manage/tasks">TASKS</a>
                     </li>
                 </ul>
             </li>
             <li class="side-nav-item ">
                 <a href="/console" class="side-nav-link active" aria-expanded="false">
                     <i class="dripicons-browser"></i>
-                    <span> 控制台</span>
+                    <span> CONSOLE</span>
                 </a>
             </li>
 
             <li class="side-nav-item ">
                 <a href="/msf" class="side-nav-link active" aria-expanded="false">
                     <i class="dripicons-browser"></i>
-                    <span> MSF控制台</span>
+                    <span> MSF CONSOLE</span>
                 </a>
             </li>
 
             <li class="side-nav-item ">
                 <a href="/api" class="side-nav-link active" aria-expanded="false">
                     <i class="mdi mdi-xaml"></i>
-                    <span> 无交互插件</span>
+                    <span> API PLUGIN</span>
                 </a>
             </li>
 
             <li class="side-nav-item">
                 <a href="javascript: void(0);" class="side-nav-link" aria-expanded="false">
                     <i class="dripicons-view-apps"></i>
-                    <span> Apps </span>
+                    <span> APPS </span>
 
                     <span class="menu-arrow"></span>
                 </a>
@@ -69,7 +69,7 @@
                         <#list menu?keys as key>
                             <tr>
                                 <li>
-                                    <a href="/plugin/mvc/${key}/index">${menu[key]}</a>
+                                    <a href="/apps/${key}">${menu[key]}</a>
                                 </li>
                             </tr>
                         </#list>

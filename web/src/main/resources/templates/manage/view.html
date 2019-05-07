@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Dashboard - TrackRay</title>
+
+        <#include "header.html"/>
+    </head>
+    <body>
+
+        <!-- Begin page -->
+        <div class="wrapper">
+
+            <#include "menu.html"/>
+
+
+            <!-- ============================================================== -->
+            <!-- Start Page Content here -->
+            <!-- ============================================================== -->
+
+            <div class="content-page">
+                <div class="content">
+
+                    <!-- Topbar Start -->
+                    <#include "topbar.html"/>
+
+                    <!-- end Topbar -->
+                    
+                    <!-- Start Content-->
+                    <div class="container-fluid">
+
+                        <!-- start page title -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="page-title-box">
+                                    
+                                    <h4 class="page-title">Task</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end page title -->
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+
+
+                                        <div class="table-responsive">
+
+                                            <table class="table table-centered mb-0">
+                                                <thead class="thead-light">
+                                                <tr>
+
+                                                    <th>标题</th>
+                                                    <th>地址</th>
+                                                    <th>等级</th>
+                                                    <th>类型</th>
+                                                    <th>载荷</th>
+                                                    <th style="width: 125px;">操作</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <#list vulns as vul>
+
+                                                    <tr>
+
+                                                        <td>
+                                                            <a href="#" class="text-body font-weight-bold">
+                                                                <#if (vul.title)??>
+                                                                    ${vul.title}
+                                                                </#if></a>
+                                                        </td>
+                                                        <td>
+                                                            <#if (vul.address)??>
+                                                                ${vul.address}
+                                                            </#if>
+                                                        </td>
+                                                        <td>
+
+                                                            <#if vul.level == 0>
+                                                                <span class="badge badge-success-lighten">提示</span>
+                                                                <#elseif vul.level == 1>                                                                <span class="badge badge-secondary">Medium{t.level}</span>
+                                                                    <span class="badge badge-info-lighten">低危</span>
+                                                                    <#elseif vul.level == 2>
+                                                                        <span class="badge badge-warning-lighten">中危</span>
+                                                                        <#else>
+                                                                            <span class="badge badge-danger-lighten">高危</span>
+                                                            </#if>
+
+                                                        </td>
+                                                        <td>
+                                                            ${TemplateUtils.getVulnNameByType(vul.type)}
+                                                        </td>
+                                                        <td>
+                                                            <#if (vul.payload)??>
+                                                                ${vul.payload}
+                                                            </#if>
+                                                        </td>
+
+                                                        <td>
+                                                            <a href="javascript:void(0);" class="action-icon"> <i class="mdi mdi-eye"></i></a>
+
+                                                        </td>
+                                                    </tr>
+
+                                                </#list>
+
+
+                                                </tbody>
+                                            </table></div>
+                                    </div> <!-- end card-body-->
+                                </div> <!-- end card-->
+                            </div> <!-- end col -->
+                        </div>
+
+                    </div>
+                    <!-- container -->
+
+                </div>
+                <!-- content -->
+
+                <!-- Footer Start -->
+                <footer class="footer">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-6">
+                                2018 - 2019 © TrackRay
+                            </div>
+                           
+                        </div>
+                    </div>
+                </footer>
+                <!-- end Footer -->
+
+            </div>
+
+            <!-- ============================================================== -->
+            <!-- End Page content -->
+            <!-- ============================================================== -->
+
+
+        </div>
+        <!-- END wrapper -->
+
+        <#include "footer.html"/>
+
+
+</body>
+</html>

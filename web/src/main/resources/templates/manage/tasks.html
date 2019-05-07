@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Tasks - TrackRay</title>
+
+        <#include "header.html"/>
+
+        <script>
+            function stopTask(task){
+                $.post(
+                    "task/destroy",
+                    {task:t},
+                    function(data){
+                        if(data['code']==200){
+                            alert("成功");
+                        }else{
+                            alert("失败");
+                        }
+                        location.reload()
+
+                    },
+                    "json"
+                );
+
+            }
+            function startTask(task){
+                $.post(
+                    "/task/process",
+                    {task:task},
+                    function (text) {
+                        if (text.code==200){
+                            alert(md5+"正在扫描请等待");
+                        }else{
+                            alert(text.msg);
+                        }
+                        location.reload()
+
+                    },
+                    "json"
+                );
+            }
+            function delTask(task){
+                $.post(
+                    "/task/delete",
+                    {task:task},
+                    function (text) {
+                        if (text.code==200){
+                            alert("已删除");
+                        }else{
+                            alert(text.msg);
+                        }
+                        location.reload()
+
+                    },
+                    "json"
+                );
+            }
+
+        </script>
+    </head>
+    <body>
+
+        <!-- Begin page -->
+        <div class="wrapper">
+
+            <#include "menu.html"/>
+
+
+            <!-- ============================================================== -->
+            <!-- Start Page Content here -->
+            <!-- ============================================================== -->
+
+            <div class="content-page">
+                <div class="content">
+
+                    <!-- Topbar Start -->
+                    <#include "topbar.html"/>
+                    <!-- end Topbar -->
+                    
+                    <!-- Start Content-->
+                    <div class="container-fluid">
+
+                        <!-- start page title -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="page-title-box">
+
+                                    <h4 class="page-title">Tasks
+                                        <a href="/manage/create" class="btn btn-success btn-sm ml-3">Add New</a></h4>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end page title -->
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="board">
+                                    <div class="tasks" data-plugin="dragula" data-containers="[&quot;task-list-one&quot;, &quot;task-list-two&quot;, &quot;task-list-three&quot;, &quot;task-list-four&quot;]">
+                                        <h5 class="mt-0 task-header">TODO (${todo?size})</h5>
+
+                                        <div  class="task-list-items">
+
+                                            <#list todo as t>
+
+                                                <!-- Task Item -->
+                                                <div class="card mb-0">
+                                                    <div class="card-body p-3">
+                                                        <small class="float-right text-muted">${t.createTime}</small>
+                                                        <#if t.level == 0>
+                                                            <span class="badge badge-success">Low</span>
+                                                            <#elseif t.level == 1>                                                                <span class="badge badge-secondary">Medium{t.level}</span>
+                                                                <span class="badge badge-secondary">Medium</span>
+                                                                <#elseif t.level == 2>
+                                                                    <span class="badge badge-danger">High</span>
+                                                                    <#else>
+                                                                        <span class="badge badge-danger">High</span>
+                                                        </#if>
+
+                                                        <h5 class="mt-2 mb-2">
+                                                            <a href="/manage/task/${t.taskMd5}"  class="text-body">${t.taskName}</a>
+                                                        </h5>
+
+                                                        <p class="mb-0">
+
+                                                        </p>
+
+                                                        <div class="dropdown float-right">
+                                                            <a href="#" class="dropdown-toggle text-muted arrow-none" data-toggle="dropdown" aria-expanded="false">
+                                                                <i class="mdi mdi-dots-vertical font-18"></i>
+                                                            </a>
+                                                            <div class="dropdown-menu dropdown-menu-right">
+                                                                <!-- item-->
+                                                                <a href="javascript:delTask('${t.taskMd5}');" class="dropdown-item"><i class="mdi mdi-delete mr-1"></i>Delete</a>
+                                                                <a href="javascript:startTask('${t.taskMd5}');" class="dropdown-item"><i class="mdi mdi-exit-to-app mr-1"></i>Start</a>
+
+                                                            </div>
+                                                        </div>
+
+                                                        <p class="mb-0">
+                                                            <img src="/assets/images/users/avatar-1.jpg" alt="user-img" class="avatar-xs rounded-circle mr-1">
+                                                            <span class="align-middle">${t.user}</span>
+                                                        </p>
+                                                    </div> <!-- end card-body -->
+                                                </div>
+                                                <!-- Task Item End -->
+
+                                            </#list>
+
+                                        </div> <!-- end company-list-1-->
+                                    </div>
+
+                                    <div class="tasks">
+                                        <h5 class="mt-0 task-header text-uppercase">In Progress (${scanning?size})</h5>
+                                        <div class="task-list-items">
+
+                                            <#list scanning as t>
+
+                                                <!-- Task Item -->
+                                                <div class="card mb-0">
+                                                    <div class="card-body p-3">
+                                                        <small class="float-right text-muted">${t.createTime}</small>
+
+                                                        <#if t.level == 0>
+                                                            <span class="badge badge-success">Low</span>
+                                                            <#elseif t.level == 1>                                                                <span class="badge badge-secondary">Medium{t.level}</span>
+                                                                <span class="badge badge-secondary">Medium</span>
+                                                                <#elseif t.level == 2>
+                                                                    <span class="badge badge-danger">High</span>
+                                                                    <#else>
+                                                                        <span class="badge badge-danger">High</span>
+                                                        </#if>
+
+                                                        <h5 class="mt-2 mb-2">
+                                                            <a href="/manage/task/${t.taskMd5}"  class="text-body">${t.taskName}</a>
+                                                        </h5>
+
+                                                        <p class="mb-0">
+
+                                                        </p>
+
+                                                        <div class="dropdown float-right">
+                                                            <a href="#" class="dropdown-toggle text-muted arrow-none" data-toggle="dropdown" aria-expanded="false">
+                                                                <i class="mdi mdi-dots-vertical font-18"></i>
+                                                            </a>
+                                                            <div class="dropdown-menu dropdown-menu-right">
+                                                                <!-- item-->
+                                                                <a href="javascript:stopTask('${t.taskMd5}');" class="dropdown-item"><i class="mdi mdi-exit-to-app mr-1"></i>Stop</a>
+                                                            </div>
+                                                        </div>
+
+                                                        <p class="mb-0">
+                                                            <img src="/assets/images/users/avatar-1.jpg" alt="user-img" class="avatar-xs rounded-circle mr-1">
+                                                            <span class="align-middle">${t.user}</span>
+                                                        </p>
+                                                    </div> <!-- end card-body -->
+                                                </div>
+                                                <!-- Task Item End -->
+
+                                            </#list>
+
+                                        </div>
+                                    </div>
+
+
+
+
+                                    <div class="tasks">
+                                        <h5 class="mt-0 task-header text-uppercase">Done (${done?size})</h5>
+                                        <div class="task-list-items">
+
+                                            <#list done as t>
+
+                                                <!-- Task Item -->
+                                                <div class="card mb-0">
+                                                    <div class="card-body p-3">
+                                                        <small class="float-right text-muted">${t.createTime}</small>
+                                                        <#if t.level == 0>
+                                                            <span class="badge badge-success">Low</span>
+                                                            <#elseif t.level == 1>                                                                <span class="badge badge-secondary">Medium{t.level}</span>
+                                                                <span class="badge badge-secondary">Medium</span>
+                                                                <#elseif t.level == 2>
+                                                                    <span class="badge badge-danger">High</span>
+                                                                    <#else>
+                                                                        <span class="badge badge-danger">High</span>
+                                                        </#if>
+
+
+                                                        <h5 class="mt-2 mb-2">
+                                                            <a href="/manage/task/${t.taskMd5}"  class="text-body">${t.taskName}</a>
+                                                        </h5>
+
+                                                        <p class="mb-0">
+
+                                                        </p>
+
+                                                        <div class="dropdown float-right">
+                                                            <a href="#" class="dropdown-toggle text-muted arrow-none" data-toggle="dropdown" aria-expanded="false">
+                                                                <i class="mdi mdi-dots-vertical font-18"></i>
+                                                            </a>
+                                                            <div class="dropdown-menu dropdown-menu-right">
+                                                                <!-- item-->
+                                                                <!-- item-->
+                                                                <a href="javascript:delTask('${t.taskMd5}');" class="dropdown-item"><i class="mdi mdi-delete mr-1"></i>Delete</a>
+                                                                <!-- item-->
+                                                                <!-- item-->
+                                                                <a href="javascript:startTask('${t.taskMd5}');" class="dropdown-item"><i class="mdi mdi-exit-to-app mr-1"></i>Restart</a>
+                                                            </div>
+                                                        </div>
+
+                                                        <p class="mb-0">
+                                                            <img src="/assets/images/users/avatar-1.jpg" alt="user-img" class="avatar-xs rounded-circle mr-1">
+                                                            <span class="align-middle">${t.user}</span>
+                                                        </p>
+                                                    </div> <!-- end card-body -->
+                                                </div>
+                                                <!-- Task Item End -->
+
+                                            </#list>
+
+                                        </div> <!-- end company-list-4-->
+                                    </div>
+
+                                </div> <!-- end .board-->
+                            </div> <!-- end col -->
+                        </div>
+                        <!-- end row-->
+
+                    </div>
+                    <!-- container -->
+
+                </div>
+                <!-- content -->
+
+                <!-- Footer Start -->
+                <footer class="footer">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-6">
+                                2018 - 2019 © TrackRay
+                            </div>
+                           
+                        </div>
+                    </div>
+                </footer>
+                <!-- end Footer -->
+
+            </div>
+
+            <!-- ============================================================== -->
+            <!-- End Page content -->
+            <!-- ============================================================== -->
+
+
+        </div>
+        <!-- END wrapper -->
+
+        <#include "footer.html"/>
+
+
+</body>
+</html>

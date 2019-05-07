@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Task - TrackRay</title>
+
+        <#include "header.html"/>
+
+        <script>
+
+            $(function () {
+
+                $("#create_button").click(function () {
+                    $.ajax({
+                        url:"/task/create",
+                        type:"post",
+                        dataType:'json',
+                        data: $('#form_create').serialize(),
+                        success:function (data) {
+                            if (data.code==200){
+                                alert("创建成功");
+                            }else{
+                                alert(data.msg);
+                            }
+                            location.reload()
+                        }
+                    });
+                });
+
+
+            })
+
+        </script>
+
+    </head>
+    <body>
+
+        <!-- Begin page -->
+        <div class="wrapper">
+
+            <#include "menu.html"/>
+
+
+            <!-- ============================================================== -->
+            <!-- Start Page Content here -->
+            <!-- ============================================================== -->
+
+            <div class="content-page">
+                <div class="content">
+
+                    <!-- Topbar Start -->
+                    <#include "topbar.html"/>
+
+                    <!-- end Topbar -->
+                    
+                    <!-- Start Content-->
+                    <div class="container-fluid">
+
+                        <!-- start page title -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="page-title-box">
+                                    
+                                    <h4 class="page-title">Task</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end page title -->
+
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <form id="form_create">
+
+                                                    <div class="form-group mb-3">
+                                                        <label>任务名</label>
+                                                        <input type="text" name="name" class="form-control">
+                                                    </div>
+
+                                                    <div class="form-group mb-3">
+                                                        <label>目标</label>
+                                                        <input type="url" name="target" class="form-control">
+                                                    </div>
+
+                                                    <div class="form-group mb-3">
+                                                        <label>线程数</label>
+                                                        <input type="number"  name="thread" class="form-control">
+                                                    </div>
+
+                                                    <div class="form-group mb-3">
+                                                        <label>爬虫广度</label>
+                                                        <input type="number"  name="spiderMax" class="form-control">
+                                                    </div>
+
+                                                    <div class="form-group mb-3">
+                                                        <label>爬虫深度</label>
+                                                        <input type="number"  name="spiderDeep" class="form-control">
+                                                    </div>
+
+                                                    <div class="form-group mb-3">
+                                                        <label>最大扫描时间</label>
+                                                        <input type="number"  name="timeMax" class="form-control">
+                                                    </div>
+
+
+                                                    <div class="form-group mb-3">
+                                                        <label>Cookie</label>
+                                                        <textarea class="form-control" name="cookie"  rows="5"></textarea>
+                                                    </div>
+
+                                                    <div class="form-group mb-3">
+                                                        <label >代理池</label>
+                                                        <textarea class="form-control" name="proxy"  rows="5"></textarea>
+                                                    </div>
+
+
+                                                    <div class="custom-control custom-switch">
+                                                        <input class="custom-control-input" type="checkbox"  value="true" id="rule.crawler" name="rule.crawler" />
+                                                        <label class="custom-control-label" for="rule.crawler" >网页爬虫</label>
+                                                    </div>
+
+                                                    <div class="custom-control custom-switch">
+                                                        <input class="custom-control-input" type="checkbox"  value="true" id="rule.sense" name="rule.sense" />
+                                                        <label class="custom-control-label" for="rule.sense" >资产扫描</label>
+                                                    </div>
+
+                                                    <div class="custom-control custom-switch">
+                                                        <input class="custom-control-input" type="checkbox" value="true" id="rule.port" name="rule.port"/>
+                                                        <label class="custom-control-label" for="rule.port" >端口扫描</label>
+                                                    </div>
+
+                                                    <div class="custom-control custom-switch">
+                                                        <input class="custom-control-input" type="checkbox" value="true" id="rule.finger" name="rule.finger"/>
+                                                        <label class="custom-control-label" for="rule.finger" >指纹识别</label>
+                                                    </div>
+
+                                                    <div class="custom-control custom-switch">
+                                                        <input class="custom-control-input" type="checkbox" value="true" id="rule.childdomain" name="rule.childdomain"/>
+                                                        <label class="custom-control-label" for="rule.childdomain" >子域名</label>
+                                                    </div>
+
+                                                    <div class="custom-control custom-switch">
+                                                        <input class="custom-control-input" type="checkbox" value="true" id="rule.fuzzdir" name="rule.fuzzdir"/>
+                                                        <label class="custom-control-label" for="rule.fuzzdir" >目录扫描</label>
+                                                    </div>
+
+                                                    <div class="custom-control custom-switch">
+                                                        <input class="custom-control-input" type="checkbox"  value="true" id="rule.attack"  name="rule.attack" />
+                                                        <label class="custom-control-label" for="rule.attack" >漏洞模块攻击</label>
+                                                    </div>
+
+                                                    <div class="custom-control custom-switch">
+                                                        <input class="custom-control-input" type="checkbox"  value="true" id="rule.thorough"  name="rule.thorough" />
+                                                        <label class="custom-control-label" for="rule.thorough" >深度扫描</label>
+                                                    </div>
+
+                                                    <div><br/></div>
+
+                                                    <button id="create_button" type="button" class="btn btn-primary">Submit</button>
+                                                </form>
+                                            </div> <!-- end col -->
+
+                                        </div>
+                                        <!-- end row-->
+
+                                    </div> <!-- end card-body -->
+                                </div> <!-- end card -->
+                            </div><!-- end col -->
+                        </div>
+                        
+
+                    </div>
+                    <!-- container -->
+
+                </div>
+                <!-- content -->
+
+                <!-- Footer Start -->
+                <footer class="footer">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-6">
+                                2018 - 2019 © TrackRay
+                            </div>
+                           
+                        </div>
+                    </div>
+                </footer>
+                <!-- end Footer -->
+
+            </div>
+
+            <!-- ============================================================== -->
+            <!-- End Page content -->
+            <!-- ============================================================== -->
+
+
+        </div>
+        <!-- END wrapper -->
+
+        <#include "footer.html"/>
+
+
+</body>
+</html>
