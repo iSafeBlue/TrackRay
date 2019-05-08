@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Dashboard - TrackRay</title>
+        <title>Task Details - TrackRay</title>
 
         <#include "header.html"/>
     </head>
@@ -43,7 +43,41 @@
                             <div class="col-12">
                                 <div class="card">
                                     <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table mt-4">
+                                                <thead>
+                                                <tr><th>#</th>
+                                                    <th>#</th>
 
+
+
+                                                </tr></thead>
+                                                <tbody>
+                                                <tr>
+                                                    <td>任务名</td>
+                                                    <td>
+                                                        ${task.taskName}
+                                                    </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td>目标</td>
+                                                    <td>
+                                                        ${task.target}
+                                                    </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td>基本信息</td>
+                                                    <td>
+                                                        <textarea class="form-control" name="proxy" rows="15" >${task.baseInfo}</textarea>
+
+                                                    </td>
+                                                </tr>
+
+                                                </tbody>
+                                            </table>
+                                        </div>
 
                                         <div class="table-responsive">
 
@@ -76,15 +110,16 @@
                                                             </#if>
                                                         </td>
                                                         <td>
-
+                                                            <#if (vul.level)??>
                                                             <#if vul.level == 0>
                                                                 <span class="badge badge-success-lighten">提示</span>
-                                                                <#elseif vul.level == 1>                                                                <span class="badge badge-secondary">Medium{t.level}</span>
+                                                                <#elseif vul.level == 1>
                                                                     <span class="badge badge-info-lighten">低危</span>
                                                                     <#elseif vul.level == 2>
                                                                         <span class="badge badge-warning-lighten">中危</span>
                                                                         <#else>
                                                                             <span class="badge badge-danger-lighten">高危</span>
+                                                            </#if>
                                                             </#if>
 
                                                         </td>
@@ -93,7 +128,8 @@
                                                         </td>
                                                         <td>
                                                             <#if (vul.payload)??>
-                                                                ${vul.payload}
+
+                                                                <textarea class="form-control" rows="2" >${vul.payload}</textarea>
                                                             </#if>
                                                         </td>
 

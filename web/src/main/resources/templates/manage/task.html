@@ -8,8 +8,8 @@
         <script>
             function stopTask(task){
                 $.post(
-                    "task/destroy",
-                    {task:t},
+                    "/task/destroy",
+                    {task:task},
                     function(data){
                         if(data['code']==200){
                             alert("成功");
@@ -29,7 +29,7 @@
                     {task:task},
                     function (text) {
                         if (text.code==200){
-                            alert(md5+"正在扫描请等待");
+                            alert("正在扫描请等待");
                         }else{
                             alert(text.msg);
                         }
@@ -130,8 +130,8 @@
                                                             </a>
                                                             <div class="dropdown-menu dropdown-menu-right">
                                                                 <!-- item-->
-                                                                <a href="javascript:delTask('${t.taskMd5}');" class="dropdown-item"><i class="mdi mdi-delete mr-1"></i>Delete</a>
                                                                 <a href="javascript:startTask('${t.taskMd5}');" class="dropdown-item"><i class="mdi mdi-exit-to-app mr-1"></i>Start</a>
+                                                                <a href="javascript:delTask('${t.taskMd5}');" class="dropdown-item"><i class="mdi mdi-delete mr-1"></i>Delete</a>
 
                                                             </div>
                                                         </div>
@@ -185,6 +185,8 @@
                                                             <div class="dropdown-menu dropdown-menu-right">
                                                                 <!-- item-->
                                                                 <a href="javascript:stopTask('${t.taskMd5}');" class="dropdown-item"><i class="mdi mdi-exit-to-app mr-1"></i>Stop</a>
+                                                                <a href="javascript:delTask('${t.taskMd5}');" class="dropdown-item"><i class="mdi mdi-delete mr-1"></i>Delete</a>
+
                                                             </div>
                                                         </div>
 
@@ -238,12 +240,10 @@
                                                                 <i class="mdi mdi-dots-vertical font-18"></i>
                                                             </a>
                                                             <div class="dropdown-menu dropdown-menu-right">
-                                                                <!-- item-->
+                                                                <a href="javascript:startTask('${t.taskMd5}');" class="dropdown-item"><i class="mdi mdi-exit-to-app mr-1"></i>Restart</a>
                                                                 <!-- item-->
                                                                 <a href="javascript:delTask('${t.taskMd5}');" class="dropdown-item"><i class="mdi mdi-delete mr-1"></i>Delete</a>
                                                                 <!-- item-->
-                                                                <!-- item-->
-                                                                <a href="javascript:startTask('${t.taskMd5}');" class="dropdown-item"><i class="mdi mdi-exit-to-app mr-1"></i>Restart</a>
                                                             </div>
                                                         </div>
 
