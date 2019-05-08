@@ -24,8 +24,9 @@ public class VulnDTO implements Serializable {
 
     private Integer level =0;  //漏洞等级
 
+    @Column(columnDefinition = "LONGVARCHAR" , length = 65536)
     private String payload = ""; //攻击载荷
-
+    @Column(columnDefinition = "LONGVARCHAR" , length = 65536)
     private String message = ""; //响应信息
 
     private String repair  = "";  //修复建议
