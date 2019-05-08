@@ -71,12 +71,24 @@ public class AwvsScan extends InnerPlugin {
 
                         vuln.setVuln(vulndetail);
 
+                        int type = Vulnerable.Type.UNKNOWN.getType();
+                        String vname = vulndetail.getVtName().toLowerCase();
+                        if (vname.contains("xss") || vname.contains("Cross site scripting")){
+                            type = Vulnerable.Type.XSS.getType();
+                        }else if(vname.contains("csrf")){
+                            type = Vulnerable.Type.CSRF.getType();
+                        }else if(vname.contains("overflow")){
+                            type = Vulnerable.Type.OVERFLOW.getType();
+                        }else if (vname.contains("SQL")){
+                            type = Vulnerable.Type.SQL_INJECTION.getType();
+                        }
+
                         Vulnerable vulnerable = Vulnerable.builder()
                                 .address(vulndetail.getAffectsUrl())
                                 .level(vulndetail.getSeverity())
                                 .title(vulndetail.getVtName())
                                 .detail(vulndetail.getAffectsDetail())
-                                .type(Vulnerable.Type.UNKNOWN.getType())
+                                .type(type)
                                 .payload(vulndetail.getRequest())
                                 .build();
 
