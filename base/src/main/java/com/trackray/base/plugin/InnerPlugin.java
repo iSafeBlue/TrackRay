@@ -52,6 +52,12 @@ public abstract class InnerPlugin<E> extends AbstractPlugin<E>{
         }catch (Exception e){
             log.error("漏洞添加到数据库异常");
             this.task.getExceptions().add(e);
+            vuln.setPayload("");
+            VulnDTO save = vulnRepository.save(vuln);
+            if (save!=null)
+                log.info("漏洞已添加到数据库");
+
+
         }
     }
 
