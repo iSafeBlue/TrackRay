@@ -12,10 +12,7 @@ import com.trackray.module.inner.*;
 import com.trackray.web.dto.TaskDTO;
 import com.trackray.web.repository.TaskRepository;
 import net.sf.json.JSONObject;
-import org.quartz.Job;
-import org.quartz.JobDataMap;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
+import org.quartz.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,11 +33,14 @@ import java.util.concurrent.TimeUnit;
  * @since 2019/4/23 15:26
  */
 @Component
-public class ScannerJob implements Job {
+public class ScannerJob implements InterruptableJob {
 
     private static final Logger log = LoggerFactory.getLogger(ScannerJob.class);
 
-    private String taskKey;
+    private String taskKey;//任务KEY
+    private JobKey jobKey; //quartz JobKey
+
+    private boolean interrupt = false; //是否已结束
 
     @Autowired
     private DispatchController dispatchController;
@@ -57,6 +57,7 @@ public class ScannerJob implements Job {
 
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
+        this.jobKey = jobExecutionContext.getJobDetail().getKey();
 
         JobDataMap parameters = jobExecutionContext.getMergedJobDataMap();
 
@@ -69,10 +70,10 @@ public class ScannerJob implements Job {
             return;
         }
 
-        saveData(task,1);
 
         this.task = this.initTaskFromDTO(taskDTO);
 
+        saveData(task,1);
         /*try {
             new HttpClient().get(task.getTargetStr());
         } catch (Exception e) {
@@ -114,6 +115,11 @@ public class ScannerJob implements Job {
 
         saveData(task,1);
 
+        if (task.getRule().thorough)
+            fuckThorough();
+
+        saveData(task,1);
+
         if (task.getRule().port)
             fuckPort();
 
@@ -130,30 +136,29 @@ public class ScannerJob implements Job {
         if (task.getRule().fuzzdir)
             fuckDir();
 
-        if (task.getRule().thorough)
-            fuckThorough();
 
         if (task.getRule().attack)
             fuckPlugin();
 
         while (true)
         {
-            try {
-                Thread.sleep(30000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
 
-            if (threadPool.isShutdown() || ((threadPool.getTaskCount())==(threadPool.getCompletedTaskCount()) ) ){
-                SysLog.info(String.format("Task:%s 该任务已完成",taskKey));
+            if (interrupt || threadPool.isShutdown() || ((threadPool.getTaskCount())==(threadPool.getCompletedTaskCount()) ) ){
+                SysLog.info(taskinfo().concat("该任务已完成"));
                 threadPool.shutdownNow();
                 break;
             }else{
                 int activeCount = threadPool.getActiveCount();
-                log.info(String.format("task:%s 当前活动任务数:%s",task.getTaskMD5(),activeCount));
+                log.info(taskinfo().concat(String.format("当前活动任务数:%s",String.valueOf(activeCount))));
                 saveData(task,1);
             }
 
+            try {
+                Thread.sleep(10000);    //十秒一次
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                break;
+            }
         }
 
         saveData(task,2);
@@ -164,7 +169,7 @@ public class ScannerJob implements Job {
         Result result = task.getResult();
         log.info(result.toString());
 
-        log.info(JSONObject.fromObject(result).toString());
+        log.info(com.alibaba.fastjson.JSONObject.toJSONString(result));
 
         log.info("=========================================================");
 
@@ -359,12 +364,17 @@ public class ScannerJob implements Job {
 
 
         Result result = task.getResult();
-        JSONObject json = JSONObject.fromObject(result);
+
+        String json = com.alibaba.fastjson.JSONObject.toJSONString(result);
 
         TaskDTO dto = taskRepository.findTaskDTOByTaskMd5(taskMD5);
-        dto.setBaseInfo(json.toString());
+
+        dto.setBaseInfo(json);
+
         dto.setStatus(status);
+
         List<VulnDTO> vulns = vulnRepository.findAllByTaskMd5(taskMD5);
+
         if (vulns!=null && !vulns.isEmpty()){
             int max = 0;
             for (VulnDTO vuln : vulns) {
@@ -376,6 +386,7 @@ public class ScannerJob implements Job {
                 max = 2;
             dto.setLevel(max);
         }
+
         return taskRepository.save(dto)!=null?1:0;
     }
 
@@ -400,4 +411,18 @@ public class ScannerJob implements Job {
         return task;
     }
 
+    @Override
+    public void interrupt() throws UnableToInterruptJobException {
+
+        log.info(taskinfo().concat("接收到终止命令，正在结束未执行的任务，指纹识别/端口识别需要等待。"));
+
+        interrupt = true;
+
+        System.gc();
+
+    }
+
+    public String taskinfo(){
+        return String.format("task[%s]    job[%s]   ",taskKey , jobKey);
+    }
 }

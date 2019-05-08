@@ -1,5 +1,6 @@
 package com.trackray.base.quartz;
 
+import com.trackray.base.utils.SysLog;
 import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -125,6 +126,8 @@ public class QuartzManager {
         try {
 
             TriggerKey triggerKey = TriggerKey.triggerKey(triggerName, triggerGroupName);
+
+            scheduler.interrupt(JobKey.jobKey(jobName,jobGroupName));
             // 停止触发器
             scheduler.pauseTrigger(triggerKey);
             // 移除触发器
@@ -132,7 +135,7 @@ public class QuartzManager {
             // 删除任务
             scheduler.deleteJob(JobKey.jobKey(jobName, jobGroupName));
 
-            System.out.println("removeJob:"+JobKey.jobKey(jobName));
+            SysLog.info("removeJob:" + JobKey.jobKey(jobName));
 
         } catch (Exception e) {
             throw new RuntimeException(e);
