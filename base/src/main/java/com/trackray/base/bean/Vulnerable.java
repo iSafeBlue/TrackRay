@@ -11,8 +11,8 @@ public class Vulnerable {
 
     private String title  = "";//漏洞标题
     private String address  = "";//影响地址
-    private Integer level = 0;//漏洞等级
-    private Integer type = 0; //漏洞类型
+    private Integer level = Level.INFO.getLevel();//漏洞等级
+    private Integer type = Type.UNKNOWN.getType(); //漏洞类型
     private String payload = "";//攻击载荷
     private List<String> vulnId ;//漏洞ID
     private List<String> risk;    //存在的风险
@@ -63,7 +63,7 @@ public class Vulnerable {
     }
 
     public enum Level {
-        INFO(0,"低危"),
+        INFO(0,"提示"),
         LOW(1,"低危"),
         MIDDLE(2,"中危"),
         HIGH(3,"高危");

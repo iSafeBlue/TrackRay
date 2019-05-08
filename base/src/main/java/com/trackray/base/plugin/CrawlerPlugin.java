@@ -1,9 +1,7 @@
 package com.trackray.base.plugin;
 
-import com.trackray.base.attack.Crawler;
 import com.trackray.base.bean.Task;
 import com.trackray.base.bean.Vulnerable;
-import com.trackray.base.exploit.AbstractExploit;
 import com.trackray.base.httpclient.CrawlerPage;
 import com.trackray.base.httpclient.Fetcher;
 import com.trackray.base.store.VulnDTO;

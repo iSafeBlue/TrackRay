@@ -76,6 +76,7 @@ public class AwvsScan extends InnerPlugin {
                                 .level(vulndetail.getSeverity())
                                 .title(vulndetail.getVtName())
                                 .detail(vulndetail.getAffectsDetail())
+                                .type(Vulnerable.Type.UNKNOWN.getType())
                                 .payload(vulndetail.getRequest())
                                 .build();
 
