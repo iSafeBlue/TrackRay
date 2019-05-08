@@ -27,29 +27,6 @@
 		<trackray.version>2.0.0</trackray.version>
 	</properties>
 
-
-	<!--<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>com.trackray</groupId>
-				<artifactId>base</artifactId>
-				<version>0.0.1-SNAPSHOT</version>
-			</dependency>
-
-			<dependency>
-				<groupId>com.trackray</groupId>
-				<artifactId>module</artifactId>
-				<version>0.0.1-SNAPSHOT</version>
-			</dependency>
-
-			<dependency>
-				<groupId>com.trackray</groupId>
-				<artifactId>web</artifactId>
-				<version>0.0.1-SNAPSHOT</version>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
--->
 	<dependencies>
 
 		<dependency>
@@ -130,16 +107,20 @@
 			<version>1.1.0</version>
 		</dependency>
 
+		<!-- 内存数据库hsqldb -->
+		<dependency>
+			<groupId>org.hsqldb</groupId>
+			<artifactId>hsqldb</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+
+
 	</dependencies>
 
-	<build>
-
-		<plugins>
-
-
-
-		</plugins>
-
-	</build>
 
 </project>
