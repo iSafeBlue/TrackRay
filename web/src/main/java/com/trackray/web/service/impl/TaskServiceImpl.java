@@ -1,7 +1,6 @@
 package com.trackray.web.service.impl;
 
 import com.trackray.base.attack.Awvs;
-import com.trackray.base.httpclient.HttpClient;
 import com.trackray.base.quartz.QuartzManager;
 import com.trackray.web.handle.ScannerJob;
 import com.trackray.web.dto.*;
@@ -11,21 +10,21 @@ import com.trackray.web.service.TaskService;
 import com.trackray.base.bean.*;
 import com.trackray.base.controller.DispatchController;
 import com.trackray.base.handle.CoreThreadMap;
-import com.trackray.base.plugin.AbstractPlugin;
 import com.trackray.base.utils.CheckUtils;
 import com.trackray.base.utils.SysLog;
 import com.trackray.base.utils.TaskUtils;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.quartz.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.WebApplicationContext;
 
 import javax.servlet.http.HttpSession;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.Calendar;
 import java.util.concurrent.*;
 
 
@@ -47,6 +46,9 @@ public class TaskServiceImpl implements TaskService {
 
     @Autowired
     private QuartzManager quartzManager;
+
+    private static final Logger log = LoggerFactory.getLogger(TaskServiceImpl.class);
+
 
     /**
      * 创建任务
@@ -141,19 +143,34 @@ public class TaskServiceImpl implements TaskService {
         //构建Job
         JobDetail jobDetail = JobBuilder.
                 newJob(ScannerJob.class).
+                withIdentity(JobKey.jobKey(taskMd5)).
                 withIdentity(taskMd5,userName).
                 build();
 
         jobDetail.getJobDataMap().put("taskKey" , taskMd5);
+
+
+        Calendar calendar = Calendar.getInstance();
+
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        Integer timeMax = task.getTimeMax();    //最大时间
+
+        calendar.set(java.util.Calendar.HOUR_OF_DAY,
+                calendar.get(Calendar.HOUR_OF_DAY) + timeMax);//当前时间+timeMax小时
+
+        Date endDate = calendar.getTime();
+
+        log.info(String.format("task[%s]    任务将在%s结束",taskMd5,df.format(endDate)));
 
         //构建触发器
         Trigger trigger = TriggerBuilder.newTrigger().
                 withIdentity(taskMd5,userName).
                 withSchedule(builder).
                 startNow().
+                endAt(endDate).
                 build();
 
-        //TODO 根据任务对象的最大任务时间计算出任务的结束日期
 
         try {
             // 交由Scheduler安排触发
@@ -266,140 +283,6 @@ public class TaskServiceImpl implements TaskService {
 */
     }
 
-    private void awvs(Task task, String target) {
-
-        if (this.awvs!=null && awvs.ok){
-            String targetId = this.awvs.createTarget(target);
-
-            this.awvs.startScan(targetId);
-            try {
-                out:for (int i = 1; i <=5 ; i++) {
-                    Thread.sleep(5000); //给awvs一点时间初始化任务
-
-                    List<Awvs.Scan> scans = awvs.scans();
-
-                    in:for (Awvs.Scan scan : scans) {
-                        String tid = scan.getTargetId();
-                        if(targetId.equals(tid)){
-                            String scanId = scan.getScanId();
-
-                            String scanSessionId = scan.getCurrentSession().getScanSessionId();
-
-                            SysLog.info(String.format("Task=%s TargetID=%s scanID=%s sessionID=%s",task.getTaskMD5(),targetId,scanId,scanSessionId));
-
-
-                            if(StringUtils.isAnyEmpty(scanId,scanSessionId)){
-                                //如果scanid或sessionid有任意一个为空 ，则需要进行重试
-                                SysLog.warn("第"+i+"次重试");
-
-                                Thread.sleep(10000);
-
-                                continue out;//跳过外层循环
-                            }else{
-
-                                SysLog.info("深度任务已初始化完成，即将开始深度扫描");
-
-                                /*Map<String, Object> temp = task.getResult().getItems().get(target).getTemp();
-                                temp.put("target_id",targetId);
-                                temp.put("scan_id",scanId);
-                                temp.put("session_id",scanSessionId);*/
-
-                                break out;//结束外层循环
-                            }
-
-
-                        }
-                    }
-
-                }
-            } catch (InterruptedException e) {
-                SysLog.error(e);
-            }
-
-        }
-
-        AbstractPlugin awvs = (AbstractPlugin) dispatchController.getAppContext().getBean("awvsScan");
-        awvs.setParam(
-                new HashMap<String,Object>(){{
-                    put("task",task);
-                    put("target",target);
-                }}
-        );
-        task.getExecutor().submit(awvs);
-    }
-
-    private void nmap(Task task, String target) {
-        AbstractPlugin nmap = (AbstractPlugin) dispatchController.getAppContext().getBean("nmap");
-        nmap.setParam(
-                new HashMap<String,Object>(){{
-                    put("task",task);
-                    put("target",target);
-                }}
-        );
-        task.getExecutor().submit(nmap);
-    }
-
-    private void fuzzdir(Task task, String target) {
-        AbstractPlugin fuzzDir = (AbstractPlugin) dispatchController.getAppContext().getBean("fuzzDir");
-        fuzzDir.setParam(
-                new HashMap<String,Object>(){{
-                    put("task",task);
-                    put("target",target);
-                }}
-        );
-        task.getExecutor().submit(fuzzDir);
-    }
-
-    private void finger(Task task,String target){
-        WebApplicationContext context = dispatchController.getAppContext();
-        AbstractPlugin fingerScan = (AbstractPlugin) context.getBean("fingerScan");
-        fingerScan.setParam(
-                new HashMap<String,Object>(){{
-                    put("task",task);
-                    put("target",target);
-                }}
-        );
-        task.getExecutor().submit(fingerScan);
-    }
-
-    /*private void fingerScan(Task task, String target, ThreadPoolExecutor exec) {
-        List<FingerDTO> fingers = fingerDTOMapper.selectByExample(new FingerDTOExample());
-
-        for (FingerDTO finger : fingers) {
-            Runnable runnable = new Runnable() {
-                @Override
-                public void run() {
-                    if (task.getResult().getItems().get(target).getSystemInfo().getFinger()!=null)
-                        return;
-
-                    String url = finger.getUrl();
-                    ResponseStatus content = null;
-                    HttpClient httpClient = new HttpClient();
-                    try {
-                        content = httpClient.get(task.getTargetStr().concat(url));
-                    } catch (Exception e) {
-                        return;
-                    }
-                    if (content != null && content.getStatusCode() == 200) {
-                        Integer type = finger.getFingerType();
-                        if (type == 2) {
-                            if (content.getContent().contains(finger.getRegex())) {
-                                Finger f = Finger.valueOf(finger.getEnumKey());
-                                if (f != null) {
-                                    task.getResult().getItems().get(target).getSystemInfo().setFinger(new FingerEntity(f,f.getValue()));
-                                    SysLog.info("task="+task.getTaskMD5()+" 已识别到CMS为"+f.getValue());
-                                }
-                            }
-                        } else if (type == 1) {
-                            //...
-                        }
-                    }
-                }
-            };
-            exec.execute(runnable);
-        }
-
-    }*/
 
     @Override
     public double taskProgress(String md5) {
