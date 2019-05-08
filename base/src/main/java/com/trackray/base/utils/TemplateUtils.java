@@ -10,6 +10,8 @@ import com.trackray.base.bean.Vulnerable;
 public class TemplateUtils {
 
     public static String getVulnNameByType(Object id){
+        if (id==null)
+            return Vulnerable.Type.UNKNOWN.getName();
         Vulnerable.Type[] values = Vulnerable.Type.values();
         for (Vulnerable.Type value : values) {
             if (Integer.parseInt(id.toString()) == value.getType())
