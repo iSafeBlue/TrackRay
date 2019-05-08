@@ -2,6 +2,7 @@ package com.trackray.web.service.impl;
 
 import com.trackray.base.attack.Awvs;
 import com.trackray.base.quartz.QuartzManager;
+import com.trackray.base.store.VulnRepository;
 import com.trackray.web.handle.ScannerJob;
 import com.trackray.web.dto.*;
 import com.trackray.web.query.TaskQuery;
@@ -42,8 +43,7 @@ public class TaskServiceImpl implements TaskService {
     private TaskRepository taskRepository;
 
     @Autowired
-    private Awvs awvs;
-
+    private VulnRepository vulnRepository;
     @Autowired
     private QuartzManager quartzManager;
 
@@ -201,88 +201,6 @@ public class TaskServiceImpl implements TaskService {
         }
     }
 
-    @Override
-    public boolean startTask(String taskMd5) {
-        /*List<TaskDTO> tasks = this.selectTaskByMd5(taskMd5);
-        if (tasks.size()!=1){
-            return false;
-        }
-        TaskDTO taskDTO = tasks.get(0);
-
-        Task task = this.initTaskFromDTO(taskDTO);
-
-        try {
-            new HttpClient().get(task.getTargetStr());
-        } catch (Exception e) {
-            SysLog.error("访问目标出现异常，请检测，已结束此任务"+e.getMessage());
-            this.saveData(task , 2);
-            return false;
-        }
-
-        dispatchController.init(task);
-
-        ThreadPoolExecutor exec = new ThreadPoolExecutor(task.getThreadPool(), task.getThreadPool() + 5, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
-        task.setExecutor(exec);
-
-        this.saveData(task , 1);
-        ResultCode code = dispatchController.dispatch(task);
-
-        String taskMD5 = task.getTaskMD5();
-
-        if (code.getCode() != 200) {
-            this.saveData(task , 2);
-            return false;
-        }else{
-        }
-        HashMap<String,Object> value = new HashMap<String,Object>();
-        value.put("create_time",System.currentTimeMillis());
-        value.put("thread_pool",exec);
-        value.put("task",task);
-        coreThreadPool.put(taskMD5,value);
-        this.scanTargets(task);
-*/
-        return true;
-    }
-
-    private void scanTargets(Task task) {
-       /* ThreadPoolExecutor exec = (ThreadPoolExecutor) task.getExecutor();
-        while (exec.getTaskCount() != exec.getCompletedTaskCount()){
-            //...
-        }
-        SysLog.info("信息探测结束！");
-        for (String target : task.getTargets()) {
-            SysLog.info("开始扫描目标："+target);
-
-            if (task.getRule().thorough){
-                SysLog.info("开始深度扫描");
-                awvs(task , target);
-                SysLog.info("深度扫描结束");
-            } else if(task.getRule().crawler){
-                dispatchController.crawler(task , target , exec);
-            }
-            if(task.getRule().port){
-                //Nmap.nmap(task , target ,  exec);
-                SysLog.info("开始扫描端口");
-                nmap(task,target);
-            }
-            if (task.getRule().finger){
-                SysLog.info("开始指纹探测");
-                finger(task,target);
-            }
-            if (task.getRule().fuzzdir){
-                //FuzzDir.fuzz(task , target ,exec);
-                SysLog.info("开始目录扫描");
-                fuzzdir(task,target);
-            }
-
-        }
-
-        if (task.getRule().attack){
-            dispatchController.attack(task,exec);
-        }
-*/
-    }
-
 
     @Override
     public double taskProgress(String md5) {
@@ -303,6 +221,9 @@ public class TaskServiceImpl implements TaskService {
         try {
             String user = session.getAttribute("user").toString();
             quartzManager.removeJob(task,user,task,user);
+            TaskDTO t = taskRepository.findTaskDTOByTaskMd5(task);
+            t.setStatus(2);//扫描结束
+            taskRepository.save(t);
         }catch (Exception e){
             return false;
         }
@@ -353,7 +274,6 @@ public class TaskServiceImpl implements TaskService {
         return ResultCode.getInstance(200,"成功",baseInfo);
     }
 
-    @Override
     public ResultCode checkTask(String task) {
         List<TaskDTO> tasks = this.selectTaskByMd5(task);
         if (tasks.size()>0){
