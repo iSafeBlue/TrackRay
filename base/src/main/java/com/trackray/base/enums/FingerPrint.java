@@ -1559,6 +1559,8 @@ public enum FingerPrint {
 			new FingerBean("","/readme.txt","","9545ae859b1f52a0856dbcc12cd3f7d4"),
 			new FingerBean("","/readme.txt","","31e1d6bdb8c8efe7eb33cdf35f7fb2f4")),
 
+	$希尔大学OA("希尔大学OA系统",FingerBean.builder().url("/oa/faWenAction.do").match("由于以上错误，您的操作被终止，请您重新操作或者与系统管理员联系,谢谢").build()),
+
     $通达OA系统("通达OA系统", 
 			new FingerBean("","/images/tongda.ico","","c615668494a4cc54601a06976c9ea408"),
 			new FingerBean("","/images/tongda.ico","","ab93346c1650acf2f16328fa41caf425"),
