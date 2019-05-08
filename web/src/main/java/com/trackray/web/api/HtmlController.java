@@ -7,6 +7,7 @@ import com.trackray.base.plugin.MVCPlugin;
 import com.trackray.base.quartz.QuartzManager;
 import com.trackray.base.store.VulnDTO;
 import com.trackray.base.store.VulnRepository;
+import com.trackray.base.utils.StrUtils;
 import com.trackray.web.dto.TaskDTO;
 import com.trackray.web.repository.TaskRepository;
 import com.trackray.web.service.PluginService;
@@ -109,9 +110,10 @@ public class HtmlController {
     @GetMapping("/manage/task/{task}")
     public String view(@PathVariable String task , Model model){
         TaskDTO t = taskRepository.findTaskDTOByTaskMd5(task);
+        t.setBaseInfo(StrUtils.formatJson(t.getBaseInfo()));
         List<VulnDTO> vulns = vulnRepository.findAllByTaskMd5(task);
         if (t!=null && vulns!=null) {
-            model.addAttribute("task", task);
+            model.addAttribute("task", t);
             model.addAttribute("vulns", vulns);
         }
         return "manage/view";
@@ -144,7 +146,7 @@ public class HtmlController {
         model.addAttribute("todo",todo);
         model.addAttribute("scanning",scanning);
         model.addAttribute("done",done);
-        return "manage/tasks";
+        return "manage/task";
     }
 
 
