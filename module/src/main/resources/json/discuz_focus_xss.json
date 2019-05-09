@@ -1,0 +1,23 @@
+{
+    "target":"discuz",
+    "meta":{
+        "name":    "Disucz! x3.0 focus.swf XSS",
+        "remarks": "Discuz! x3.0 /static/image/util/focus.swf 存在Flash XSS漏洞",
+        "level":   3,
+        "type":    "XSS",
+        "author":   "wolf",
+        "references": {
+            "url":"",
+            "cve":"",
+            "kpid":"KP-0047"
+        }
+    },
+    "request":{
+        "path":     "/static/image/util/focus.swf",
+        "postData": ""
+    },
+    "verify":{
+        "type":  "md5",
+        "match": "c16a7c6143f098472e52dd13de85527f"
+    }
+}

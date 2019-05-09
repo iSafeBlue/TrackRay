@@ -1,0 +1,23 @@
+{
+    "target":"discuz",
+    "meta":{
+        "name":    "Discuz! 6.0 XSS",
+        "remarks": "Discuz! 6.0 viewthread.php 存在反射型XSS漏洞",
+        "level":   3,
+        "type":    "XSS",
+        "author":   "wolf",
+        "references": {
+            "url":"",
+            "cve":"",
+            "kpid":"KP-0054"
+        }
+    },
+    "request":{
+        "path":     "/viewthread.php?tid=\"/><test>test(700)</test>",
+        "postData": ""
+    },
+    "verify":{
+        "type":  "string",
+        "match": "/><test>test(700)</test>"
+    }
+}

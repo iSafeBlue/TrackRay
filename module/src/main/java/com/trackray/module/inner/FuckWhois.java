@@ -8,6 +8,8 @@ import com.trackray.base.plugin.InnerPlugin;
 import com.trackray.base.utils.ApiUtils;
 import com.trackray.base.utils.DomainUtils;
 import com.trackray.base.utils.SysLog;
+import org.javaweb.core.net.HttpRequest;
+import org.javaweb.core.net.HttpResponse;
 import org.javaweb.core.net.HttpURLRequest;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -89,14 +91,21 @@ public class FuckWhois extends InnerPlugin{
     }
 
     public String searchWhois(String domain){
-        HttpClient client = new HttpClient();
-        HashMap<String, Object> map = new HashMap<>();
+        HashMap<String, String> map = new HashMap<>();
         map.put("sld",domain);
-        ResponseStatus post = client.post("https://tool.lu/whois/ajax.html",map);
-        if (post!=null && post.getStatusCode() == 200 && !post.getContent().isEmpty()) {
-            SysLog.info("已扫描到WHOIS");
-            return post.getContent();
+        try {
+            HttpResponse res = requests.url("https://tool.lu/whois/ajax.html").data(map).method(HttpRequest.Method.POST).request();
+
+
+            if (res!=null && res.getStatusCode() == 200 && !res.body().isEmpty()) {
+                SysLog.info("已扫描到WHOIS");
+                return res.body();
+            }
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
         }
+
         return "";
     }
 }

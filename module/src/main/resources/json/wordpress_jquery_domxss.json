@@ -1,0 +1,23 @@
+{
+    "target":"wordpress",
+    "meta":{
+        "name":    "WordPress example.html jQuery DomXSS",
+        "remarks": "WordPress example.html jQuery 1.7.2 存在DomXSS漏洞",
+        "level":   3,
+        "type":    "XSS",
+        "author":   "wolf",
+        "references": {
+            "url":"https://www.freebuf.com/news/66695.html",
+            "cve":"",
+            "kpid":"KP-0070"
+        }
+    },
+    "request":{
+        "path":     "/wp-content/themes/twentyfifteen/genericons/example.html",
+        "postData": ""
+    },
+    "verify":{
+        "type":  "string",
+        "match": "jquery/1.7.2/jquery.min.js"
+    }
+}

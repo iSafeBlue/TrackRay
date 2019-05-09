@@ -1,0 +1,23 @@
+{
+    "target":"docker",
+    "meta":{
+        "name":    "Docker Remote API未授权访问",
+        "remarks": "Docker Remote API未授权访问可导致代码泄露，严重可导致服务器被入侵控制。",
+        "level":   0,
+        "type":    "RCE",
+        "author":   "wolf",
+        "references": {
+            "url":"https://github.com/vulhub/vulhub/blob/master/docker/unauthorized-rce/README.zh-cn.md",
+            "cve":"",
+            "kpid":"KP-0056"
+        }
+    },
+    "request":{
+        "path":     "/containers/json",
+        "postData": ""
+    },
+    "verify":{
+        "type":  "string",
+        "match": "HostConfig"
+    }
+}

