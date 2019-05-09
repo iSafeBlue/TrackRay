@@ -55,7 +55,7 @@ public class Vulnerable {
             return id;
         }
 
-        Type( int id ,int type , String name) {
+        Type( int type ,int id, String name) {
             this.id = id;
             this.type = type;
             this.name = name;
