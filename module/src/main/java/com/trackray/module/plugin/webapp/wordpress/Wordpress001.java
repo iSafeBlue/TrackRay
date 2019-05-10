@@ -19,7 +19,7 @@ import java.util.Map;
         @Param(key = "target", desc = "目标"),
         @Param(key = "host", desc = "HOST头"),
         @Param(key = "username",desc = "重置的用户名"),
-    }, type = AbstractPlugin.Type.JSON)
+    }, type = CommonPlugin.Type.JSON)
 public class Wordpress001 extends CommonPlugin<String> {
     @Override
     public boolean check(Map<String, Object> param) {

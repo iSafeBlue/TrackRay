@@ -23,44 +23,7 @@ import java.util.concurrent.Callable;
  */
 public abstract class AbstractPlugin<E> implements Callable<AbstractPlugin<E>> {
 
-    public enum Type{
-        /**
-         * 非交互式插件响应类型
-         */
-        JSON("application/json"),
-        XML("application/xml"),
-        HTML("text/html"),
-        TEXT("text/plain");
 
-        private String value;
-
-        Type(String value) {
-            this.value = value;
-        }
-
-        public String getValue() {
-            return value;
-        }
-    }
-    public enum Charset{
-        /**
-         * 非交互式插件响应编码
-         */
-        UTF8("charset=utf-8"),
-        GBK("charset=gbk"),
-        GB2312("charset=gb2312"),
-        NULL("");
-
-        private String value;
-
-        Charset(String value) {
-            this.value = value;
-        }
-
-        public String getValue() {
-            return value;
-        }
-    }
 
     protected final static String BASE = Constant.RESOURCES_INCLUDE_PATH;   // resource外部资源文件的绝对路径
 

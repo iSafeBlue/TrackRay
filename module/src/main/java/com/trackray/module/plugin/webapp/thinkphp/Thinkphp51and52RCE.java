@@ -15,7 +15,7 @@ import java.util.Map;
  * @email blue@ixsec.org
  * @since 2019/1/17 19:51
  */
-@Rule( type = AbstractPlugin.Type.HTML ,
+@Rule( type = CommonPlugin.Type.HTML ,
         params = {
                 @Param(key = "target", desc = "目标地址"),
                 @Param(key = "func",defaultValue = "phpinfo" , desc = "执行函数"),

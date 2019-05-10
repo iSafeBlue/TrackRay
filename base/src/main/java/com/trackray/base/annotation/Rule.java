@@ -2,6 +2,7 @@ package com.trackray.base.annotation;
 
 
 import com.trackray.base.plugin.AbstractPlugin;
+import com.trackray.base.plugin.CommonPlugin;
 
 import java.lang.annotation.*;
 
@@ -21,8 +22,8 @@ public @interface Rule {
     //String[] param() default {};    //插件使用所需参数 如{"url","port"}
     //String[] defParam() default {}; //插件默认参数需与param下标一一对应 如{"http://localhost","3306"}
     //String[] descParam() default {};//插件参数对应的介绍 需与param下标对应 如{"目标地址","使用端口"}
-    AbstractPlugin.Type type() default AbstractPlugin.Type.JSON;    //当使用commonplugin时返回给浏览器的文本类型
-    AbstractPlugin.Charset charset() default AbstractPlugin.Charset.UTF8;   //使用commonplugin时返回给浏览器的文本编码
+    CommonPlugin.Type type() default CommonPlugin.Type.JSON;    //当使用commonplugin时返回给浏览器的文本类型
+    CommonPlugin.Charset charset() default CommonPlugin.Charset.UTF8;   //使用commonplugin时返回给浏览器的文本编码
     String[] headers() default {};  //返回给浏览器时的response header
     String filename() default "";   //插件用于下载功能时返回的文件名
 }

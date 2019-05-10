@@ -24,7 +24,7 @@ import java.util.Map;
         @Param(key = "username",defaultValue = "root" , desc = "pma用户名"),
         @Param(key = "password",defaultValue = "root" , desc = "pma密码"),
         @Param(key = "code",defaultValue = "<?php echo(md5(1));?>" , desc = "执行代码"),
-    }, type = AbstractPlugin.Type.TEXT)
+    }, type = CommonPlugin.Type.TEXT)
 public class PHPMyAdmin001 extends CommonPlugin<String> {
     @Override
     public boolean check(Map param) {

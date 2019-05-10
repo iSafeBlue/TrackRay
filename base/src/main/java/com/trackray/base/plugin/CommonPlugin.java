@@ -13,6 +13,45 @@ import javax.servlet.http.HttpServletResponse;
  */
 public abstract class CommonPlugin<E> extends AbstractPlugin<E> {
 
+    public enum Type{
+        /**
+         * 非交互式插件响应类型
+         */
+        JSON("application/json"),
+        XML("application/xml"),
+        HTML("text/html"),
+        TEXT("text/plain");
+
+        private String value;
+
+        Type(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+    }
+    public enum Charset{
+        /**
+         * 非交互式插件响应编码
+         */
+        UTF8("charset=utf-8"),
+        GBK("charset=gbk"),
+        GB2312("charset=gb2312"),
+        NULL("");
+
+        private String value;
+
+        Charset(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+    }
+
     public HttpServletRequest request;
     public HttpServletResponse response;
 

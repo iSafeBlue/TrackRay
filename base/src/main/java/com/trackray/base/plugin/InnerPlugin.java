@@ -36,11 +36,11 @@ public abstract class InnerPlugin<E> extends AbstractPlugin<E>{
         //vuln.setMessage(vulnerable.);
         vuln.setPayload(vulnerable.getPayload());
         if (vulnerable.getReferences()!=null)
-            vuln.setReference((String[]) vulnerable.getReferences().toArray());
+            vuln.setReference(vulnerable.getReferences().toArray(new String[]{}));
         if (vulnerable.getRisk()!=null)
-            vuln.setRisk((String[]) vulnerable.getRisk().toArray());
+            vuln.setRisk( vulnerable.getRisk().toArray(new String[]{}));
         if (vulnerable.getVulnId()!=null)
-            vuln.setVulnId((String[]) vulnerable.getVulnId().toArray());
+            vuln.setVulnId(vulnerable.getVulnId().toArray(new String[]{}));
         vuln.setRepair(vulnerable.getRepair());
         vuln.setTitle(vulnerable.getTitle());
         vuln.setTaskMd5(this.task.getTaskMD5());
@@ -48,14 +48,14 @@ public abstract class InnerPlugin<E> extends AbstractPlugin<E>{
         try {
             VulnDTO save = vulnRepository.save(vuln);
             if (save!=null)
-                log.info("漏洞已添加到数据库");
+                log.info(vuln.getTitle()+ " 漏洞已添加到数据库");
         }catch (Exception e){
-            log.error("漏洞添加到数据库异常");
+            log.error(vuln.getTitle()+"漏洞添加到数据库异常");
             this.task.getExceptions().add(e);
             vuln.setPayload("");
             VulnDTO save = vulnRepository.save(vuln);
             if (save!=null)
-                log.info("漏洞已添加到数据库");
+                log.info(vuln.getTitle()+"漏洞已添加到数据库");
 
 
         }

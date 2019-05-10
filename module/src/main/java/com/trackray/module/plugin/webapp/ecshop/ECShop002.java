@@ -20,7 +20,7 @@ import java.util.Map;
         @Param(key = "url", desc = "user.php目录下的地址"),
         @Param(key = "code",defaultValue = "phpinfo();" , desc = "执行的代码"),
         @Param(key = "isShell",defaultValue = "false" , desc = "是否自动getshell"),},
-        type = AbstractPlugin.Type.HTML)
+        type = CommonPlugin.Type.HTML)
 public class ECShop002 extends CommonPlugin<String> {
     @Override
     public boolean check(Map<String, Object> param) {

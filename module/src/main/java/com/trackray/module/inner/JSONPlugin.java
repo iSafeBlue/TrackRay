@@ -120,6 +120,8 @@ public class JSONPlugin extends MVCPlugin{
     @Value("${temp.dir}")
     private String temp;
     private boolean matchMd5(HttpResponse req, String match) {
+        if (req.getStatusCode() != 200)
+            return false;
         String uuid = UUID.randomUUID().toString();
         String body = req.body();
         try {

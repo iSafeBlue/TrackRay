@@ -12,7 +12,7 @@ import java.util.Map;
 @Plugin(value = "typecho001",
         title = " Typecho install.php 反序列化导致任意代码执行", desc = "target=http://xxx.com/",
         author = "浅蓝", link = "https://paper.seebug.org/424/")
-@Rule(params = {@Param(key = "target", desc = "目标地址"),} , type = AbstractPlugin.Type.TEXT)
+@Rule(params = {@Param(key = "target", desc = "目标地址"),} , type = CommonPlugin.Type.TEXT)
 public class Typecho001 extends CommonPlugin<String> {
     String file = "/install.php";
     String url ="/install.php?finish=1";

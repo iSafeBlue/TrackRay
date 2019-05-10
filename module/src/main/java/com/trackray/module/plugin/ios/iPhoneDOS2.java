@@ -10,7 +10,7 @@ import java.util.Map;
 @Plugin(value = "iphoneDOS2",
         title = "iPhone 拒绝服务，安卓浏览器闪退",
         author = "浅蓝")
-@Rule(type = AbstractPlugin.Type.HTML )
+@Rule(type = CommonPlugin.Type.HTML )
 public class iPhoneDOS2 extends CommonPlugin<String> {
     @Override
     public boolean check(Map<String, Object> param) {
