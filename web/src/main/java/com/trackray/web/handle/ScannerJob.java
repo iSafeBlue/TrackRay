@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
@@ -143,9 +144,17 @@ public class ScannerJob implements InterruptableJob {
         while (true)
         {
 
+            Date endTime = jobExecutionContext.getTrigger().getEndTime();
+
+            Date currTime = new Date();
+
+            if (currTime.compareTo(endTime) > -1 ){
+                log.info(taskinfo().concat("当前任务已超时，即将结束任务"));
+                break;
+            }
+
             if (interrupt || threadPool.isShutdown() || ((threadPool.getTaskCount())==(threadPool.getCompletedTaskCount()) ) ){
-                SysLog.info(taskinfo().concat("该任务已完成"));
-                threadPool.shutdownNow();
+                log.info(taskinfo().concat("该任务已完成"));
                 break;
             }else{
                 int activeCount = threadPool.getActiveCount();
@@ -160,7 +169,7 @@ public class ScannerJob implements InterruptableJob {
                 break;
             }
         }
-
+        threadPool.shutdownNow();
         saveData(task,2);
 
         log.info("======================任务基本信息=========================");
@@ -379,7 +388,7 @@ public class ScannerJob implements InterruptableJob {
             int max = 0;
             for (VulnDTO vuln : vulns) {
                 Integer level = vuln.getLevel();
-                if (level>max)
+                if (level!=null && level>max)
                     max = level;
             }
             if (max>2)
