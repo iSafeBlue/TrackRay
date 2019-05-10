@@ -279,16 +279,16 @@ public class FuckCrawler extends InnerPlugin {
                 return;
             }
 
-            try {
+/*            try {
                 for (String s : suffix) {
                     if (new URL(href).getFile().endsWith(s))
-                        return;
+                        //return;
                 }
-                /*if (href.matches(regex))
-                    return;*/
+                *//*if (href.matches(regex))
+                    return;*//*
             } catch (MalformedURLException e) {
 
-            }
+            }*/
 
             if (href.startsWith("http")){
                 if (!href.matches("^(http|https)://(\\S+\\.)*"+root+"/.*")){
