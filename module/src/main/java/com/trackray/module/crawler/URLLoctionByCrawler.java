@@ -43,7 +43,8 @@ public class URLLoctionByCrawler extends CrawlerPlugin {
                 String v = param.get(k);
                 if (k.equals(key)) {
                     path.append(k + ("="));
-                    path.append(v + (payload));
+                    //path.append(v + (payload));
+                    path.append((payload));//只保留PAYLOAD 不保留原有参数值
                     path.append("&");
                 }else{
                     path.append(k + ("="));
@@ -61,7 +62,7 @@ public class URLLoctionByCrawler extends CrawlerPlugin {
 
             }
 
-            if (StringUtils.containsAny(content,flag,"User-Agent")){
+            if (StringUtils.contains(content,"User-Agent") && StringUtils.contains(content,flag)){
                 //存在漏洞
                 Vulnerable build = Vulnerable.builder()
                         .detail("通过爬虫检测出来该链接存在url跳转漏洞 param=" + key)
