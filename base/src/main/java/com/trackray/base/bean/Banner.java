@@ -1,13 +1,18 @@
 package com.trackray.base.bean;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.trackray.base.controller.DispatchController;
 import com.trackray.base.exploit.AbstractExploit;
 import com.trackray.base.plugin.AbstractPlugin;
 import com.trackray.base.plugin.CrawlerPlugin;
+import com.trackray.base.utils.CheckUtils;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Random;
 
 /**
@@ -28,17 +33,12 @@ public class Banner {
 
     public String generate(){
 
-        WebApplicationContext context = dispatchController.getAppContext();
 
-        int crawler = context.getBeansOfType(CrawlerPlugin.class).size();
-        int plugin = context.getBeansOfType(AbstractPlugin.class).size();
-        int exploit = context.getBeansOfType(AbstractExploit.class).size();
-        int auxiliary = 0;
-        for (AbstractPlugin a : context.getBeansOfType(AbstractPlugin.class).values()) {
-            if (a.getClass().getPackage().getName().contains("auxiliary")){
-                auxiliary++;
-            }
-        }
+        int crawler = crawlerCount();
+        int plugin = pluginCount()+jsonPluginCount();
+        int exploit = exploitCount();
+        int auxiliary = auxiliaryCount();
+
 
         String c = toInt(crawler);
         String p = toInt(plugin);
@@ -56,7 +56,42 @@ public class Banner {
         return text;
     }
 
+    public int count(){
+        return auxiliaryCount()+crawlerCount()+exploitCount()+jsonPluginCount()+pluginCount();
+    }
 
+    public int auxiliaryCount() {
+        int auxiliary = 0;
+        for (AbstractPlugin a : dispatchController.getAppContext().getBeansOfType(AbstractPlugin.class).values()) {
+            if (a.getClass().getPackage().getName().contains("auxiliary")){
+                auxiliary++;
+            }
+        }
+        return auxiliary;
+    }
+
+    public int exploitCount() {
+        return dispatchController.getAppContext().getBeansOfType(AbstractExploit.class).size();
+    }
+
+    public int pluginCount() {
+        return dispatchController.getAppContext().getBeansOfType(AbstractPlugin.class).size();
+    }
+
+    public int crawlerCount() {
+        return dispatchController.getAppContext().getBeansOfType(CrawlerPlugin.class).size();
+    }
+    public int jsonPluginCount(){
+        String jsonPath = Constant.RESOURCES_PATH.concat("json/");
+
+        File file = new File(jsonPath);
+        if (file.isDirectory()){
+            String[] list = file.list();
+            if (list!=null)
+                return list.length;
+        }
+        return 0;
+    }
     private String toInt(int i) {
         StringBuffer result = new StringBuffer();
         int temp = String.valueOf(i).length();

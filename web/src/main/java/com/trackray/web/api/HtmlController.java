@@ -2,9 +2,7 @@ package com.trackray.web.api;
 
 import com.trackray.base.bean.Banner;
 import com.trackray.base.bean.Constant;
-import com.trackray.base.bean.ResultCode;
 import com.trackray.base.plugin.MVCPlugin;
-import com.trackray.base.quartz.QuartzManager;
 import com.trackray.base.store.VulnDTO;
 import com.trackray.base.store.VulnRepository;
 import com.trackray.base.utils.StrUtils;
@@ -82,6 +80,22 @@ public class HtmlController {
             }
             session.setAttribute("menu",param);
             session.setAttribute("user",systemAccount);
+
+            int plugin = banner.pluginCount()+banner.crawlerCount()+banner.jsonPluginCount();
+            int exploit = banner.exploitCount();
+            int task = 0;
+            int vuln = 0;
+            for (TaskDTO t : taskRepository.findAll()) {
+                task++;
+            }
+
+            for (VulnDTO t : vulnRepository.findAll()) {
+                vuln++;
+            }
+            session.setAttribute("pluginSize",plugin);
+            session.setAttribute("exploitSize",exploit);
+            session.setAttribute("taskSize",task);
+            session.setAttribute("vulnSize",vuln);
             return "redirect:/manage";
         }
         return "redirect:/login";

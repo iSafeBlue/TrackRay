@@ -21,19 +21,7 @@ public class TaskApi {
     @Autowired
     private TaskRepository taskRepository;
 
-    @RequestMapping(value = "start" , method = RequestMethod.POST )
-    public ResultCode start(String task){
-        ResultCode code = taskService.checkTask(task);
-        if (code.getCode() == 200) {
-            new Thread() {
-                @Override
-                public void run() {
-                    boolean flag = taskService.startTask(task);
-                }
-            }.start();
-        }
-        return code;
-    }
+
 
     @RequestMapping(value = "process" , method = RequestMethod.POST )
     public ResultCode process(String task){
