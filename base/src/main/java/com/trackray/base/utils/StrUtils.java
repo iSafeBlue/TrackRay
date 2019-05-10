@@ -2,6 +2,8 @@ package com.trackray.base.utils;
 
 
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -193,4 +195,84 @@ public class StrUtils {
 		}
 		return str.replaceAll("[\\u0000-\\u0002\b]","");//转义字符 回车等范围
 	}
+
+	public static String urltoSchemaHostPort(URL u) {
+		int len = u.getProtocol().length() + 1;
+		if (u.getAuthority() != null && u.getAuthority().length() > 0)
+			len += 2 + u.getAuthority().length();
+		if (u.getPath() != null) {
+			len += u.getPath().length();
+		}
+		if (u.getQuery() != null) {
+			len += 1 + u.getQuery().length();
+		}
+		if (u.getRef() != null)
+			len += 1 + u.getRef().length();
+
+		StringBuffer result = new StringBuffer(len);
+		result.append(u.getProtocol());
+		result.append(":");
+		if (u.getAuthority() != null && u.getAuthority().length() > 0) {
+			result.append("//");
+			result.append(u.getAuthority());
+		}
+
+		return result.toString();
+	}
+
+	public static String urltoSchemaHostPortPath(URL u) {
+		int len = u.getProtocol().length() + 1;
+		if (u.getAuthority() != null && u.getAuthority().length() > 0)
+			len += 2 + u.getAuthority().length();
+		if (u.getPath() != null) {
+			len += u.getPath().length();
+		}
+		if (u.getQuery() != null) {
+			len += 1 + u.getQuery().length();
+		}
+		if (u.getRef() != null)
+			len += 1 + u.getRef().length();
+
+		StringBuffer result = new StringBuffer(len);
+		result.append(u.getProtocol());
+		result.append(":");
+		if (u.getAuthority() != null && u.getAuthority().length() > 0) {
+			result.append("//");
+			result.append(u.getAuthority());
+		}
+		if (u.getPath() != null) {
+			result.append(u.getPath());
+		}
+		return result.toString();
+	}
+
+	public static String urltoSchemaHostPortFile(URL u) {
+		int len = u.getProtocol().length() + 1;
+		if (u.getAuthority() != null && u.getAuthority().length() > 0)
+			len += 2 + u.getAuthority().length();
+		if (u.getPath() != null) {
+			len += u.getPath().length();
+		}
+		if (u.getQuery() != null) {
+			len += 1 + u.getQuery().length();
+		}
+		if (u.getRef() != null)
+			len += 1 + u.getRef().length();
+
+		StringBuffer result = new StringBuffer(len);
+		result.append(u.getProtocol());
+		result.append(":");
+		if (u.getAuthority() != null && u.getAuthority().length() > 0) {
+			result.append("//");
+			result.append(u.getAuthority());
+		}
+		if (u.getPath() != null) {
+			result.append(u.getFile());
+		}
+		return result.toString();
+	}
+
+
+
+
 }
