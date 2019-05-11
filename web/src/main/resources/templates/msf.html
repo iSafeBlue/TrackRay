@@ -181,8 +181,8 @@
         };
 
         ws.onmessage = function(evt) {
-            if (evt.data.indexOf("console")!=-1){
-                $(".path").text(evt.data.split(":")[1])
+            if (evt.data.indexOf("c0nso1e")!=-1){
+                $(".path").text(evt.data.split("##!##")[1])
             }else{
                 console.append(evt.data);
             }

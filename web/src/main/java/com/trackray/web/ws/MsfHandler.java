@@ -56,7 +56,7 @@ public class MsfHandler extends TextWebSocketHandler {
         if (flag){
             String response = metasploit.execute(metasploit.list(payload));
             String console = metasploit.getConsole();
-            session.sendMessage(Message.NORMAL("console:"+console));
+            session.sendMessage(Message.NORMAL("c0nso1e##!##"+console));
             session.sendMessage(Message.NORMAL(response));
             while (metasploit.isBusy()) {
                 Thread.sleep(1200);
