@@ -15,7 +15,7 @@ import java.util.Map;
  * @email blue@ixsec.org
  * @since 2019/5/10 12:56
  */
-@Plugin(title = "ceye.io 插件" ,author = "浅蓝")
+@Plugin(title = "ceye.io 插件" ,desc = "ceye.io DNSlog 回显插件，可以查询http和dns日志",author = "浅蓝")
 public class FuckCeye extends InnerPlugin<Boolean> {
     @Value("${ceye.io.token}")
     public String token;

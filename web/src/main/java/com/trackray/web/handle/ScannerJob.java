@@ -274,7 +274,8 @@ public class ScannerJob implements InterruptableJob {
      */
     private void fuckDir() {
         SysLog.info("开始扫描目录");
-        FuzzDir fuzzDir = new FuzzDir();
+        FuzzDir fuzzDir = dispatchController.getAppContext().getBean(FuzzDir.class);
+
         fuzzDir.setTask(task);
         threadPool.submit(fuzzDir);
         SysLog.info("扫描目录结束");
@@ -297,7 +298,8 @@ public class ScannerJob implements InterruptableJob {
      */
     private void fuckFinger() {
         SysLog.info("开始鉴别指纹");
-        FingerScan fingerScan = new FingerScan();
+        FingerScan fingerScan = dispatchController.getAppContext().getBean(FingerScan.class);
+
         fingerScan.setTask(task);
         //threadPool.submit(fingerScan);
         fingerScan.executor();
@@ -321,7 +323,7 @@ public class ScannerJob implements InterruptableJob {
      */
     private void fuckBroDomain() {
         SysLog.info("开始扫描兄弟域名");
-        FuckBroDomain broDomain = new FuckBroDomain();
+        FuckBroDomain broDomain = dispatchController.getAppContext().getBean(FuckBroDomain.class);
         broDomain.setTask(task);
         threadPool.submit(broDomain);
         SysLog.info("扫描兄弟域名结束");
@@ -332,7 +334,8 @@ public class ScannerJob implements InterruptableJob {
      */
     private void fuckChildDomain() {
         SysLog.info("开始扫描子域名");
-        FuckChildDomain childDomain = new FuckChildDomain();
+        FuckChildDomain childDomain = dispatchController.getAppContext().getBean(FuckChildDomain.class);
+
         childDomain.setTask(task);
         threadPool.submit(childDomain);
         SysLog.info("扫描子域名结束");
@@ -344,7 +347,8 @@ public class ScannerJob implements InterruptableJob {
      */
     private void fuckWhois() {
         SysLog.info("开始检查域名基本信息");
-        FuckWhois whois = new FuckWhois();
+        FuckWhois whois = dispatchController.getAppContext().getBean(FuckWhois.class);
+
         whois.setTask(task);
         threadPool.submit(whois);
         SysLog.info("检查域名基本信息结束");
