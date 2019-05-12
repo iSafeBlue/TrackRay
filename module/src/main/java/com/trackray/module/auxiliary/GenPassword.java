@@ -1,4 +1,4 @@
-package com.trackray.module.mvc;
+package com.trackray.module.auxiliary;
 
 import com.trackray.base.annotation.Param;
 import com.trackray.base.annotation.Plugin;
