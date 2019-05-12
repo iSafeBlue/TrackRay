@@ -250,9 +250,6 @@ public class SimpleVulRule extends InnerPlugin<List<Vulnerable>> {
         }
     }
 
-    public static void main(String[] args) throws MalformedURLException {
-        System.out.println(new HttpURLRequest().url("http://www.epb.dl.gov.cn/OutLink/Law.aspx?url=http://www.httpbin.org/get").get().body());
-    }
     private void test(List<Payloader> payloaders) {
         SysLog.info("符合要求的有"+payloaders.size()+"个简单的漏洞规则");
         for (Payloader payloader : payloaders) {
