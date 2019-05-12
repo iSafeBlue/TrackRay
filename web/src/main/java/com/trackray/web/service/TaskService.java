@@ -9,15 +9,11 @@ import javax.servlet.http.HttpSession;
 public interface TaskService {
     ResultCode createTask(TaskQuery query , HttpSession session);
 
-    boolean startTask(String query);
-
     double taskProgress(String md5);
 
     boolean taskDestroy(String task, HttpSession session);
 
     ResultCode getTaskData(String task);
-
-    ResultCode checkTask(String task);
 
     int saveData(Task task, int status);
 

@@ -32,7 +32,11 @@
                         </div>
 
                         <form action="/doLogin" method="post">
-
+                            <#if (msg)??>
+                                <div class="alert alert-info bg-info text-white border-0" role="alert">
+                                    <strong>${msg}</strong>
+                                </div>
+                            </#if>
                             <div class="form-group">
                                 <label for="account">Account</label>
                                 <input class="form-control" name="account" type="text" id="account" required="" placeholder="浅蓝">
@@ -41,6 +45,16 @@
                             <div class="form-group">
                                 <label for="password">Password</label>
                                 <input class="form-control" type="password" name="password" required="" id="password" >
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label>VCode</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="code" >
+                                    <div class="input-group-append">
+                                        <img src="/verify">
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="form-group mb-0 text-center">
@@ -52,6 +66,11 @@
                 </div>
                 <!-- end card -->
 
+                <div class="row mt-3">
+                    <div class="col-12 text-center">
+                        <<a href="http://bbs.ixsec.org/member.php?mod=reg1ster" class="text-muted ml-1"><b>注册</b></a></p>
+                    </div> <!-- end col -->
+                </div>
                 <!-- end row -->
 
             </div> <!-- end col -->

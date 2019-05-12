@@ -9,6 +9,9 @@ import com.trackray.base.utils.StrUtils;
 import com.trackray.web.dto.TaskDTO;
 import com.trackray.web.repository.TaskRepository;
 import com.trackray.web.service.PluginService;
+import net.dongliu.requests.RawResponse;
+import net.dongliu.requests.Requests;
+import net.sf.json.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,8 +19,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -66,11 +76,12 @@ public class HtmlController {
     public String login(){return "/manage/login";}
 
     @PostMapping("/doLogin")
-    public String doLogin(String account , String password , HttpSession session){
+    public String doLogin(String account , String password ,String code , HttpSession session){
         String systemAccount = Constant.SYSTEM_ACCOUNT;
         String systemPassword = Constant.SYSTEM_PASSWORD;
-
-        if (StringUtils.equals(account,systemAccount) && StringUtils.equals(password,systemPassword))
+        //if (StringUtils.equals(account,systemAccount) && StringUtils.equals(password,systemPassword))
+        int result = forumLogin(account, password, code,session.getAttribute("phpsession").toString());
+        if(result == 1)
         {
 
             Map<String, MVCPlugin> mvcPlugins = pluginService.findMVCPlugins();
@@ -79,7 +90,7 @@ public class HtmlController {
                 param.put(entry.getKey(),entry.getValue().currentPlugin().title());
             }
             session.setAttribute("menu",param);
-            session.setAttribute("user",systemAccount);
+            session.setAttribute("user",account);
 
             int plugin = banner.pluginCount()+banner.crawlerCount()+banner.jsonPluginCount();
             int exploit = banner.exploitCount();
@@ -97,11 +108,52 @@ public class HtmlController {
             session.setAttribute("taskSize",task);
             session.setAttribute("vulnSize",vuln);
             return "redirect:/manage";
+        }else if (result == 0){
+            session.setAttribute("msg","账号或密码错误");
+        }else if(result == 2){
+            session.setAttribute("msg","验证码错误");
+        }else if(result == 3){
+            session.setAttribute("msg","溯光社区不稳定请重新登录");
         }
         return "redirect:/login";
     }
 
+    private int forumLogin(String account, String password, String code, String phpsession) {
+        HashMap<String, String> param = new HashMap<>();
+        param.put("username",account);
+        param.put("password",password);
+        param.put("code",code);
 
+        try {
+            RawResponse resp = Requests.get("http://bbs.ixsec.org/api/trackray_auth.php?act=log")
+                    .body(param)
+                    .cookies(new HashMap<String,String>(){{
+                        put("PHPSESSID",phpsession);
+                    }})
+                    .send();
+            JSONObject result = JSONObject.fromObject(resp.readToText());
+            return result.getInt("code");
+        }catch (Exception e){
+            return 3;
+        }
+    }
+
+    @GetMapping("/verify")
+    @ResponseBody
+    public void verify(HttpServletResponse response,HttpSession session){
+        try {
+            RawResponse resp = Requests.get("http://bbs.ixsec.org/api/trackray_auth.php?act=verify").send();
+            String phpsessid = resp.getCookie("PHPSESSID").value();
+            if (phpsessid!=null){
+                session.setAttribute("phpsession",phpsessid);
+            }
+            InputStream input = resp.getInput();
+            BufferedImage image = ImageIO.read(input);
+            ImageIO.write(image, "JPEG", response.getOutputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     @GetMapping("/manage")
     public String manage(){

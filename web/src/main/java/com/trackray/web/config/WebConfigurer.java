@@ -28,6 +28,6 @@ public class WebConfigurer implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
 
-        registry.addInterceptor(loginInterceptor).addPathPatterns("/**").excludePathPatterns("/doLogin","/login", "/","/js/**","/assets/**","/css/**");
+        registry.addInterceptor(loginInterceptor).addPathPatterns("/**").excludePathPatterns("/doLogin","/login","/verify", "/","/js/**","/assets/**","/css/**");
     }
 }
