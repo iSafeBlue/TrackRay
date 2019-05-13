@@ -12,10 +12,10 @@ import org.apache.commons.lang.StringUtils;
 @Data
 @Builder(toBuilder = true)
 public class FingerBean {
-    private String version;
-    private String match;
-    private String url;
-    private String md5;
+    private String version; //指纹版本
+    private String match;   //匹配表达式
+    private String url; //指纹URL
+    private String md5; //指纹MD5
 
     public FingerBean(String version, String match, String url) {
         this.version = version;
