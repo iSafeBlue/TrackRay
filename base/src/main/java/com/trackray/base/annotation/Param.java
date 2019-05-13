@@ -6,8 +6,8 @@ package com.trackray.base.annotation;
  * @since 2019/1/8 12:28
  */
 public @interface Param {
-    String key () default "";
-    String defaultValue() default "";
-    String desc() default "";
+    String key () default "";           // 参数键
+    String defaultValue() default "";   // 参数默认值
+    String desc() default "";           // 参数说明
 
 }
