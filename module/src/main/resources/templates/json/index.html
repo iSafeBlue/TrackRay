@@ -11,6 +11,24 @@
 
     <form action="attack" method="post">
 
+        <div>
+            <ul>
+
+                <#if plugins?exists>
+                    <#list plugins?keys as key>
+                        <tr>
+                            <li>
+                                <input type="checkbox" value="true" name="${key}">${plugins[key]}
+                            </li>
+                        </tr>
+                    </#list>
+                </#if>
+
+
+            </ul>
+        </div>
+
+
         <textarea name="urls" placeholder="http://xxx.com/ 一行一个网站" rows="15" cols="50"></textarea>
 
         <br/>
@@ -21,15 +39,6 @@
 
 </div>
 
-<div>
-    <ul>
-        <li th:each="plugin : ${plugins}">
-
-            <a  th:text="${plugin.value}" ></a>
-        </li>
-
-    </ul>
-</div>
 
 </body>
 </html>

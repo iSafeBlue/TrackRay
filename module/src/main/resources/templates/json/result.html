@@ -9,13 +9,20 @@
 
 <div>
     <ul>
-        <li th:each="r : ${results}">
 
-            <p  th:text="${r}" ></p>
-        </li>
+        <#list results as t>
+
+            <p >${t} </p>
+
+        </#list>
+
     </ul>
 
-    <h2 th:if="${results.size() == 0}">没有找到漏洞</h2>
+    <#if results?size == 0>
+        <h2>没有找到漏洞</h2>
+    </#if>
+
+
 
 
 </div>
