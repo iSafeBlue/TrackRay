@@ -2,7 +2,7 @@
 <div align="center">
 
 
-![](img/logo.png)
+![](docs/img/logo.png)
 
 <br/>
 
@@ -20,68 +20,86 @@
 
 ## 关于溯光
 
-溯光是一个由Java语言编写的服务式插件化渗透测试框架，项目是一个WEB服务，提供了调用插件和扫描的接口，并且使用了 Websocket 技术实现命令行风格交互，启动后只需要通过浏览器即可访问，是其他开源渗透测试框架不具备的特点。
+溯光，英文名“TrackRay”，意为逆光而行，追溯光源。同时致敬安全圈前辈开发的“溯雪”，“流光”。
 
-自更新 2.0 版本后，项目数据库采用嵌入式数据库hsqldb，使用 SpringBoot 框架开发，用maven管理依赖，使开发和使用更为简单方便。
+溯光是一个开源的插件化渗透测试框架，框架自身实现了漏洞扫描功能，集成了知名安全工具：Metasploit、Nmap、Sqlmap、AWVS等。
 
-如有任何使用上的问题可发送邮件或联系我的私人微信，BUG请提交issue。
+溯光使用 Java 编写，SpringBoot 作为基础框架，JPA + HSQLDB嵌入式数据库做持久化，Maven 管理依赖，Jython 实现 Python 插件调用，quartz 做任务调度，freemarker + thymeleaf 做视图层，Websocket 实现命令行式插件交互。
+
+框架可扩展性高，支持 Java、Python、JSON 等方式编写插件，有“漏洞扫描插件”、“爬虫插件”、“MVC插件”、“内部插件”、“无交互插件”和“可交互插件” 等插件类型。
+
+如有任何使用上的问题请前往 iZone 社区[溯光板块](http://bbs.ixsec.org/forum.php?mod=forumdisplay&fid=85)或者提交 issue。
 
 如果你具备插件开发的能力，希望你也能一起来维护这个项目。
 
-项目开发不易，你的 star 就是我坚持的动力。
-
-
+项目开发不易，可以的话请留下你的 star。
 
 ## 特点
 
-- 提供WEB服务接口
+- 提供 WEB 服务接口
 - 使用只需要一个浏览器
-- 第一个使用Java集成MSF & AWVS的开源项目
-- 内置插件式扫描器
-
-
-## 如何使用
-* 安装nmap，写入环境变量
-* 启动SQLMAP API
-* 启动msfrpc服务 ```msfrpcd -U msf -P msf -S -f```
-* 启动AWVS
-* 在application.properties配置文件中修改 ```database.dir```及以上有变更的配置参数
-* 编译并运行SpringBoot启动类WebApplication.java
-
-[详细教程](https://github.com/iSafeBlue/TrackRay/wiki/%E5%AE%89%E8%A3%85%E8%AF%B4%E6%98%8E)
+- 集成知名安全工具
+- 内置漏洞扫描器
+- 强大、易用、方便、开源
 
 
 
 ## 功能展示
 
+# 截图
+
+#### 主页
+
+![][1]
+
+#### 登录
+
+![][2]
+
+#### 任务创建
+
+![][3]
+
+#### 任务列表
+
+![][4]
+
+#### 任务详情
+
+
+![1557573022.jpg][6]
+
+#### 无交互接口插件调用
+
+![][7]
+
+#### MVC插件示例
+
+![1557573113(1).jpg][8]
+
 #### 交互式插件控制台
-![](img/netcat.gif)
+
+![05.gif][9]
 
 #### MSF 控制台
-![](img/msf.gif)
 
-#### 无交互插件调用
-![Image text](img/5.png)
-![Image text](img/2.gif)
-
-#### 扫描器展示
-![](img/6.gif)
+![](/docs/img/msf.gif)
 
 
-## 插件
+## 文档
 
-[plugin.md](plugin.md)
+[安装说明](/docs/安装说明.md)
 
+[插件开发](/docs/扩展开发.md)
 
-## 功能简介
-
-[functions.md](functions.md)
+[功能介绍](/docs/功能.md)
 
 
 ## ChangeLog
 
 | 日期 | 描述  |
 | ---- | ---- |
+| 2019-05-14 | 溯光3更新 |
 | 2019-03-11 | 新增jython支持，可通过`PyScript.java`插件调用python脚本 |
 | 2019-02-02 | 修复在linux环境下相关bug |
 | 2019-01-30 | 溯光2更新 |
@@ -89,6 +107,7 @@
 
 
 ## 贡献者
+
 项目由[浅蓝](https://github.com/iSafeBlue)发起并主导开发。
 
 [致谢名单](https://github.com/iSafeBlue/TrackRay/wiki/%E8%87%B4%E8%B0%A2%E5%90%8D%E5%8D%95)
@@ -103,7 +122,7 @@
 * 社区活动
 * 奖励杰出贡献者
 
-![微信](img/wx.png) ![支付宝](img/ali.png)
+![微信](docs/img/wx.png) ![支付宝](docs/img/ali.png)
 
 ## 申明
 
@@ -124,3 +143,13 @@
 ## 联系作者
 
 email: blue#ixsec.org
+
+  [1]: /docs/img/3999579642.png
+  [2]: /docs/img/242398485.png
+  [3]: /docs/img/4052103405.png
+  [4]: /docs/img/3017849620.png
+  [5]: /docs/img/4059228044.png
+  [6]: /docs/img/4094571871.png
+  [7]: /docs/img/1587610634.png
+  [8]: /docs/img/1141028461.png
+  [9]: /docs/img/2882579563.gif
