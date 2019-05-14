@@ -79,9 +79,9 @@ public class HtmlController {
     public String doLogin(String account , String password ,String code , HttpSession session){
         String systemAccount = Constant.SYSTEM_ACCOUNT;
         String systemPassword = Constant.SYSTEM_PASSWORD;
-        //if (StringUtils.equals(account,systemAccount) && StringUtils.equals(password,systemPassword))
-        int result = forumLogin(account, password, code,session.getAttribute("phpsession").toString());
-        if(result == 1)
+        Object phpsession = session.getAttribute("phpsession");
+        int result = forumLogin(account, password, code,phpsession==null?"":phpsession.toString());
+        if(result == 1 || (StringUtils.equals(account,systemAccount) && StringUtils.equals(password,systemPassword)))
         {
 
             Map<String, MVCPlugin> mvcPlugins = pluginService.findMVCPlugins();
