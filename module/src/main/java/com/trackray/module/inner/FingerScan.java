@@ -66,7 +66,7 @@ public class FingerScan extends InnerPlugin<FingerPrint> {
                             return scaned(finger);
                         }
                     }
-                } catch (MalformedURLException e) {
+                } catch (Exception e) {
                     continue;
                 }
             }
@@ -87,12 +87,16 @@ public class FingerScan extends InnerPlugin<FingerPrint> {
             return false;
         String uuid = UUID.randomUUID().toString();
         String body = req.body();
+        File file = new File(temp.concat(uuid));
         try {
-            FileUtils.writeStringToFile(new File(temp.concat(uuid)),body);
-            String md5 = DigestUtils.md5Hex(new FileInputStream(temp.concat(uuid)));
+            FileUtils.writeStringToFile(file,body);
+            String md5 = DigestUtils.md5Hex(new FileInputStream(file));
             return md5.equals(match);
         } catch (IOException e) {
             return false;
+        }finally {
+            if (file.exists())
+                file.delete();
         }
     }
 }

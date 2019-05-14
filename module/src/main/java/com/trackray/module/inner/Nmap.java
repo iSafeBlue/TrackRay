@@ -43,6 +43,8 @@ public class Nmap extends InnerPlugin {
 
     private static String nmap = "nmap";
 
+    private String filename = "";
+
     @Override
     public void process() {
         result = start();
@@ -53,7 +55,7 @@ public class Nmap extends InnerPlugin {
         if (!Constant.AVAILABLE_NMAP)
             return null;
         String realIP = this.task.getResult().getHostInfo().getRealIP();
-        String filename = tempDirl.concat(String.format(filenameTemplate, realIP, task.getTaskMD5()));
+        filename = tempDirl.concat(String.format(filenameTemplate, realIP, task.getTaskMD5()));
 
         Shell shell = shell();
         try {
@@ -75,6 +77,13 @@ public class Nmap extends InnerPlugin {
         }
 
         return null;
+    }
+
+    @Override
+    public void after() {
+        File file = new File(filename);
+        if (file!=null && file.exists() )
+            file.delete();
     }
 
     private boolean checkNotBlank(Elements elements){

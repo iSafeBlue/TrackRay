@@ -54,13 +54,16 @@ public class JSONPlugin extends MVCPlugin{
 
     @Function
     public void attack(){
+
+
         ArrayList<String> result = new ArrayList<>();
 
-        String urls = param.get("urls").toString();
+        String urls = param.remove("urls").toString();
         for (String url : urls.split("\r\n")) {
 
             for (String k : fuckJsonList().keySet()) {
-
+                if (!param.containsKey(k))
+                    continue;
                 try {
                     String code = FileUtils.readFileToString(new File(jsonPath.concat(k)) , "utf-8");
 
@@ -124,12 +127,16 @@ public class JSONPlugin extends MVCPlugin{
             return false;
         String uuid = UUID.randomUUID().toString();
         String body = req.body();
+        File file = new File(temp.concat(uuid));
         try {
-            FileUtils.writeStringToFile(new File(temp.concat(uuid)),body);
-            String md5 = DigestUtils.md5Hex(new FileInputStream(temp.concat(uuid)));
+            FileUtils.writeStringToFile(file,body);
+            String md5 = DigestUtils.md5Hex(new FileInputStream(file));
             return md5.equals(match);
         } catch (IOException e) {
             return false;
+        }finally {
+            if (file.exists())
+                file.delete();
         }
     }
 

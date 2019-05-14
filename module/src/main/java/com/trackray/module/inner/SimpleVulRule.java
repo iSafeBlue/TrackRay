@@ -241,7 +241,7 @@ public class SimpleVulRule extends InnerPlugin<List<Vulnerable>> {
     }
 
     @Override
-    public void after(Object... args) {
+    public void after() {
 
         if (result!=null){
             for (Vulnerable vulnerable : result) {

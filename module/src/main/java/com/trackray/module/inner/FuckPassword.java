@@ -15,7 +15,7 @@ import java.util.*;
  */
 @Plugin(value = "fuckPassword",title = "弱口令生成内部插件" ,author = "浅蓝")
 public class FuckPassword extends InnerPlugin<Set<String>> {
-    public String filename = BASE + this.currentPlugin().value() + "/template.txt";
+    public String filename = BASE + "/fuckPassword/template.txt";
 
     @Override
     public boolean check(Map<String, Object> param) {
@@ -78,7 +78,7 @@ public class FuckPassword extends InnerPlugin<Set<String>> {
     }
 
     @Override
-    public void after(Object... args) {
+    public void after() {
         result = pwds;
     }
 }

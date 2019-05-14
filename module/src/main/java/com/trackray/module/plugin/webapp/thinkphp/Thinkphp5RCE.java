@@ -66,7 +66,7 @@ public class Thinkphp5RCE extends CommonPlugin<String>{
     }
 
     @Override
-    public void after(Object... args) {
+    public void after() {
         if (result!=null){
             System.out.print("[+]");
             System.out.println(target);
