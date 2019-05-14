@@ -1,5 +1,4 @@
 #!/bin/bash
-rm -rf resources/**
 
 rm -rf trackray.jar
 
