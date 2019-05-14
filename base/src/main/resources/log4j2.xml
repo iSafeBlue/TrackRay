@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration status="WARN">
+<configuration status="DEBUG">
 
     <appenders>
         <console name="Console" target="SYSTEM_OUT">
@@ -10,7 +10,6 @@
     <loggers>
         <logger name="org.springframework" level="INFO"/>
         <logger name="org.hibernate" level="INFO"/>
-        <logger name="com.anbai" level="info"/>
         <root level="all">
             <appender-ref ref="Console"/>
         </root>
