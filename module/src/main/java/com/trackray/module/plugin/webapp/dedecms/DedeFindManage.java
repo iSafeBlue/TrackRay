@@ -104,6 +104,4 @@ public class DedeFindManage extends WebSocketPlugin {
 
     }
 
-    public static void main(String[] args) {
-    }
 }

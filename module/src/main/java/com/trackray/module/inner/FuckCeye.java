@@ -2,9 +2,11 @@ package com.trackray.module.inner;
 
 import com.trackray.base.annotation.Plugin;
 import com.trackray.base.plugin.InnerPlugin;
+import com.trackray.base.utils.PropertyUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang3.StringUtils;
+import org.javaweb.core.net.HttpURLRequest;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.net.MalformedURLException;
@@ -22,7 +24,13 @@ public class FuckCeye extends InnerPlugin<Boolean> {
     @Value("${ceye.io.identifier}")
     public String identifier;
 
-    private String template = "http://api.ceye.io/v1/records?token=%s&type=%s&filter=%s";
+    public static boolean canUse = false;
+
+    static {
+        canUse = canUse();
+    }
+
+    public static String template = "http://api.ceye.io/v1/records?token=%s&type=%s&filter=%s";
 
     public String formatURL(String type , String keyword){
         return String.format(template,token,type,keyword);
@@ -34,16 +42,27 @@ public class FuckCeye extends InnerPlugin<Boolean> {
             return new JSONObject();
         }
     }
+    private static boolean canUse(){
+        String token = PropertyUtil.getProperty("ceye.io.token");
+        String identifier = PropertyUtil.getProperty("ceye.io.identifier");
+        if (StringUtils.isAnyBlank(token,identifier))
+            return false;
+        String url = String.format("http://api.ceye.io/v1/records?token=%s&type=%s&filter=%s",token,"dns","");
+        JSONObject obj = null;
+        try {
+            obj = JSONObject.fromObject(new HttpURLRequest().url(url).get().body());
+        } catch (MalformedURLException e) {
+            obj = new JSONObject();
+        }
+        return !obj.isNullObject() && obj.has("meta") && obj.getJSONObject("meta").getInt("code") ==200;
+    }
+
     public boolean check(){
         return check(this.param);
     }
     @Override
     public boolean check(Map param) {
-        if (StringUtils.isAnyBlank(token,identifier))
-            return false;
-        String url = formatURL("dns", "");
-        JSONObject obj = get(url);
-        return !obj.isNullObject() && obj.has("meta") && obj.getJSONObject("meta").getInt("code") ==200;
+        return true;
     }
     public static final String NAME = "name";
     public static final String REMOTE_ADDR= "remote_addr";

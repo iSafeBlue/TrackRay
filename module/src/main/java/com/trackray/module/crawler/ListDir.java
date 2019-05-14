@@ -24,10 +24,6 @@ public class ListDir extends CrawlerPlugin {
         return target.toString().contains(".");
     }
 
-    public static void main(String[] args) {
-        System.out.println("/asdas".split("/").length);
-    }
-
     @Override
     public void process() {
 

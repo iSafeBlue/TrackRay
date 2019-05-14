@@ -12,6 +12,7 @@ import com.trackray.base.utils.RegexUtil;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.javaweb.core.net.HttpResponse;
+import org.javaweb.core.net.HttpURLRequest;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -42,6 +43,14 @@ public class FuckIPinfo extends InnerPlugin {
 
         host.setHost(targetHost);
 
+        try {
+            Document titleParse = Jsoup.parse(new URL(target), 1500);
+            String title = titleParse.select("title").text();
+            if (StringUtils.isNotEmpty(title))
+                task.getResult().getAdditional().put("网站标题",title);
+        } catch (Exception e) {
+        }
+
         if (ip != null) {
             host.setIp(ip);
             host.setRealIP(ip);
@@ -57,23 +66,38 @@ public class FuckIPinfo extends InnerPlugin {
             fuckOhterIP(task);
             fuckIPLocation(task);
             fuckIPHistory(task);
-            //TODO:真实IP
+            fuckRealIP(task);
 
         }
 
     }
 
-    public static void main(String[] args) {
-
+    private void fuckRealIP(Task task) {
         try {
-            Document parse = Jsoup.parse(new URL("http://site.ip138.com/www.ixsec.org/"), 1500);
-            Elements p = parse.select(".panel:contains(历史解析记录) > p");
-            System.out.println(p);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            String url = "https://fofa.so/result?qbase64=";
+            String keyword = "domain=\"%s\" ";
+            HttpURLRequest req = requests;
+            String text = Base64.getEncoder().encodeToString((String.format(keyword, task.getResult().getHostInfo().getDomain())).getBytes());
+            HttpResponse response = req.url(url.concat(text)).get();
+            String body = response.body();
+            if (StringUtils.containsAny(body,"获得 0 条匹配结果","Retry")){
+                return;
+            }
+            Document parse = response.parse();
+            Elements a = parse.select(".list_mod .fa-map-marker +a");
+            if (!a.isEmpty()){
+                String realIP = a.text().trim();
+                String ip = task.getResult().getHostInfo().getIp();
+                if (!ip.equals(realIP)){
+                    task.getResult().getHostInfo().setRealIP(realIP);
+                    task.getResult().getAdditional().put("FOFA提取到疑似真实IP" , realIP);
+                }
+            }
 
+
+        }catch (Exception e){}
     }
+
     private void fuckIPHistory(Task task) {
         try {
             HttpResponse resp = requests.url("http://site.ip138.com/" + task.getResult().getHostInfo().getDomain() + "/")
