@@ -4,6 +4,20 @@
         <title>Task Details - TrackRay</title>
 
         <#include "header.html"/>
+
+        <script>
+
+            function getVulResult(id) {
+                $.get(
+                    "/task/getVuln",
+                    {"id":id},
+                    function (data) {
+                        $("#vulResult").val(data);
+                    }
+                )
+            }
+
+        </script>
     </head>
     <body>
 
@@ -134,7 +148,7 @@
                                                         </td>
 
                                                         <td>
-                                                            <a href="javascript:void(0);" class="action-icon"> <i class="mdi mdi-eye"></i></a>
+                                                            <a href="javascript:void(0);" onclick="getVulResult('${vul.id}')" data-toggle="modal" data-target="#vul-result-modal"  class="action-icon"> <i class="mdi mdi-eye"></i></a>
 
                                                         </td>
                                                     </tr>
@@ -145,6 +159,25 @@
                                                 </tbody>
                                             </table></div>
                                     </div> <!-- end card-body-->
+
+                                    <div class="modal fade" id="vul-result-modal" tabindex="-1">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header border-bottom-0 d-block">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                                    <h4 class="modal-title">漏洞详情</h4>
+                                                </div>
+                                                <div class="modal-body p-4">
+                                                    <div class="form-group">
+                                                        <textarea id="vulResult" class="form-control" rows="20"></textarea>
+                                                    </div>
+
+                                                </div> <!-- end modal-body-->
+                                            </div> <!-- end modal-content-->
+                                        </div> <!-- end modal dialog-->
+                                    </div>
+                                    <!-- end modal-->
+
                                 </div> <!-- end card-->
                             </div> <!-- end col -->
                         </div>

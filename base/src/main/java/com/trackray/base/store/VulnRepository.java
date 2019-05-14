@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 @Repository
-public interface VulnRepository extends CrudRepository<VulnDTO, String> {
+public interface VulnRepository extends CrudRepository<VulnDTO, Integer> {
     List<VulnDTO> findAllByTaskMd5(String taskMd5);
     List<VulnDTO> deleteAllByTaskMd5(String taskMd5);
     List<VulnDTO> removeAllByTaskMd5(String taskMd5);

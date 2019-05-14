@@ -1,5 +1,9 @@
 package com.trackray.web.api;
 
+import com.alibaba.fastjson.JSON;
+import com.trackray.base.store.VulnDTO;
+import com.trackray.base.store.VulnRepository;
+import com.trackray.base.utils.StrUtils;
 import com.trackray.web.query.TaskQuery;
 import com.trackray.web.query.VulnQuery;
 import com.trackray.web.repository.TaskRepository;
@@ -21,6 +25,15 @@ public class TaskApi {
     @Autowired
     private TaskRepository taskRepository;
 
+    @Autowired
+    private VulnRepository vulnRepository;
+
+    @ResponseBody
+    @RequestMapping(value = "getVuln" , method = RequestMethod.GET)
+    public String getVulnById(int id){
+        VulnDTO vuln = vulnRepository.findById(id).get();
+        return StrUtils.formatJson(JSON.toJSONString(vuln));
+    }
 
 
     @RequestMapping(value = "process" , method = RequestMethod.POST )
