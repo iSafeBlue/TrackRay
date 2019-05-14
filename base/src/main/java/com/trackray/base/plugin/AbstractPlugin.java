@@ -9,6 +9,8 @@ import com.trackray.base.handle.Shell;
 import com.trackray.base.httpclient.CrawlerPage;
 import com.trackray.base.httpclient.Fetcher;
 import org.javaweb.core.net.HttpURLRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashMap;
@@ -23,6 +25,8 @@ import java.util.concurrent.Callable;
  */
 public abstract class AbstractPlugin<E> implements Callable<AbstractPlugin<E>> {
 
+
+    public final Logger log = LoggerFactory.getLogger(this.getClass());
 
 
     protected final static String BASE = Constant.RESOURCES_INCLUDE_PATH;   // resource外部资源文件的绝对路径
@@ -87,9 +91,12 @@ public abstract class AbstractPlugin<E> implements Callable<AbstractPlugin<E>> {
             flag = false;
         }
         if (flag){  //合法则执行插件代码
+            String title = currentPlugin().title();
+            log.info(String.format("[%s] 该插件通过检测，正在执行。",title));
             before();
             result = start();
             after();
+            log.info(String.format("[%s] 插件执行结束。",title));
         }
         return this;
     }

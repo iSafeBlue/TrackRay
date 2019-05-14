@@ -232,10 +232,6 @@ public class HttpClient {
         return ret;
     }
 
-    public static void main(String[] args) throws HttpException, IOException {
-        testGet();
-        //testUploadFile();
-    }
 
     //test
     public static void testGet() throws HttpException, IOException {
