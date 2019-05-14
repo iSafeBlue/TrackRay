@@ -55,10 +55,10 @@
 				<configuration>
 					<encoding>${project.build.sourceEncoding}</encoding>
 				</configuration>
-				<executions>
+				<!--<executions>
 					<execution>
 						<id>copy-spring-boot-resources</id>
-						<!-- here the phase you need -->
+						&lt;!&ndash; here the phase you need &ndash;&gt;
 						<phase>validate</phase>
 						<goals>
 							<goal>copy-resources</goal>
@@ -79,7 +79,7 @@
 							</resources>
 						</configuration>
 					</execution>
-				</executions>
+				</executions>-->
 			</plugin>
 
 
