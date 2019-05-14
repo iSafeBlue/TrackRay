@@ -27,7 +27,7 @@ public class Result {
     private SystemInfo systemInfo = new SystemInfo();   //操作系统和运行环境的基本信息
 
     @JSONField(name="附加信息")
-    private Map<String,String> additional = new HashMap<>();    //附加信息
+    private Map<String,Object> additional = new HashMap<>();    //附加信息
 
 
 }

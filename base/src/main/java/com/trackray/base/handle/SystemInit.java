@@ -42,7 +42,8 @@ public class SystemInit
     private Metasploit metasploit;
     private void check() {
 
-        String includePath = Constant.RESOURCES_PATH.concat(PropertyUtil.getProperty("include.path"));
+        String includePath = Constant.RESOURCES_PATH.concat("include");
+        Constant.RESOURCES_INCLUDE_PATH = includePath;
 
         Constant.SYSTEM_ACCOUNT = PropertyUtil.getProperty("trackray.account");
         Constant.SYSTEM_PASSWORD= PropertyUtil.getProperty("trackray.password");
@@ -51,6 +52,20 @@ public class SystemInit
         Constant.CENSYS_APPID = PropertyUtil.getProperty("censys.appid");
         Constant.CENSYS_SECRET = PropertyUtil.getProperty("censys.secret");
         Constant.SQLMAP_HOST = PropertyUtil.getProperty("sqlmap.root");
+
+        try {
+            //加载字典
+            Payload.domainPayload = FileUtils.readLines(new File(includePath.concat("dicts/domain.txt")));
+            Payload.dirPayload = FileUtils.readLines(new File((includePath.concat("dicts/dir.txt"))));
+            Payload.xssPayload = FileUtils.readLines(new File(includePath.concat("dicts/xss.txt")));
+            Payload.chinesePasswordTOP100 = FileUtils.readLines(new File(includePath.concat("dicts/chinese-pwd-top-100.txt")));
+            Payload.simpleUsername = FileUtils.readLines(new File(includePath.concat("dicts/simple-username.txt")));
+            Payload.usernameTOP500 = FileUtils.readLines(new File(includePath.concat("dicts/username-top-500.txt")));
+
+        } catch (Exception e) {
+            SysLog.error("payload加载异常 "+e.getMessage());
+        }
+
 
         try {
             Requests.get(Constant.SQLMAP_HOST).send();
@@ -96,19 +111,6 @@ public class SystemInit
         }
 
 
-        try {
-            //加载字典
-            Constant.RESOURCES_INCLUDE_PATH = includePath;
-            Payload.domainPayload = FileUtils.readLines(new File(includePath.concat("dicts/domain.txt")));
-            Payload.dirPayload = FileUtils.readLines(new File((includePath.concat("dicts/dir.txt"))));
-            Payload.xssPayload = FileUtils.readLines(new File(includePath.concat("dicts/xss.txt")));
-            Payload.chinesePasswordTOP100 = FileUtils.readLines(new File(includePath.concat("dicts/chinese-pwd-top-100.txt")));
-            Payload.simpleUsername = FileUtils.readLines(new File(includePath.concat("dicts/simple-username.txt")));
-            Payload.usernameTOP500 = FileUtils.readLines(new File(includePath.concat("dicts/username-top-500.txt")));
-
-        } catch (Exception e) {
-            SysLog.error("payload加载异常 "+e.getMessage());
-        }
 
         System.gc(); //垃圾回收
 

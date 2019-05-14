@@ -1,6 +1,7 @@
 package com.trackray.module.inner;
 
 import com.trackray.base.bean.HostInfo;
+import com.trackray.base.bean.Task;
 import com.trackray.base.enums.HttpMethod;
 import com.trackray.base.httpclient.CrawlerPage;
 import com.trackray.base.plugin.InnerPlugin;
@@ -9,14 +10,17 @@ import com.trackray.base.utils.ExtractUtils;
 import com.trackray.base.utils.ReUtils;
 import com.trackray.base.utils.RegexUtil;
 import net.sf.json.JSONObject;
+import org.apache.commons.lang3.StringUtils;
+import org.javaweb.core.net.HttpResponse;
+import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.*;
 
 /**
  * @author 浅蓝
@@ -50,24 +54,101 @@ public class FuckIPinfo extends InnerPlugin {
             host.setIp(ip); //域名的IP
             host.setRealIP(ip);//真实IP
 
+            fuckOhterIP(task);
+            fuckIPLocation(task);
+            fuckIPHistory(task);
             //TODO:真实IP
 
-            task.getExecutor().submit(
-                    new Runnable() {
-                        @Override
-                        public void run() {
-                            Set<String> ips = fuckOhterIP(domain);
-                            if (!ips.isEmpty()){
-                                host.getOtherIP().addAll(ips);
-                                host.setCdn(true);
-                            }
-                        }
-                    }
-            );
         }
 
     }
 
+    public static void main(String[] args) {
+
+        try {
+            Document parse = Jsoup.parse(new URL("http://site.ip138.com/www.ixsec.org/"), 1500);
+            Elements p = parse.select(".panel:contains(历史解析记录) > p");
+            System.out.println(p);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+    private void fuckIPHistory(Task task) {
+        try {
+            HttpResponse resp = requests.url("http://site.ip138.com/" + task.getResult().getHostInfo().getDomain() + "/")
+                    .get();
+            if (resp!=null && resp.getStatusCode() == 200){
+
+                Document parse = resp.parse();
+
+                Elements p = parse.select(".panel:contains(历史解析记录) > p");
+                if (p!=null && p.size()>0){
+                    HashMap<String, String> historyIP = new HashMap<>();
+                    for (Element element : p) {
+                        String date = element.select("span").text();
+                        String ip = element.select("a").text();
+                        if (StringUtils.isNotEmpty(ip)){
+                            historyIP.put(ip , date);
+                        }
+                    }
+                    if (!historyIP.isEmpty())
+                        task.getResult().getAdditional().put("域名历史解析记录",historyIP);
+                }
+
+
+            }
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private void fuckIPLocation(Task task) {
+        String domain = task.getResult().getHostInfo().getDomain();
+        task.getExecutor().submit(
+                new Runnable() {
+                    @Override
+                    public void run() {
+
+                        try {
+                            HttpResponse resp = requests.url("http://ip.tool.chinaz.com/" + domain).get();
+                            Document parse = resp.parse();
+                            if (parse!=null ){
+                                Elements select = parse.select("p.WhwtdWrap:contains(物理位置) +p > span");
+                                if (select.size() > 0)
+                                {
+                                    String ip = select.get(1).text();
+                                    String location = select.last().text();
+                                    if (location!=null && location.toLowerCase().contains("cdn"))
+                                        task.getResult().getHostInfo().setCdn(true);
+                                    task.getResult().getAdditional().put("IP物理位置",ip + " --- " + location);
+                                }
+                            }
+                        } catch (MalformedURLException e) {
+                        }
+                    }
+                }
+        );
+    }
+
+    private void fuckOhterIP(Task task) {
+        task.getExecutor().submit(
+                new Runnable() {
+                    @Override
+                    public void run() {
+
+                        Set<String> ips = fuckOhterIP(task.getResult().getHostInfo().getDomain());
+                        if (!ips.isEmpty()){
+                            task.getResult().getHostInfo().getOtherIP().addAll(ips);
+                            task.getResult().getHostInfo().setCdn(ips.size()>1);
+                        }
+                    }
+                }
+        );
+
+
+    }
     private Set<String> fuckOhterIP(String domain) {
         Set<String> r = new HashSet<>();
         CrawlerPage page = new CrawlerPage();
@@ -93,6 +174,5 @@ public class FuckIPinfo extends InnerPlugin {
         }
         return r;
     }
-
 
 }

@@ -48,7 +48,7 @@ public abstract class AbstractPlugin<E> implements Callable<AbstractPlugin<E>> {
 
     public void before(){}                                      // 执行插件主代码前执行
 
-    public void after(Object... args){}           // 执行插件主代码后执行
+    public void after(){}           // 执行插件主代码后执行
 
     public abstract E start();                                  // 插件代码实现方法
 
