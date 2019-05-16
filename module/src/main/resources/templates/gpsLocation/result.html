@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="//cdn.bootcss.com/jquery/2.2.2/jquery.min.js"></script>
+
+    <script>
+        function del(id) {
+            $.get(
+                "delete",
+                {id:id},
+                function () {
+                    location.reload()
+                }
+            )
+        }
+    </script>
+</head>
+<body>
+
+<h3>工具</h3>
+
+<ul>
+    <li>
+        <a href="generate" > 生成页面</a>
+    </li>
+
+    <li>
+        <a href="http://chaipip.com/ip.php" > IP 高精度查询</a>
+    </li>
+    <li>
+        <a href="https://met.red/h/location/queryIp" > IP 高精度查询2</a>
+    </li>
+    <li>
+        <a href="https://met.red/h/location/getOpenUrlUserIpInfo" > IP 高精度查询3 (key=tester)</a>
+    </li>
+    <li>
+        <a href="https://www.opengps.cn/Data/IP/rtb.aspx" > opengps IP 高精度查询</a>
+    </li>
+    <li>
+        <a href="https://www.opengps.cn/Data/IP/ipplus.aspx" > opengps IP 高精度查询2</a>
+    </li>
+    <li>
+        <a href="http://www.gpsspg.com/maps.htm" > 经纬度查询 </a>
+    </li>
+
+</ul>
+
+
+<h3>数据</h3>
+<#if (datas)??>
+
+    <table border="1">
+        <tr>
+            <th>IP</th>
+            <th>纬度</th>
+            <th>经度</th>
+            <th>user-agent</th>
+            <th>信息</th>
+            <th>备注</th>
+            <th>日期</th>
+            <th>操作</th>
+        </tr>
+        <#list datas as item>
+            <tr>
+                <td>
+                    <#if (item.ip)??>
+                        ${item.ip}
+                    </#if>
+                </td>
+                <td>
+                    <#if (item.latitude)??>
+                        ${item.latitude}
+                    </#if>
+                </td>
+                <td>
+                    <#if (item.longitude)??>
+                        ${item.longitude}
+                    </#if>
+                </td>
+                <td>
+                    <#if (item.userAgent)??>
+                        ${item.userAgent}
+                    </#if>
+                </td>
+                <td>
+                    <#if (item.msg)??>
+                        ${item.msg}
+                    </#if>
+                </td>
+                <td>
+                    <#if (item.remark)??>
+                        ${item.remark}
+                    </#if>
+                </td>
+                <td>${item.date}</td>
+                <td><a href="javascript:void(0)" onclick="del(${item.id})">删除</a></td>
+            </tr>
+        </#list>
+
+    </table>
+
+
+
+</#if>
+
+</body>
+</html>

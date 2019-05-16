@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml">
+<html>
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -7,6 +7,8 @@
 <body>
 
     <h1>Error</h1>
-    <li>${msg}</li>
+    <#if (msg)??>
+        <li>${msg}</li>
+    </#if>
 </body>
 </html>

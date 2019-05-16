@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<form>
+    <p>模板：</p>
+    <select name="template">
+        <#if (templates)??>
+            <#list templates as t>
+                <option value="${t}">${t}</option>
+            </#list>
+        </#if>
+    </select>
+
+    <br/>
+
+    <input type="text" name="remark" placeholder="备注">
+
+    <br/>
+
+    <input type="submit" value="生成">
+</form>
+
+
+<ul>
+    <li>
+        <p>https://met.red/h/location/push?server=rTebRCwJncIfEhTE 访问获取定位</p>
+    </li>
+
+    <li>
+        <a href="logo.png" target="_blank">通过图片获取IP</a>
+    </li>
+
+    <#if (link)??>
+        <li>
+            <a target="_blank" href="${link}">${link}</a>
+        </li>
+    </#if>
+</ul>
+
+
+</body>
+</html>

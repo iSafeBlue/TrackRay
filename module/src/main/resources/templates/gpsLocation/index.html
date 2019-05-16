@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<script src="//cdn.bootcss.com/jquery/2.2.2/jquery.min.js"></script>
+<script>
+    var remark = "${remark}";
+    function getLocation()
+    {
+
+        if (navigator.geolocation)
+        {
+            navigator.geolocation.getCurrentPosition(showPosition,showError);
+        }
+        else
+        {
+            $.ajax({
+                type:'post',
+                url:'/plugin/mvc/gpsLocation/addData',
+                async:true,
+                data: { latitude: "",longitude: "" , msg:"浏览器不支持定位" , remark:remark},
+            });
+
+        }
+    }
+    function showPosition(position)
+    {
+
+        $.ajax({
+            type:'post',
+            url:'/plugin/mvc/gpsLocation/addData',
+            async:true,
+            data: { latitude: position.coords.latitude,longitude: position.coords.longitude , msg:"成功获取定位",remark:remark},
+        });
+    }
+    function showError(error)
+    {
+        var msg = "";
+        switch(error.code)
+        {
+            case error.PERMISSION_DENIED:
+                msg="用户拒绝对获取地理位置的请求。"
+                break;
+            case error.POSITION_UNAVAILABLE:
+                msg="位置信息是不可用的。"
+                break;
+            case error.TIMEOUT:
+                msg="请求用户地理位置超时。"
+                break;
+            case error.UNKNOWN_ERROR:
+                msg="未知错误。"
+                break;
+        }
+
+        $.ajax({
+            type:'post',
+            url:'/plugin/mvc/gpsLocation/addData',
+            async:true,
+            data: { latitude: "",longitude: "" , msg:msg,remark:remark},
+        });
+
+    }
+    getLocation()
+</script>
+<script src="logo.png"></script>
+
+${body}
