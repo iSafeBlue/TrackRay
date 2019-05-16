@@ -2,6 +2,7 @@ package com.trackray.web.api;
 
 import com.trackray.base.bean.Banner;
 import com.trackray.base.bean.Constant;
+import com.trackray.base.controller.DispatchController;
 import com.trackray.base.plugin.MVCPlugin;
 import com.trackray.base.store.VulnDTO;
 import com.trackray.base.store.VulnRepository;
@@ -48,7 +49,8 @@ public class HtmlController {
     private TaskRepository taskRepository;
     @Autowired
     private VulnRepository vulnRepository;
-
+    @Autowired
+    private DispatchController dispatchController;
     @GetMapping("/")
     public String index(Model model){
         String banner = this.banner.generate();
@@ -164,7 +166,10 @@ public class HtmlController {
     @GetMapping("/apps/{plugin}")
     public String mvc(@PathVariable String plugin,
                       Model model){
+
+        MVCPlugin bean = dispatchController.getAppContext().getBean(plugin, MVCPlugin.class);
         model.addAttribute("plugin",plugin);
+        model.addAttribute("func",bean.currentRule().defaultPage());
         return "manage/mvcplugin";
     }
 
