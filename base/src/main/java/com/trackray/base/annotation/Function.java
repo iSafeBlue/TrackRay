@@ -12,4 +12,5 @@ import java.lang.annotation.*;
 @Documented
 public @interface Function {
     String value() default "";
+    String desc() default "";
 }

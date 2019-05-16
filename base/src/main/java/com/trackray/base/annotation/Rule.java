@@ -23,4 +23,5 @@ public @interface Rule {
     CommonPlugin.Charset charset() default CommonPlugin.Charset.UTF8;   //使用commonplugin时返回给浏览器的文本编码
     String[] headers() default {};  //返回给浏览器时的response header
     String filename() default "";   //插件用于下载功能时返回的文件名
+    String defaultPage() default "index";//MVC插件的默认页面
 }
