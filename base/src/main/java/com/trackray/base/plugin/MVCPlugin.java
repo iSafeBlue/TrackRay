@@ -4,6 +4,7 @@ import com.trackray.base.annotation.Function;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Map;
 
@@ -51,7 +52,7 @@ public abstract class MVCPlugin extends CommonPlugin<ModelAndView>{
         if (flag){
             try {
                 target.invoke(this, null);
-                model.setViewName(pluginKey.concat("/"+model.getViewName())); // 如果功能执行正常 那在viewName则为：插件id/视图名
+                model.setViewName(pluginKey.concat("/" + model.getViewName())); // 如果功能执行正常 那在viewName则为：插件id/视图名
             } catch (Exception e) {
                 model.setViewName("common/error");
                 model.addObject("msg",e.getMessage());
@@ -65,6 +66,25 @@ public abstract class MVCPlugin extends CommonPlugin<ModelAndView>{
                 model.setViewName("common/error");
                 model.addObject("msg",e.getMessage());
             }
+        }
+
+        /*
+            如果流已经被使用，就强制使用反射将 usingOutputStream 重置，不让他抛异常。
+         */
+        if (response.isCommitted()){
+
+            try {
+                Field field = this.response.getClass().getDeclaredField("response");
+                field.setAccessible(true);
+                Object response = field.get(this.response);
+
+                Field usingOutputStream = response.getClass().getDeclaredField("usingOutputStream");
+                usingOutputStream.setAccessible(true);
+                usingOutputStream.setBoolean(response,false);
+            }catch (Exception e){
+                log.error("重置stream异常",e);
+            }
+
         }
 
         return model;
