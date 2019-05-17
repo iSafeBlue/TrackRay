@@ -9,6 +9,7 @@ import com.trackray.base.plugin.CommonPlugin;
 import com.trackray.base.plugin.InnerPlugin;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.javaweb.core.net.HttpResponse;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -45,19 +46,20 @@ public class FingerScan extends InnerPlugin<FingerPrint> {
             for (FingerBean bean : beans) {
                 try {
                     String url = target.concat(bean.getUrl());
+                    log.info(String.format("指纹名[%s] url[%s]" , finger.getName() , bean.getUrl()));
                     HttpResponse response = requests.url(url).get();
                     int statusCode = response.getStatusCode();
                     String content = response.body();
                     if (bean.isMatch()){
 
-                            if (    statusCode!=404
-                                    &&
-                                    (content.contains(bean.getMatch())
-                                            ||
-                                            content.matches(bean.getMatch())
-                                    )){
-                                return scaned(finger);
-                            }
+                        if (    statusCode!=404
+                                &&
+                                (content.contains(bean.getMatch())
+                                        ||
+                                        content.matches(bean.getMatch())
+                                )){
+                            return scaned(finger);
+                        }
 
                     }else{
 

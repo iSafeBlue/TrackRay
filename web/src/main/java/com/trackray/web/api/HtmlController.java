@@ -71,9 +71,6 @@ public class HtmlController {
     public String msf(){return "msf";}
 
 
-    @GetMapping("/scan")
-    public String scan(){return "scan";}
-
     @GetMapping("/login")
     public String login(){return "/manage/login";}
 

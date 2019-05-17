@@ -29,5 +29,7 @@ public class Result {
     @JSONField(name="附加信息")
     private Map<String,Object> additional = new HashMap<>();    //附加信息
 
+    @JSONField(serialize = false)
+    private transient Map<String , Object> variables = new HashMap<>(); // 变量信息
 
 }

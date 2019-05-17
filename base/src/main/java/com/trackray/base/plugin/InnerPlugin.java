@@ -22,7 +22,7 @@ import java.util.Map;
  */
 public abstract class InnerPlugin<E> extends AbstractPlugin<E>{
 
-    private static final Logger log = LoggerFactory.getLogger(InnerPlugin.class);
+    public static final Logger log = LoggerFactory.getLogger(InnerPlugin.class);
 
     protected Task task;
 

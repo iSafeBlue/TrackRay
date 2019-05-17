@@ -2,10 +2,13 @@ package com.trackray.base.handle;
 
 import com.trackray.base.bean.Constant;
 import com.trackray.base.utils.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -24,6 +27,7 @@ public class Shell {
     private boolean block = false;
     private String target = "";
     private boolean enable = false;
+    private List<String> commands = new ArrayList<>();
     public Shell(){
     }
     public Shell(boolean enable){
@@ -43,6 +47,7 @@ public class Shell {
         ArrayList<String> base = new ArrayList<>();
         base.addAll(Arrays.asList((os.contains("indows") ? WIN_PREFIX : LINUX_PREFIX)));
         base.add(target);
+        commands = base;
         if (c!=null&&c.length>0)
             base.addAll(Arrays.asList(c));
         String path = System.getenv().get("Path");
@@ -73,22 +78,20 @@ public class Shell {
 
         return null;
     }
-
+    public static Logger log = LoggerFactory.getLogger(Shell.class);
     public String content(){
         if (block){
             try {
                 process.waitFor();
                 return IOUtils.analysisProcess(process);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                log.error("读取命令执行结果异常 "+commands);
             }
         }else{
             try {
                 return IOUtils.analysisProcess(process);
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error("读取命令执行结果异常 "+commands);
             }
         }
         return null;
@@ -98,6 +101,7 @@ public class Shell {
             try {
                 process.waitFor();
             } catch (InterruptedException e) {
+                log.error("读取命令执行结果异常 "+commands);
                 return "";
             }
         }
@@ -118,6 +122,7 @@ public class Shell {
             try {
                 process.waitFor();
             } catch (InterruptedException e) {
+                log.error("读取命令执行结果异常 "+commands);
                 return "";
             }
         }

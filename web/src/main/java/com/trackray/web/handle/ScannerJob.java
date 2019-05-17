@@ -2,7 +2,9 @@ package com.trackray.web.handle;
 
 import com.trackray.base.bean.*;
 import com.trackray.base.controller.DispatchController;
+import com.trackray.base.enums.FingerPrint;
 import com.trackray.base.exploit.AbstractExploit;
+import com.trackray.base.plugin.AbstractPlugin;
 import com.trackray.base.plugin.CrawlerPlugin;
 import com.trackray.base.store.VulnDTO;
 import com.trackray.base.store.VulnRepository;
@@ -22,10 +24,7 @@ import org.springframework.web.context.WebApplicationContext;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 /**
  * 扫描任务类
@@ -89,7 +88,7 @@ public class ScannerJob implements InterruptableJob {
 
         switch (whatTarget()){
             case Constant.IP_TYPE:
-                SysLog.info("目标是IP主机");
+                log.info(taskinfo()+"目标是IP主机");
 
                 fuckIPinfo();
 
@@ -97,7 +96,7 @@ public class ScannerJob implements InterruptableJob {
 
                 break;
             case Constant.URL_TYPE:
-                SysLog.info("目标是域名主机");
+                log.info(taskinfo()+"目标是域名主机");
 
                 fuckWhois();
 
@@ -119,15 +118,6 @@ public class ScannerJob implements InterruptableJob {
         if (task.getRule().thorough)
             fuckThorough();
 
-        saveData(task,1);
-
-        if (task.getRule().port)
-            fuckPort();
-
-        saveData(task,1);
-
-        if (task.getRule().finger)
-            fuckFinger();
 
         saveData(task,1);
 
@@ -137,6 +127,19 @@ public class ScannerJob implements InterruptableJob {
         if (task.getRule().fuzzdir)
             fuckDir();
 
+        saveData(task,1);
+
+        if (task.getRule().port)
+            fuckPort();
+        else
+            task.getResult().getVariables().put("nmapScaned",true);
+
+        saveData(task,1);
+
+        if (task.getRule().finger)
+            fuckFinger();
+        else
+            task.getResult().getVariables().put("fingerScaned",true);
 
         if (task.getRule().attack)
             fuckPlugin();
@@ -208,7 +211,7 @@ public class ScannerJob implements InterruptableJob {
      * 获取IP基本信息
      */
     private void fuckIPinfo() {
-        SysLog.info("开始检查IP基本信息");
+        log.info(taskinfo()+"开始检查IP基本信息");
         FuckIPinfo ipinfo = new FuckIPinfo();
         ipinfo.setTask(this.task);
         ipinfo.executor();
@@ -218,29 +221,48 @@ public class ScannerJob implements InterruptableJob {
      * 插件扫描
      */
     private void fuckPlugin() {
-        SysLog.info("开始调用漏洞检测插件");
 
-        WebApplicationContext context = dispatchController.getAppContext();
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    boolean fingerScaned = (boolean) task.getResult().getVariables().getOrDefault("fingerScaned", false);
+                    boolean nmapScaned = (boolean) task.getResult().getVariables().getOrDefault("nmapScaned", false);
+                    if (fingerScaned && nmapScaned)
+                        break;
+                    try {
+                        Thread.sleep(3000);
+                    } catch (InterruptedException e) {
+                    }
+                }
 
-        Map<String, AbstractExploit> beans = context.getBeansOfType(AbstractExploit.class);
+                log.info(taskinfo() + "开始调用漏洞检测插件");
 
-        SimpleVulRule simpleVul = dispatchController.getAppContext().getBean(SimpleVulRule.class);
-        simpleVul.setTask(task);
-        threadPool.submit(simpleVul);//简单的漏洞规则
+                WebApplicationContext context = dispatchController.getAppContext();
 
-        //调用JSON格式的漏洞插件
-        JSONInner jsonInner = dispatchController.getAppContext().getBean(JSONInner.class);
-        jsonInner.setTask(task);
-        threadPool.submit(jsonInner);
+                Map<String, AbstractExploit> beans = context.getBeansOfType(AbstractExploit.class);
 
-        //调用独立的漏洞插件
-        for (Map.Entry<String, AbstractExploit> entry : beans.entrySet()) {
-            AbstractExploit exp = entry.getValue();
-            exp.setTask(task);
-            exp.setTarget(task.getTargetStr());
-            threadPool.submit(exp);
-        }
-        SysLog.info("调用漏洞检测插件结束");
+                SimpleVulRule simpleVul = dispatchController.getAppContext().getBean(SimpleVulRule.class);
+                simpleVul.setTask(task);
+                threadPool.submit(simpleVul);//简单的漏洞规则
+
+                //调用JSON格式的漏洞插件
+                JSONInner jsonInner = dispatchController.getAppContext().getBean(JSONInner.class);
+                jsonInner.setTask(task);
+                threadPool.submit(jsonInner);
+
+                //调用独立的漏洞插件
+                for (Map.Entry<String, AbstractExploit> entry : beans.entrySet()) {
+                    AbstractExploit exp = entry.getValue();
+                    exp.setTask(task);
+                    exp.setTarget(task.getTargetStr());
+                    threadPool.submit(exp);
+                }
+                log.info(taskinfo() + "调用漏洞检测插件结束");
+            }
+        };
+
+        threadPool.submit(runnable);
 
     }
 
@@ -249,7 +271,7 @@ public class ScannerJob implements InterruptableJob {
      * 深度扫描 AWVS和NESSUS
      */
     private void fuckThorough() {
-        SysLog.info("开始深度扫描");
+        log.info(taskinfo()+"开始深度扫描");
 
         FuckAwvs fuckAwvs = dispatchController.getAppContext().getBean(FuckAwvs.class);
         fuckAwvs.setTask(task);
@@ -265,7 +287,7 @@ public class ScannerJob implements InterruptableJob {
 
             threadPool.submit(awvsScan);
         }
-        SysLog.info("深度扫描结束");
+        log.info(taskinfo()+"深度扫描结束");
 
     }
 
@@ -273,23 +295,23 @@ public class ScannerJob implements InterruptableJob {
      * 目录爆破
      */
     private void fuckDir() {
-        SysLog.info("开始扫描目录");
+        log.info(taskinfo()+"开始扫描目录");
         FuzzDir fuzzDir = dispatchController.getAppContext().getBean(FuzzDir.class);
 
         fuzzDir.setTask(task);
         threadPool.submit(fuzzDir);
-        SysLog.info("扫描目录结束");
+        log.info(taskinfo()+"扫描目录结束");
     }
 
     /**
      * 网页爬虫
      */
     private void fuckCrawler() {
-        SysLog.info("开始网页爬虫");
+        log.info(taskinfo()+"开始网页爬虫");
         FuckCrawler crawler = dispatchController.getAppContext().getBean(FuckCrawler.class);
         crawler.setTask(task);
         threadPool.submit(crawler);
-        SysLog.info("网页爬虫结束");
+        log.info(taskinfo()+"网页爬虫结束");
     }
 
     /**
@@ -297,13 +319,59 @@ public class ScannerJob implements InterruptableJob {
      * @Description: 这一步会阻塞，等待检测完成后才走下一步
      */
     private void fuckFinger() {
-        SysLog.info("开始鉴别指纹");
+        log.info(taskinfo()+"开始鉴别指纹");
         FingerScan fingerScan = dispatchController.getAppContext().getBean(FingerScan.class);
 
         fingerScan.setTask(task);
-        //threadPool.submit(fingerScan);
-        fingerScan.executor();
-        SysLog.info("鉴别指纹结束");
+        Future<AbstractPlugin<FingerPrint>> future = threadPool.submit(fingerScan);
+        threadPool.submit(new Runnable() {
+            @Override
+            public void run() {
+                //如果没有结束或关闭则一直循环
+                int flag = 90;//等待15分钟 超时强制结束线程
+                while(true){
+                    flag--;
+                    boolean done = future.isDone();
+                    boolean cancelled = future.isCancelled();
+                    if(done || cancelled)
+                        break;
+                    if (flag<=0)
+                        break;
+                    try {
+                        Thread.sleep(10000);//一次十秒
+                    } catch (InterruptedException e) {
+                        break;
+                    }
+
+                }
+                future.cancel(true);
+                task.getResult().getVariables().put("fingerScaned",true);
+                log.info(taskinfo()+"指纹扫描结束");
+            }
+        });
+
+        /*threadPool.submit(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    future.get(1,TimeUnit.MINUTES);
+                } catch (InterruptedException e) {
+                    task.getExceptions().add(e);
+                } catch (ExecutionException e) {
+                    task.getExceptions().add(e);
+                } catch (TimeoutException e) {
+                    task.getExceptions().add(e);
+                    log.error("指纹扫描超时");
+                }finally {
+                    future.cancel(true);
+                    log.info("指纹扫描结束");
+                    if (future.isDone()||future.isCancelled())
+                        task.getResult().getVariables().put("fingerScaned",true);
+                }
+            }
+        });*/
+
+
     }
 
     /**
@@ -311,34 +379,79 @@ public class ScannerJob implements InterruptableJob {
      * @Description: 这一步会阻塞，等待检测完成后才走下一步
      */
     private void fuckPort() {
-        SysLog.info("开始扫描端口");
+        log.info(taskinfo()+"开始扫描端口");
         Nmap nmap = dispatchController.getAppContext().getBean(Nmap.class);
         nmap.setTask(task);
-        nmap.executor();
-        SysLog.info("扫描端口结束");
+        Future future = threadPool.submit(nmap);
+        threadPool.submit(new Runnable() {
+            @Override
+            public void run() {
+                //如果没有结束或关闭则一直循环
+                int flag = 30;//15分钟
+                while(true){
+                    flag--;
+                    boolean done = future.isDone();
+                    boolean cancelled = future.isCancelled();
+                    if(done || cancelled)
+                        break;
+                    if (flag<=0)
+                        break;
+                    try {
+                        Thread.sleep(10000);//一次十秒
+                    } catch (InterruptedException e) {
+                        break;
+                    }
+
+                }
+                future.cancel(true);
+                task.getResult().getVariables().put("nmapScaned",true);
+                log.info(taskinfo()+"nmap端口扫描结束");
+            }
+        });
+
+        /*threadPool.submit(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    future.get(1,TimeUnit.MINUTES);
+                } catch (InterruptedException e) {
+                    task.getExceptions().add(e);
+                } catch (ExecutionException e) {
+                    task.getExceptions().add(e);
+                } catch (TimeoutException e) {
+                    task.getExceptions().add(e);
+                    log.error("nmap扫描超时");
+                }finally {
+                    future.cancel(true);
+                    log.info("Nmap端口扫描结束");
+                    if (future.isDone()||future.isCancelled())
+                        task.getResult().getVariables().put("nmapScaned",true);
+                }
+            }
+        });*/
     }
 
     /**
      * 扫描兄弟域名
      */
     private void fuckBroDomain() {
-        SysLog.info("开始扫描兄弟域名");
+        log.info(taskinfo()+"开始扫描兄弟域名");
         FuckBroDomain broDomain = dispatchController.getAppContext().getBean(FuckBroDomain.class);
         broDomain.setTask(task);
         threadPool.submit(broDomain);
-        SysLog.info("扫描兄弟域名结束");
+        log.info(taskinfo()+"扫描兄弟域名结束");
     }
 
     /**
      * 扫描子域名
      */
     private void fuckChildDomain() {
-        SysLog.info("开始扫描子域名");
+        log.info(taskinfo()+"开始扫描子域名");
         FuckChildDomain childDomain = dispatchController.getAppContext().getBean(FuckChildDomain.class);
 
         childDomain.setTask(task);
         threadPool.submit(childDomain);
-        SysLog.info("扫描子域名结束");
+        log.info(taskinfo()+"扫描子域名结束");
     }
 
     /**
@@ -346,12 +459,12 @@ public class ScannerJob implements InterruptableJob {
      * Whois、域名商、DNS服务器、CDN服务商
      */
     private void fuckWhois() {
-        SysLog.info("开始检查域名基本信息");
+        log.info(taskinfo()+"开始检查域名基本信息");
         FuckWhois whois = dispatchController.getAppContext().getBean(FuckWhois.class);
 
         whois.setTask(task);
         threadPool.submit(whois);
-        SysLog.info("检查域名基本信息结束");
+        log.info(taskinfo()+"检查域名基本信息结束");
     }
 
     /**
@@ -373,7 +486,7 @@ public class ScannerJob implements InterruptableJob {
 
         String taskMD5 = task.getTaskMD5();
 
-        SysLog.info(taskMD5+"：正在保存数据 状态："+status);
+        log.info(taskinfo()+taskMD5+"：正在保存数据 状态："+status);
 
 
         Result result = task.getResult();
@@ -436,6 +549,6 @@ public class ScannerJob implements InterruptableJob {
     }
 
     public String taskinfo(){
-        return String.format("task[%s]    job[%s]   ",taskKey , jobKey);
+        return String.format("job[%s]   ", jobKey);
     }
 }
