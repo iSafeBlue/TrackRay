@@ -98,6 +98,7 @@
 - **本项目未做安全防护**，部分代码会存在安全漏洞。
 - **MSF控制台**和**交互式插件控制台**，尽量使用 Firefox 浏览器访问。
 - 开发插件建议使用 `Intellij IDEA`，需要安装 lombok 插件。
+- 登录密码在 `application.properties` 中修改 `trackray.account` 和 `trackray.password`。
 
 ## ChangeLog
 .

@@ -75,12 +75,10 @@ public class HtmlController {
     public String login(){return "/manage/login";}
 
     @PostMapping("/doLogin")
-    public String doLogin(String account , String password ,String code , HttpSession session){
+    public String doLogin(String account , String password , HttpSession session){
         String systemAccount = Constant.SYSTEM_ACCOUNT;
         String systemPassword = Constant.SYSTEM_PASSWORD;
-        Object phpsession = session.getAttribute("phpsession");
-        int result = forumLogin(account, password, code,phpsession==null?"":phpsession.toString());
-        if(result == 1 || (StringUtils.equals(account,systemAccount) && StringUtils.equals(password,systemPassword)))
+        if( (StringUtils.equals(account,systemAccount) && StringUtils.equals(password,systemPassword)))
         {
 
             Map<String, MVCPlugin> mvcPlugins = pluginService.findMVCPlugins();
@@ -107,52 +105,13 @@ public class HtmlController {
             session.setAttribute("taskSize",task);
             session.setAttribute("vulnSize",vuln);
             return "redirect:/manage";
-        }else if (result == 0){
+        }else{
             session.setAttribute("msg","账号或密码错误");
-        }else if(result == 2){
-            session.setAttribute("msg","验证码错误");
-        }else if(result == 3){
-            session.setAttribute("msg","溯光社区不稳定请重新登录");
         }
         return "redirect:/login";
     }
 
-    private int forumLogin(String account, String password, String code, String phpsession) {
-        HashMap<String, String> param = new HashMap<>();
-        param.put("username",account);
-        param.put("password",password);
-        param.put("code",code);
 
-        try {
-            RawResponse resp = Requests.get("http://bbs.ixsec.org/api/trackray_auth.php?act=log")
-                    .body(param)
-                    .cookies(new HashMap<String,String>(){{
-                        put("PHPSESSID",phpsession);
-                    }})
-                    .send();
-            JSONObject result = JSONObject.fromObject(resp.readToText());
-            return result.getInt("code");
-        }catch (Exception e){
-            return 3;
-        }
-    }
-
-    @GetMapping("/verify")
-    @ResponseBody
-    public void verify(HttpServletResponse response,HttpSession session){
-        try {
-            RawResponse resp = Requests.get("http://bbs.ixsec.org/api/trackray_auth.php?act=verify").send();
-            String phpsessid = resp.getCookie("PHPSESSID").value();
-            if (phpsessid!=null){
-                session.setAttribute("phpsession",phpsessid);
-            }
-            InputStream input = resp.getInput();
-            BufferedImage image = ImageIO.read(input);
-            ImageIO.write(image, "JPEG", response.getOutputStream());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     @GetMapping("/manage")
     public String manage(){
