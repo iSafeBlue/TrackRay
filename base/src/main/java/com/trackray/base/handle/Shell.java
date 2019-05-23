@@ -46,7 +46,8 @@ public class Shell {
         String os = props.getProperty("os.name");
         ArrayList<String> base = new ArrayList<>();
         base.addAll(Arrays.asList((os.contains("indows") ? WIN_PREFIX : LINUX_PREFIX)));
-        base.add(target);
+        if (target!=null && !target.isEmpty())
+            base.add(target);
         commands = base;
         if (c!=null&&c.length>0)
             base.addAll(Arrays.asList(c));
