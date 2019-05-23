@@ -12,8 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * 系统初始化类
@@ -41,6 +43,9 @@ public class SystemInit
     @Autowired
     private Metasploit metasploit;
     private void check() {
+        Properties props=System.getProperties();
+        String os = props.getProperty("os.name");
+        Constant.TRACKRAY_SYSTEMOS = (os.contains("indows") ? Constant.WINDOWS : Constant.LINUX);
 
         String includePath = Constant.RESOURCES_PATH.concat("include");
         Constant.RESOURCES_INCLUDE_PATH = includePath;
