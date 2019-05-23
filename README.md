@@ -24,11 +24,11 @@
 
 溯光是一个开源的插件化渗透测试框架，框架自身实现了漏洞扫描功能，集成了知名安全工具：Metasploit、Nmap、Sqlmap、AWVS等。
 
-溯光使用 Java 编写，SpringBoot 作为基础框架，JPA + HSQLDB嵌入式数据库做持久化，Maven 管理依赖，Jython 实现 Python 插件调用，quartz 做任务调度，freemarker + thymeleaf 做视图层，Websocket 实现命令行式插件交互。
+溯光使用 Java 编写，SpringBoot 作为基础框架，JPA + HSQLDB嵌入式数据库做持久化，Maven 管理依赖，Jython 实现 Python 插件调用，quartz 做任务调度，freemarker 做视图层，Websocket 实现命令行式插件交互。
 
 框架可扩展性高，支持 Java、Python、JSON 等方式编写插件，有“漏洞扫描插件”、“爬虫插件”、“MVC插件”、“内部插件”、“无交互插件”和“可交互插件” 等插件类型。
 
-如有任何使用上的问题请前往 **iZone** 社区[溯光板块](http://bbs.ixsec.org/forum.php?mod=forumdisplay&fid=85)或者提交 issue。
+如有任何使用上的问题请提交 issue。
 
 如果你具备插件开发的能力，希望你也能一起来维护这个项目。
 
@@ -94,7 +94,7 @@
 [功能介绍](/docs/功能.md)
 
 ## 注意
-
+- 提问前请 **务必!务必!务必!** 阅读一遍[《提问的智慧》](https://github.com/ryanhanwu/How-To-Ask-Questions-The-Smart-Way/blob/master/README-zh_CN.md)。
 - **本项目未做安全防护**，部分代码会存在安全漏洞。
 - **MSF控制台**和**交互式插件控制台**，尽量使用 Firefox 浏览器访问。
 - 开发插件建议使用 `Intellij IDEA`，需要安装 lombok 插件。
