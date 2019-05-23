@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div>
+        <ul>
+
+            <#if codes?exists>
+                <#list codes?keys as key>
+
+                    <li>
+                        <p><b>${key}</b></p>
+
+                        <code><pre>${codes[key]}</pre></code>
+
+                    </li>
+
+                </#list>
+            </#if>
+
+        </ul>
+
+    </div>
+</body>
+</html>

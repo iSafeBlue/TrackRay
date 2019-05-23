@@ -19,6 +19,8 @@ public class Constant {
 
     public static final String WINDOWS = "WINDOWS";
     public static final String LINUX = "LINUX";
+    public static String TRACKRAY_SYSTEMOS = WINDOWS;   //溯光操作系统
+
 
     public static String SYSTEM_ACCOUNT = "";
     public static String SYSTEM_PASSWORD = "";
