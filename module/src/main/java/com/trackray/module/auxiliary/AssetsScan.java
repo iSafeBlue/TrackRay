@@ -22,7 +22,7 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Plugin(title = "资产扫描" , author = "浅蓝")
+//@Plugin(title = "资产扫描" , author = "浅蓝")
 @Rule(enable = false , params = {
                 @Param(key = "domain",defaultValue = "baidu.com" , desc = "目标域名"),
                 @Param(key = "port",defaultValue = "true" , desc = "是否扫描端口"),

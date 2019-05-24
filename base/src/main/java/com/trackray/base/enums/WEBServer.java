@@ -16,6 +16,7 @@ public enum WEBServer {
     NGINX("nginx/"),
     TOMCAT("Apache Tomcat"),
     APACHE("The requested URL","Apache/"),
+    WEBLOGIC("Hypertext Transfer Protocol","From RFC 2068","unavailable and has no forwarding address"),
     OTHER;
     private List<String> keywords = new ArrayList<>();
     WEBServer() {

@@ -27,7 +27,7 @@ import static com.trackray.module.exploit.WebLogicWLSRCE.pages;
 @Rule(params = {
         @Param(key = "target" ,desc= "目标网址")
 },type = CommonPlugin.Type.JSON)
-public class WeblogicRCE  extends CommonPlugin<String> {
+public class WeblogicAsyncResponseServiceRCE extends CommonPlugin<String> {
     @Autowired
     private FuckCeye fuckCeye;
 

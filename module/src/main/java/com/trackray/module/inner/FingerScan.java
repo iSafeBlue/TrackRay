@@ -5,6 +5,7 @@ import com.trackray.base.annotation.Rule;
 import com.trackray.base.bean.FingerBean;
 import com.trackray.base.bean.Task;
 import com.trackray.base.enums.FingerPrint;
+import com.trackray.base.enums.WEBServer;
 import com.trackray.base.plugin.CommonPlugin;
 import com.trackray.base.plugin.InnerPlugin;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -38,6 +39,24 @@ public class FingerScan extends InnerPlugin<FingerPrint> {
 
     @Override
     public FingerPrint start() {
+
+        //通过404判断webSERVER
+        try {
+            String page404 = requests.url(task.getTargetStr().concat("/asdasdsad")).get().body();
+
+            for (WEBServer web : WEBServer.values()) {
+                if (!web.getKeywords().isEmpty())
+                {
+                    if (StringUtils.containsAny(page404,web.getKeywords().toArray(new String[]{}))){
+                        task.getResult().getSystemInfo().setWebServer(web);
+                    }
+                }
+            }
+
+        } catch (MalformedURLException e) {
+        }
+
+
         FingerPrint[] fingers = FingerPrint.values();
         for (FingerPrint finger : fingers) {
             if (finger==FingerPrint.unknown)
