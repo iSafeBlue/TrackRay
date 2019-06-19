@@ -150,7 +150,9 @@
 
 ## 溯光交流群
 
-![][10]
+![][11]
+
+> 交流群已满员，请联系作者邀请入群。
 
 ## 联系作者
 
@@ -166,3 +168,4 @@ Email: blue#ixsec.org
   [8]: /docs/img/1141028461.png
   [9]: /docs/img/2882579563.gif
   [10]: /docs/img/group.jpg
+  [11]: /docs/img/wechat.jpg
