@@ -44,7 +44,7 @@ public abstract class AbstractPlugin<E> implements Callable<AbstractPlugin<E>> {
     public String errorMsg = "未通过校验";                       // 错误响应信息
 
     @Autowired
-    private HackKit hackKit = new HackKit() ; //工具包
+    protected HackKit hackKit = new HackKit() ; //工具包
 
     public int step = 1;
 
