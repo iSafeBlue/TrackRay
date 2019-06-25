@@ -12,7 +12,7 @@ public enum WEBServer {
     RESIN("Resin"),
     IIS8("class=\"content-container\"><fieldset>"),
     IIS6("go.microsoft.com/fwlink/?linkid="),
-    IIS7("Internet Information Services 7"),
+    IIS7("Internet Information Services 7","background-color:#555555;}","<h3>您要查找的资源可能已被删除","<div id=\"header\"><h1>服务器错误</h1></div>"),
     NGINX("nginx/"),
     TOMCAT("Apache Tomcat"),
     APACHE("The requested URL","Apache/"),
