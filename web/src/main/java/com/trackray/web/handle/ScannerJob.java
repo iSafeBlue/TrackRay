@@ -102,12 +102,12 @@ public class ScannerJob implements InterruptableJob {
 
                 fuckIPinfo();
 
+                if (task.getRule().childdomain){
+                    fuckChildDomain();
+                }
 
                 if (task.getRule().sense)
                 {
-
-                    fuckChildDomain();
-
                     fuckBroDomain();
                 }
                 break;
