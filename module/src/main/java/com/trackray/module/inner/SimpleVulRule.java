@@ -140,6 +140,26 @@ public class SimpleVulRule extends InnerPlugin<List<Vulnerable>> {
                                 .build()
                 );
 
+
+                loaders.add(
+                        Payloader.builder()
+                                .url("/plus/download.php?open=1&link=aHR0cDovL3d3dy5iYWlkdS5jb20%3D")
+                                .request(new HttpURLRequest().followRedirects(false).method(HttpRequest.Method.GET))
+                                .custom(new Custom() {
+                                    @Override
+                                    public boolean fun(HttpResponse response) throws Exception {
+                                        if (    response!=null &&
+                                                response.getStatusCode() == 302 ){
+                                            return true;
+                                        }
+                                        return false;
+                                    }
+                                })
+                                .vuln(Vulnerable.builder().title("dedecms 5.7  /plus/download.php URL重定向漏洞")
+                                        .level(Vulnerable.Level.MIDDLE.getLevel()).type(Vulnerable.Type.UNKNOWN.getType()).build())
+                                .build()
+                );
+
                 break;
             default:
                 /**
@@ -315,6 +335,7 @@ public class SimpleVulRule extends InnerPlugin<List<Vulnerable>> {
                         resp = req.post();
 
                 }else{
+                    req.url(target.concat(payloader.url));
                     resp = req.request();
                 }
 
