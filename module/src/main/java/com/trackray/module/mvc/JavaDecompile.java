@@ -175,9 +175,10 @@ public class JavaDecompile extends MVCPlugin{
                                     .exec("-o", "-d"+absolutePath , "-sjava",classFilename);
                             break;
                         case Constant.LINUX:
-                            shell().target("chmod")
-                                    .block(true)
-                                    .exec("+x" , LINUX ,"&" ,  "."+LINUX , "-o", "-d"+absolutePath , "-sjava",classFilename);
+                            shell().block(true)
+                                    .exec("chmod +x "+LINUX );
+                            shell().block(true)
+                                    .exec(LINUX +" -o -d" + absolutePath + " -sjava "+ classFilename);
 
                             break;
 
@@ -218,9 +219,10 @@ public class JavaDecompile extends MVCPlugin{
                                     .exec("-r", "-ff" , "-d" , absolutePath , "-sjava",jarPath+"/**/*.class");
                             break;
                         case Constant.LINUX:
-                            shell().target("chmod")
-                                    .block(true)
-                                    .exec("+x" , LINUX ,"&" ,  "."+LINUX , "-r", "-ff" , "-d" , absolutePath , "-sjava",jarPath+"/**/*.class");
+                            shell().block(true)
+                                    .exec("chmod +x "+LINUX );
+                            shell().block(true)
+                                    .exec(LINUX +" -r -ff -d" + absolutePath + " -sjava "+ jarPath +"/**/*.class");
 
                             break;
 
