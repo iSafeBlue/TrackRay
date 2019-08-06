@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>鲲鹏扫描</title>
+    <#include "/manage/header.html"/>
+    <script>
+        $(function () {
+
+            $("#scan").click(function () {
+                var target = $("#target").val();
+                var netloc = $("#netloc").val();
+                var timeout = $("#timeout").val();
+                var type = $("#type").val();
+                $("#outlog").append("正在扫描中..."+"\r\n")
+                $.post(
+                    "check",
+                    {
+                        netloc:netloc,
+                        target:target,
+                        timeout:timeout,
+                        type:type
+                    },
+                    function (e) {
+                        $("#outlog").append("\r\n===================\r\n"+e)
+                    }
+                )
+            })
+        })
+
+    </script>
+</head>
+
+<body>
+
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+
+                <div class="form-group mb-3">
+                    <label for="target">服务类型</label>
+                    <select class="form-control" id="target">
+                        <#if (targets)??>
+                            <#list targets as t>
+                                <option value="${t}">${t}</option>
+                            </#list>
+                        </#if>
+                    </select>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="type">服务类型</label>
+                    <select class="form-control" id="type">
+                        <option value="web">网站应用</option>
+                        <option value="service">服务应用</option>
+                    </select>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="netloc">扫描目标</label>
+                    <input type="text" id="netloc" class="form-control">
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="timeout">超时时间(秒)</label>
+                    <input class="form-control" id="timeout" type="number" value="15">
+                </div>
+
+                <button type="button" id="scan" class="btn btn-primary">扫描</button>
+            </div> <!-- end col -->
+
+            <div class="col-md-6">
+                <h4 class="header-title mt-5 mt-sm-0"></h4>
+                <div class="form-group mb-3">
+                    <label for="example-multiselect">插件列表</label>
+                    <select id="example-multiselect" multiple="" class="form-control">
+                        <#if (plugins)??>
+                            <#list plugins as p>
+                                <option>[${p.target}] - [${p.name}]</option>
+                            </#list>
+                        </#if>
+                    </select>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="outlog">输出日志</label>
+                    <textarea class="form-control" id="outlog" rows="5"></textarea>
+                </div>
+            </div> <!-- end col -->
+        </div> <!-- end row -->
+
+    </div> <!-- end card-body-->
+</div>
+
+</body>
+
+<#include "/manage/footer_script.html"/>
+
+</html>

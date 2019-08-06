@@ -37,7 +37,7 @@ import java.util.UUID;
  * @since 2019/4/4 17:51
  */
 @Rule
-@Plugin(value = "json", title = "kunpeng插件调用" ,author = "浅蓝")
+@Plugin(value = "json", title = "鲲鹏JSON插件调用" ,author = "浅蓝")
 public class JSONPlugin extends MVCPlugin{
 
     public static String jsonPath = Constant.RESOURCES_PATH.concat("json/");

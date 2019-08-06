@@ -24,7 +24,7 @@ import java.util.Map;
 @Rule(params = {
         @Param(key = "command" , desc = "载荷命令" ,defaultValue = "calc"),
         @Param(key = "payload" , desc = "攻击载荷" , defaultValue = "CommonsCollections4")
-} , filename = "payload.ser" , charset = CommonPlugin.Charset.UTF8)
+} , filename = "payload.ser" , charset = CommonPlugin.Charset.UTF8, auth = true)
 @Plugin(title = "ysoserial payload在线生成接口" ,author = "浅蓝")
 public class DownloadYsoserialPayload extends CommonPlugin<Object> {
     @Autowired

@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Value;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.UUID;
 
 /**
@@ -43,14 +42,16 @@ public class YsoserialGenerate extends InnerPlugin<File>{
         String tempname = temp.concat("ysoserial_"+uuid);
 
         try {
-            Shell shell = shell().target("java")
-                    .block(true);
+            Shell shell = shell().block(true);
 
-            shell.exec("-jar", PATH , payload , "\""+command+"\"", ">" , tempname);
+            shell.exec(String.format("java -jar %s %s %s > %s",PATH,payload,command,tempname));
+
+            String s = shell.readAll();
+
 
             result = new File(tempname);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(),e);
         }
 
 

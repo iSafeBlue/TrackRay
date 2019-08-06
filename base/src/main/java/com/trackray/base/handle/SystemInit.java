@@ -42,10 +42,14 @@ public class SystemInit
     private Banner banner;
     @Autowired
     private Metasploit metasploit;
-    private void check() {
+
+    static{
         Properties props=System.getProperties();
         String os = props.getProperty("os.name");
         Constant.TRACKRAY_SYSTEMOS = (os.contains("indows") ? Constant.WINDOWS : Constant.LINUX);
+    }
+
+    private void check() {
 
         String includePath = Constant.RESOURCES_PATH.concat("include");
         Constant.RESOURCES_INCLUDE_PATH = includePath;

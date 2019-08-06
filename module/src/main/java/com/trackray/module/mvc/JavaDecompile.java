@@ -25,7 +25,7 @@ import java.util.UUID;
  * @since 2019/5/22 12:54
  */
 @Plugin(title = "Java 在线反编译" ,value = "javaDecompile", author = "浅蓝" )
-@Rule
+@Rule(auth = true)
 public class JavaDecompile extends MVCPlugin{
 
     public static final String LINUX = BASE + "/javaDecompile/linux/jad";
@@ -48,9 +48,10 @@ public class JavaDecompile extends MVCPlugin{
 
         File file = new File(path,"output");
 
-        if (!file.exists())
+        if (!file.exists()) {
             model.setViewName("dirs");
-
+            return ;
+        }
 
         File[] filelist = file.listFiles();
 

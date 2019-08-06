@@ -34,7 +34,7 @@ import java.util.Map;
 public class Nmap extends InnerPlugin {
 
     @Value("${temp.dir}")
-    private String tempDirl = "E:/";
+    private String tempDirl;
 
     private static String filenameTemplate = "nmap_%s_%s.xml";
 
@@ -59,7 +59,8 @@ public class Nmap extends InnerPlugin {
 
         Shell shell = shell();
         try {
-            shell.block(true).target(nmap).exec("-sT","-A","-sV","-O","-T5","--open","-oX",filename,realIP);
+            //shell.block(true).target(nmap).exec("-sT","-A","-sV","-O","-T5","--open","-oX",filename,realIP);
+            shell.block(true).target(nmap).exec("-sT -A -sV -O -T5 --open -oX " + filename + " "+realIP);
 
             String content = shell.content();
 

@@ -33,6 +33,7 @@ public class Shell {
     public Shell(boolean enable){
         this.enable = enable;
     }
+
     public Shell block(boolean b){
         this.block = b;
         return this;
@@ -42,18 +43,22 @@ public class Shell {
         return this;
     }
     public void exec(String... c) throws IOException {
-        Properties props=System.getProperties();
+        Properties props = System.getProperties();
         String os = props.getProperty("os.name");
+        boolean isWin = os.contains("indows");
         ArrayList<String> base = new ArrayList<>();
-        base.addAll(Arrays.asList((os.contains("indows") ? WIN_PREFIX : LINUX_PREFIX)));
+        if (isWin)
+            base.addAll(Arrays.asList(WIN_PREFIX));
+        else
+            base.addAll(Arrays.asList(LINUX_PREFIX));
         if (target!=null && !target.isEmpty())
             base.add(target);
         commands = base;
         if (c!=null&&c.length>0)
             base.addAll(Arrays.asList(c));
-        String path = System.getenv().get("Path");
+        String path = isWin ? System.getenv().get("Path") : System.getenv().get("PATH");
         String[] bases = base.toArray(new String[]{});
-        process = runtime.exec(bases,new String[]{"Path="+path});
+        process = runtime.exec(bases,new String[]{(isWin?"Path=":"PATH=")+path});
     }
 
     public void echo(String s){
