@@ -10,6 +10,7 @@ import com.trackray.base.controller.DispatchController;
 import com.trackray.base.plugin.AbstractPlugin;
 import com.trackray.base.plugin.CommonPlugin;
 import com.trackray.base.plugin.WebSocketPlugin;
+import com.trackray.web.utils.ServletUtils;
 import com.trackray.web.utils.wagu.Block;
 import com.trackray.web.utils.wagu.Board;
 import com.trackray.web.utils.wagu.Table;
@@ -162,7 +163,7 @@ public class PluginServiceImpl implements PluginService {
      * @throws IOException
      */
     @Override
-    public void usePlugin(Map<String, String> map, HttpServletResponse response) throws IOException {
+    public void usePlugin(Map<String, String> map, HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         String key = map.get("key");
         if (!getContext().containsBean(key)){
@@ -190,6 +191,10 @@ public class PluginServiceImpl implements PluginService {
         }
         if (rule.websocket()){
             response.getWriter().print(ResultCode.WARN("该插件类型为websocket"));
+            return;
+        }
+        if (rule.auth() && !ServletUtils.isLogged(request)){
+            response.getWriter().print(ResultCode.WARN("该插件需要登录认证"));
             return;
         }
         /*try {
@@ -458,7 +463,13 @@ public class PluginServiceImpl implements PluginService {
 
             MVCPlugin mvcPlugin = (MVCPlugin) this.getBean(plugin);
 
-            if (mvcPlugin!=null && mvcPlugin.currentRule().enable()){
+            if (mvcPlugin.currentRule().auth() && !ServletUtils.isLogged(request)){
+                model.setViewName("common/error");
+                model.addObject("msg","该插件需要登录认证");
+                return model;
+            }
+
+            if (mvcPlugin.currentRule().enable()){
 
                 mvcPlugin.setParam(map);
 
@@ -473,6 +484,9 @@ public class PluginServiceImpl implements PluginService {
                 AbstractPlugin<ModelAndView> executor = mvcPlugin.executor();
 
                 model = executor.result();
+            }else{
+                model.setViewName("common/error");
+                model.addObject("msg","该插件未开启");
             }
 
         }

@@ -5,6 +5,7 @@ package com.trackray.web.interceptor;
  * @email blue@ixsec.org
  * @since 2019/5/6 16:28
  */
+import com.trackray.web.utils.ServletUtils;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -17,11 +18,8 @@ import javax.servlet.http.HttpSession;
 public class LoginInterceptor implements HandlerInterceptor {
 
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        HttpSession session = request.getSession();
 
-        Object user = session.getAttribute("user");
-
-        if (user == null){
+        if (!ServletUtils.isLogged(request)){
             response.sendRedirect("/login");
             return false;
         }else {

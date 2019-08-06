@@ -24,4 +24,5 @@ public @interface Rule {
     String[] headers() default {};  //返回给浏览器时的response header
     String filename() default "";   //插件用于下载功能时返回的文件名
     String defaultPage() default "index";//MVC插件的默认页面
+    boolean auth() default false;   //插件是否启用登录认证
 }

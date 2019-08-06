@@ -47,7 +47,7 @@ public class PluginApi {
             response.getWriter().print(code.toString());
         }else if (map.containsKey("key")){
             String key =  map.get("key");
-            pluginService.usePlugin(map , response);
+            pluginService.usePlugin(map , request , response);
         }
     }
 

@@ -18,7 +18,7 @@ public interface PluginService {
 
     Map<String,MVCPlugin> findMVCPlugins();
 
-    void usePlugin(Map<String, String> map, HttpServletResponse response) throws IOException;
+    void usePlugin(Map<String, String> map, HttpServletRequest request, HttpServletResponse response) throws IOException;
 
     void getPlugin(String task, HttpServletResponse response) throws IOException;
 
