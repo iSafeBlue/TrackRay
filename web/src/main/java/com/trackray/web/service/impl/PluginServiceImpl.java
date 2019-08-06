@@ -73,10 +73,15 @@ public class PluginServiceImpl implements PluginService {
             ArrayList<String> ruleparam = new ArrayList<>();
             ArrayList<String> defparam = new ArrayList<>();
             ArrayList<String> descparam = new ArrayList<>();
-            for (Param param : rule.params()) {
-                ruleparam.add(param.key());
-                defparam.add(param.defaultValue());
-                descparam.add(param.desc());
+            Param[] params = rule.params();
+            if (!rule.defParam() && params[0].key().equals("RHOST") && params[3].key().equals("SSL")){
+
+            }else{
+                for (Param param : params) {
+                    ruleparam.add(param.key());
+                    defparam.add(param.defaultValue());
+                    descparam.add(param.desc());
+                }
             }
 
             rules.put("params",ruleparam);
@@ -124,10 +129,15 @@ public class PluginServiceImpl implements PluginService {
             ArrayList<String> ruleparam = new ArrayList<>();
             ArrayList<String> defparam = new ArrayList<>();
             ArrayList<String> descparam = new ArrayList<>();
-            for (Param param : rule.params()) {
-                ruleparam.add(param.key());
-                defparam.add(param.defaultValue());
-                descparam.add(param.desc());
+            Param[] params = rule.params();
+            if (!rule.defParam() && params[0].key().equals("RHOST") && params[3].key().equals("SSL")){
+
+            }else{
+                for (Param param : params) {
+                    ruleparam.add(param.key());
+                    defparam.add(param.defaultValue());
+                    descparam.add(param.desc());
+                }
             }
 
             rules.put("params",ruleparam);
@@ -547,10 +557,15 @@ public class PluginServiceImpl implements PluginService {
         ArrayList<String> ruleparam = new ArrayList<>();
         ArrayList<String> defparam = new ArrayList<>();
         ArrayList<String> descparam = new ArrayList<>();
-        for (Param param : rule.params()) {
-            ruleparam.add(param.key());
-            defparam.add(param.defaultValue());
-            descparam.add(param.desc());
+        Param[] params = rule.params();
+        if (!rule.defParam() && params[0].key().equals("RHOST") && params[3].key().equals("SSL")){
+
+        }else{
+            for (Param param : params) {
+                ruleparam.add(param.key());
+                defparam.add(param.defaultValue());
+                descparam.add(param.desc());
+            }
         }
 
         rules.put("params",ruleparam);
