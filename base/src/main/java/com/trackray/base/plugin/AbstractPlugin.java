@@ -85,18 +85,20 @@ public abstract class AbstractPlugin<E> implements Callable<AbstractPlugin<E>> {
      */
     public AbstractPlugin<E> executor() {
         boolean flag = true;
+        String title = currentPlugin().title();
         try {
             flag = check(param); // 判断参数是否合法
+
+            if (flag){  //合法则执行插件代码
+                log.info(String.format("[%s] 该插件通过检测，正在执行。",title));
+                before();
+                result = start();
+                after();
+                log.info(String.format("[%s] 插件执行结束。",title));
+            }
         }catch (Exception e){
-            flag = false;
-        }
-        if (flag){  //合法则执行插件代码
-            String title = currentPlugin().title();
-            log.info(String.format("[%s] 该插件通过检测，正在执行。",title));
-            before();
-            result = start();
-            after();
-            log.info(String.format("[%s] 插件执行结束。",title));
+            errorMsg = e.getMessage();
+            log.error(String.format("[%s] 执行过程中发生异常。",title),e);
         }
         return this;
     }

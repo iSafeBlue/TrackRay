@@ -4,6 +4,8 @@ import org.apache.commons.lang.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 /**
  * 普通插件类
@@ -61,6 +63,21 @@ public abstract class CommonPlugin<E> extends AbstractPlugin<E> {
 
     public boolean isNull(Object o){
         return o==null;
+    }
+
+    public void write(String content){
+        if (response!=null ){
+            try {
+                response.setContentType("text/pain;charset=utf-8");
+                response.setCharacterEncoding("utf-8");
+                PrintWriter writer = response.getWriter();
+                writer.print(content);
+                writer.flush();
+                writer.close();
+            } catch (IOException e) {
+                log.error(e.getMessage(),e);
+            }
+        }
     }
 
 }

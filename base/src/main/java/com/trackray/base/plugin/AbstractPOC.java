@@ -1,4 +1,4 @@
-package com.trackray.base.exploit;
+package com.trackray.base.plugin;
 
 import com.trackray.base.annotation.Plugin;
 import com.trackray.base.bean.*;
@@ -6,23 +6,19 @@ import com.trackray.base.httpclient.CrawlerPage;
 import com.trackray.base.httpclient.Fetcher;
 import com.trackray.base.store.VulnDTO;
 import com.trackray.base.store.VulnRepository;
-import com.trackray.base.utils.PageUtils;
 import org.javaweb.core.net.HttpURLRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-import java.util.List;
-
 
 /**
- * exploit抽象类
+ * poc抽象类
  * @author 浅蓝
  * @email blue@ixsec.org
  * @since 2019/1/8 12:28
  */
-public abstract class AbstractExploit implements Runnable{
+public abstract class AbstractPOC implements Runnable{
     @Deprecated
     protected static Fetcher fetcher = new Fetcher();
     @Deprecated
@@ -35,7 +31,7 @@ public abstract class AbstractExploit implements Runnable{
 
     private String target;
 
-    private static final Logger log = LoggerFactory.getLogger(AbstractExploit.class);
+    private static final Logger log = LoggerFactory.getLogger(AbstractPOC.class);
 
     private Task task;
 

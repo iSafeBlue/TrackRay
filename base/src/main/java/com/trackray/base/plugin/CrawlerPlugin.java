@@ -54,8 +54,7 @@ public abstract class CrawlerPlugin implements Runnable {
         if (StringUtils.isBlank(vulnerable.getPayload())){
             vuln.setPayload(vulnerable.getAddress());
         }
-
-        //vuln.setMessage(vulnerable.);
+        vuln.setMessage(vulnerable.getDetail());
         vuln.setPayload(vulnerable.getPayload());
         if (vulnerable.getReferences()!=null)
             vuln.setReference((String[]) vulnerable.getReferences().toArray());

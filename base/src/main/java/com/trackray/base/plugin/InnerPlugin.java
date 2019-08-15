@@ -89,7 +89,8 @@ public abstract class InnerPlugin<E> extends AbstractPlugin<E>{
 
             after();
         }catch (Exception e){
-            this.task.getExceptions().add(e);
+            if (task!=null)
+                this.task.getExceptions().add(e);
         }
 
         return this;
