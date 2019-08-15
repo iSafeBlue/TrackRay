@@ -3,9 +3,8 @@ package com.trackray.web.handle;
 import com.trackray.base.bean.*;
 import com.trackray.base.controller.DispatchController;
 import com.trackray.base.enums.FingerPrint;
-import com.trackray.base.exploit.AbstractExploit;
+import com.trackray.base.plugin.AbstractPOC;
 import com.trackray.base.plugin.AbstractPlugin;
-import com.trackray.base.plugin.CrawlerPlugin;
 import com.trackray.base.store.VulnDTO;
 import com.trackray.base.store.VulnRepository;
 import com.trackray.base.utils.CheckUtils;
@@ -240,7 +239,7 @@ public class ScannerJob implements InterruptableJob {
 
                 WebApplicationContext context = dispatchController.getAppContext();
 
-                Map<String, AbstractExploit> beans = context.getBeansOfType(AbstractExploit.class);
+                Map<String, AbstractPOC> beans = context.getBeansOfType(AbstractPOC.class);
 
                 SimpleVulRule simpleVul = dispatchController.getAppContext().getBean(SimpleVulRule.class);
                 simpleVul.setTask(task);
@@ -252,8 +251,8 @@ public class ScannerJob implements InterruptableJob {
                 threadPool.submit(jsonInner);
 
                 //调用独立的漏洞插件
-                for (Map.Entry<String, AbstractExploit> entry : beans.entrySet()) {
-                    AbstractExploit exp = entry.getValue();
+                for (Map.Entry<String, AbstractPOC> entry : beans.entrySet()) {
+                    AbstractPOC exp = entry.getValue();
                     exp.setTask(task);
                     exp.setTarget(task.getTargetStr());
                     threadPool.submit(exp);
@@ -328,12 +327,12 @@ public class ScannerJob implements InterruptableJob {
             @Override
             public void run() {
                 //如果没有结束或关闭则一直循环
-                int flag = 90;//等待15分钟 超时强制结束线程
+                int flag = 30;//等待15分钟 超时强制结束线程
                 while(true){
                     flag--;
                     boolean done = future.isDone();
                     boolean cancelled = future.isCancelled();
-                    if(done || cancelled)
+                    if(done || cancelled || interrupt)
                         break;
                     if (flag<=0)
                         break;
@@ -392,7 +391,7 @@ public class ScannerJob implements InterruptableJob {
                     flag--;
                     boolean done = future.isDone();
                     boolean cancelled = future.isCancelled();
-                    if(done || cancelled)
+                    if(done || cancelled || interrupt)
                         break;
                     if (flag<=0)
                         break;

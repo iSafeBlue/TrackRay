@@ -16,7 +16,7 @@
 	<context:component-scan base-package="com.trackray.base.controller"></context:component-scan>
 	<context:component-scan base-package="com.trackray.base.service"></context:component-scan>
 	<context:component-scan base-package="com.trackray.base.attack"></context:component-scan>
-	<context:component-scan base-package="com.trackray.base.exploit"></context:component-scan>
+	<context:component-scan base-package="com.trackray.base.plugin"></context:component-scan>
 	<context:component-scan base-package="com.trackray.base.**"></context:component-scan>
 
 	<bean name="coreThreadPool" class="com.trackray.base.handle.CoreThreadMap" ></bean>

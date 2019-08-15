@@ -90,7 +90,7 @@ public class HtmlController {
             session.setAttribute("user",account);
 
             int plugin = banner.pluginCount()+banner.crawlerCount()+banner.jsonPluginCount();
-            int exploit = banner.exploitCount();
+            int exploit = banner.pocCount();
             int task = 0;
             int vuln = 0;
             for (TaskDTO t : taskRepository.findAll()) {
