@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rules>
+<!--	1111<vuln name="SQLiIbatis" id="SQLiIbatis1">
+		<regexp>^((?!(like|order)).)*\$\w+\$((?!(like|order)).)*$</regexp>
+		<decription>$parameter$不是预编译，会有sql注入风险</decription>
+		<recommendation>#parameter#预编译</recommendation>
+		<reference>CWE链接:</reference>
+	</vuln>-->
+	<vuln name="like" id="SQLiIbatis2">
+		<regexp>like.*\$\w+\$</regexp>
+		<decription>SQLiIbatis2</decription>
+		<recommendation>使用连接符</recommendation>
+		<reference>CWE链接:</reference>
+	</vuln>
+	<vuln name="Order by" id="SQLiIbatis3">
+		<regexp>order\sby.*\$\w+\$</regexp>
+		<decription>SQLiIbatis</decription>
+		<recommendation>SQLiIbatis</recommendation>
+		<reference>CWE链接:</reference>
+	</vuln>
+</rules>

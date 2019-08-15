@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CEYE 日志</title>
+    <#include "/manage/header.html"/>
+</head>
+
+<body>
+
+<div class="card">
+    <div class="card-body">
+        <h4 class="header-title">HTTP Request</h4>
+        <p class="text-muted font-14 mb-4">
+            记录只保存6小时，只显示最后100个项目。
+        </p>
+        <p class="text-muted font-14 mb-4">
+            域名：${identifier}
+        </p>
+        <div id="basic-datatable_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+            <div class="row">
+                <div class="col-sm-12">
+                    <table class="table dt-responsive nowrap dataTable no-footer dtr-inline" role="grid"
+                           aria-describedby="basic-datatable_info" style="width: 100%; position: relative;"
+                           width="100%">
+
+                        <thead>
+                        <tr role="row">
+                            <th class="sorting_asc" tabindex="0" aria-controls="basic-datatable" rowspan="1" colspan="1"
+                                width="25%" aria-sort="ascending">
+                                地址
+                            </th>
+                            <th class="sorting" tabindex="0" aria-controls="basic-datatable" rowspan="1" colspan="1"
+                                width="10%">IP
+                            </th>
+                            <th class="sorting" tabindex="0" aria-controls="basic-datatable" rowspan="1" colspan="1"
+                                width="10%">方法
+                            </th>
+                            <th class="sorting" tabindex="0" aria-controls="basic-datatable" rowspan="1" colspan="1"
+                                width="25%">数据
+                            </th>
+                            <th class="sorting" tabindex="0" aria-controls="basic-datatable" rowspan="1" colspan="1"
+                                width="20%">U-A
+                            </th>
+                            <th class="sorting" tabindex="0" aria-controls="basic-datatable" rowspan="1" colspan="1"
+                                width="10%">时间
+                            </th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <#if (http)??>
+                            <#list http as t>
+                                <tr role="row" class="odd">
+                                    <td>${t.name}</td>
+                                    <td>${t.remote_addr}</td>
+                                    <td>${t.method}</td>
+                                    <td>${t.data}</td>
+                                    <td>${t.user_agent}</td>
+                                    <td>${t.created_at}</td>
+                                </tr>
+                            </#list>
+                        </#if>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div> <!-- end card body-->
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <h4 class="header-title">DNS Query</h4>
+        <p class="text-muted font-14 mb-4">
+            记录只保存6小时，只显示最后100个项目。
+        </p>
+
+        <div class="dataTables_wrapper dt-bootstrap4 no-footer">
+            <div class="row">
+                <div class="col-sm-12">
+                    <table id="basic-datatable" class="table dt-responsive nowrap dataTable no-footer dtr-inline"
+                           role="grid" aria-describedby="basic-datatable_info" style="width: 100%; position: relative;"
+                           width="100%">
+                        <thead>
+                        <tr role="row">
+                            <th class="sorting_asc" tabindex="0" aria-controls="basic-datatable" rowspan="1" colspan="1"
+                                style="width: 211.8px;" aria-sort="ascending">
+                                地址
+                            </th>
+                            <th class="sorting" tabindex="0" aria-controls="basic-datatable" rowspan="1" colspan="1"
+                                style="width: 312.8px;">IP
+                            </th>
+                            <th class="sorting" tabindex="0" aria-controls="basic-datatable" rowspan="1" colspan="1"
+                                style="width: 134.8px;">时间
+                            </th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <#if (dns)??>
+                            <#list dns as t>
+                                <tr role="row" class="odd">
+                                    <td>${t.name}</td>
+                                    <td>${t.remote_addr}</td>
+                                    <td>${t.created_at}</td>
+                                </tr>
+                            </#list>
+                        </#if>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div> <!-- end card body-->
+</div>
+
+
+</body>
+
+<#include "/manage/footer_script.html"/>
+
+</html>

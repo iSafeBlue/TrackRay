@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rules>
+	<vuln name="sendRedirect" id="URL-Redirect1">
+		<regexp>sendRedirect\(</regexp>
+		<decription>sendRedirect。</decription>
+		<recommendation>修复建议</recommendation>
+		<reference>CWE链接：</reference>
+	</vuln>
+	<vuln name="setHeader" id="URL-Redirect2">
+		<regexp>setHeader\(\"refresh</regexp>
+		<decription>setHeader。</decription>
+		<recommendation>修复建议</recommendation>
+		<reference>CWE链接：</reference>
+	</vuln>
+</rules>

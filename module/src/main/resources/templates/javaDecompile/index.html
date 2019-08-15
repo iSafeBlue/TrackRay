@@ -2,30 +2,80 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>在线Java反编译</title>
+    <#include "/manage/header.html"/>
 </head>
+
 <body>
 
+<div class="card">
+    <div class="card-body">
+        <h4 class="header-title m-t-0">在线Java反编译</h4>
 
-    <div>
-        <ul>
-            <li><a href="dirs">反编译结果</a></li>
-        </ul>
+        <form  enctype="multipart/form-data" action="upload" method="post" class="dropzone" id="myAwesomeDropzone" data-plugin="dropzone" data-previews-container="#file-previews"
+              data-upload-preview-template="#uploadPreviewTemplate">
+            <div class="fallback">
+                <input name="file" type="file"  />
+            </div>
 
-        <h2>上传</h2>
-
-        <form enctype="multipart/form-data" action="upload" method="post">
-
-            <input type="file" name="file">
-
-            <input type="submit" value="反编译">
-
+            <div class="dz-message needsclick">
+                <i class="h1 text-muted dripicons-cloud-upload"></i>
+                <h3>拖拽或点击上传</h3>
+                <span class="text-muted font-13">请上传 .jar 或 .class 文件</span>
+            </div>
         </form>
 
+        <!-- Preview -->
+        <div class="dropzone-previews mt-3" id="file-previews"></div>
 
+        <div>
+            <ul>
+                <li class="breadcrumb-item">
+                    已完成项目
+                </li>
+                <#if (dirs)??>
+                    <#list dirs as d>
 
-
+                        <li class="breadcrumb-item">
+                            <a href="view?uuid=${d}">${d}</a>
+                        </li>
+                    </#list>
+                </#if>
+            </ul>
+        </div>
     </div>
-
+    <!-- end card-body -->
+</div>
 </body>
+
+<!-- file preview template -->
+<div class="d-none" id="uploadPreviewTemplate">
+    <div class="card mt-1 mb-0 shadow-none border">
+        <div class="p-2">
+            <div class="row align-items-center">
+                <div class="col-auto">
+                    <img data-dz-thumbnail class="avatar-sm rounded bg-light" alt="">
+                </div>
+                <div class="col pl-0">
+                    <a href="javascript:void(0);" class="text-muted font-weight-bold" data-dz-name></a>
+                    <p class="mb-0" data-dz-size></p>
+                    <p>上传成功，请刷新页面</p>
+                </div>
+                <div class="col-auto">
+                    <!-- Button -->
+                    <a href="" class="btn btn-link btn-lg text-muted" data-dz-remove>
+                        <i class="dripicons-cross"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<#include "/manage/footer_script.html"/>
+
+<!-- Dropzone js -->
+<script src="/assets/js/vendor/dropzone.min.js"></script>
+<!-- File upload js -->
+<script src="/assets/js/ui/component.fileupload.js"></script>
 </html>

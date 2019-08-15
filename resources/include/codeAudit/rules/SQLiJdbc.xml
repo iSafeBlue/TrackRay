@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rules>
+	<vuln name="Statement" id="SQLiJdbc1">
+		<regexp>^*sql\.Statement|\.createStatement\(\)</regexp>
+		<decription>使用Statement，未预编译语句可能导致SQLi。</decription>
+		<recommendation>建议使用PreparedStatement进行预编译</recommendation>
+		<reference>CWE链接:</reference>
+	</vuln>
+</rules>

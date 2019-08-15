@@ -2,27 +2,54 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <#include "/manage/header.html"/>
 </head>
+
 <body>
-    <div>
-        <ul>
 
-            <#if codes?exists>
-                <#list codes?keys as key>
+<div class="card">
+    <div class="card-body">
 
-                    <li>
-                        <p><b>${key}</b></p>
+        <div class="row">
+            <div class="col-lg-12">
 
-                        <code><pre>${codes[key]}</pre></code>
+                <div id="accordion" class="custom-accordion mb-4">
+                    <#if codes?exists>
+                        <#assign index = 0>
+                            <#list codes?keys as key>
+                                <#assign index = index+1>
+                                <div class="card mb-0">
+                                    <div class="card-header" id="heading${index}">
+                                        <h5 class="m-0">
+                                            <a class="custom-accordion-title d-block pt-2 pb-2" data-toggle="collapse" href="#collapse${index}" aria-expanded="true" aria-controls="collapse${index}">
+                                                ${key}
+                                                <span class="float-right">
+                                                <i class="mdi mdi-chevron-down accordion-arrow"></i>
+                                            </span>
+                                            </a>
+                                        </h5>
+                                    </div>
+                                    <div id="collapse${index}" class="collapse show" aria-labelledby="heading${index}" data-parent="#accordion">
+                                        <div class="card-body">
 
-                    </li>
+                                            <pre><code>${codes[key]}</code></pre>
+                                        </div>
+                                    </div>
+                                </div> <!-- end card-->
 
-                </#list>
-            </#if>
+                            </#list>
+                    </#if>
 
-        </ul>
+                </div>
+            </div>
+        </div>
 
-    </div>
+    </div> <!-- end card body-->
+</div>
+
+
 </body>
+
+<#include "/manage/footer_script.html"/>
+
 </html>

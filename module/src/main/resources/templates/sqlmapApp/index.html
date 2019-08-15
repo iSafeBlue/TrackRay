@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SQL注入检测</title>
+    <#include "/manage/header.html"/>
+    <script>
+        $(function () {
+            $("#stop").click(function () {
+                var task = $("#tasks").val()[0]
+                if (task){
+                    $.post(
+                        "stop",
+                        {task:task},
+                        function (e) {
+                            $("#outlog").val("")
+                            $("#outlog").append("\r\n"+e+"\r\n");
+                        }
+                    )
+                }else{
+                    alert("请先选中任务")
+                }
+            })
+            $("#view").click(function () {
+                var task = $("#tasks").val()[0]
+                if (task){
+                    $.post(
+                        "data",
+                        {task:task},
+                        function (e) {
+                            $("#outlog").val("")
+                            $("#outlog").append("\r\n"+e+"\r\n");
+                        }
+                    )
+                }else{
+                    alert("请先选中任务")
+                }
+            });
+            $("#scan").click(function () {
+                var url = $("#url").val()
+                var data = $("#data").val()
+                var cookie = $("#cookie").val();
+                var risk = $("#risk").val();
+                var level = $("#level").val();
+
+                $.post(
+                    "scan",
+                    {url:url,data:data,cookie:cookie,risk:risk,level:level},
+                    function (e) {
+                        $("#outlog").val("")
+                        $("#outlog").append(e);
+                    }
+                )
+
+            })
+        })
+
+    </script>
+</head>
+
+<body>
+
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <#if status>
+                <div class="col-md-6">
+
+                    <div class="form-group mb-3">
+                        <label for="url">URL(-u)</label>
+                        <input type="text" id="url" class="form-control">
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="data">请求体(--data)</label>
+                        <textarea class="form-control" id="data" rows="5"></textarea>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="data">Cookie(--cookie)</label>
+                        <textarea class="form-control" id="cookie" rows="3"></textarea>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="level">Level</label>
+                        <select class="form-control" id="level">
+                            <option value="">默认</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="risk">Risk</label>
+                        <select class="form-control" id="risk">
+                            <option value="">默认</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                        </select>
+                    </div>
+
+                    <button type="button" id="scan" class="btn btn-primary">扫描</button>
+                </div> <!-- end col -->
+
+                <div class="col-md-6">
+                    <h4 class="header-title mt-5 mt-sm-0"></h4>
+                    <div class="form-group mb-3">
+                        <label for="tasks">任务列表</label>
+                        <select id="tasks" multiple="" class="form-control">
+                            <#if (tasks)??>
+                                <#list tasks as t>
+                                    <option value="${t}">${t}</option>
+                                </#list>
+                            </#if>
+                        </select>
+                    </div>
+
+                    <br/>
+                    <button type="button" id="view" class="btn btn-primary">查看结果</button>
+                    <button type="button" id="stop" class="btn btn-primary">停止任务</button>
+                    <br/>
+                    <br/>
+
+                    <div class="form-group mb-3">
+                        <label for="outlog">输出日志</label>
+                        <textarea class="form-control" id="outlog" rows="10"></textarea>
+                    </div>
+                </div> <!-- end col -->
+            <#else>
+                <h2>未检测到SQLMAP API服务，请检查配置文件</h2>
+            </#if>
+
+        </div> <!-- end row -->
+
+    </div> <!-- end card-body-->
+</div>
+
+</body>
+
+<#include "/manage/footer_script.html"/>
+
+</html>

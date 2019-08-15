@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-    <script src="//cdn.bootcss.com/jquery/2.2.2/jquery.min.js"></script>
+    <title>GPS</title>
+    <#include "/manage/header.html"/>
 
     <script>
         function del(id) {
@@ -17,93 +17,122 @@
         }
     </script>
 </head>
+
 <body>
 
-<h3>工具</h3>
+<div class="card">
+    <div class="card-body">
+        <h4 class="header-title">GPS定位</h4>
+        <p class="text-muted font-14 mb-4">
+            注意，使用H5 GPS定位时需要将溯光部署为HTTPS。
+        </p>
+        <div class="button-list">
+            <a class="btn btn-primary" href="generate">页面生成</a>
+            <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" aria-expanded="false">IP查定位<span class="caret"></span> </button>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="http://chaipip.com/ip.php">IP高精度查询1</a>
+                <a class="dropdown-item" href="https://met.red/h/location/queryIp">IP高精度查询2</a>
+                <a class="dropdown-item" href="https://met.red/h/location/getOpenUrlUserIpInfo">IP高精度查询3(key=tester)</a>
+                <a class="dropdown-item" href="https://www.opengps.cn/Data/IP/rtb.aspx">opengps IP高精度查询1</a>
+                <a class="dropdown-item" href="https://www.opengps.cn/Data/IP/ipplus.aspx">opengps IP高精度查询2</a>
+            </div>
+            <a class="btn btn-primary" href="http://www.gpsspg.com/maps.htm">经纬度定位</a>
+        </div>
+        <div id="basic-datatable_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+            <div class="row">
+                <div class="col-sm-12">
+                    <table class="table dt-responsive nowrap dataTable no-footer dtr-inline" role="grid"
+                           aria-describedby="basic-datatable_info" style="width: 100%; position: relative;"
+                           width="100%">
 
-<ul>
-    <li>
-        <a href="generate" > 生成页面</a>
-    </li>
+                        <thead>
+                        <tr role="row">
 
-    <li>
-        <a href="http://chaipip.com/ip.php" > IP 高精度查询</a>
-    </li>
-    <li>
-        <a href="https://met.red/h/location/queryIp" > IP 高精度查询2</a>
-    </li>
-    <li>
-        <a href="https://met.red/h/location/getOpenUrlUserIpInfo" > IP 高精度查询3 (key=tester)</a>
-    </li>
-    <li>
-        <a href="https://www.opengps.cn/Data/IP/rtb.aspx" > opengps IP 高精度查询</a>
-    </li>
-    <li>
-        <a href="https://www.opengps.cn/Data/IP/ipplus.aspx" > opengps IP 高精度查询2</a>
-    </li>
-    <li>
-        <a href="http://www.gpsspg.com/maps.htm" > 经纬度查询 </a>
-    </li>
+                            <th class="sorting_asc" tabindex="0" aria-controls="basic-datatable" rowspan="1" colspan="1"
+                                width="10%" aria-sort="ascending">
+                                IP
+                            </th>
+                            <th class="sorting" tabindex="0" aria-controls="basic-datatable" rowspan="1" colspan="1"
+                                width="10%">纬度
+                            </th>
+                            <th class="sorting" tabindex="0" aria-controls="basic-datatable" rowspan="1" colspan="1"
+                                width="10%">经度
+                            </th>
+                            <th class="sorting" tabindex="0" aria-controls="basic-datatable" rowspan="1" colspan="1"
+                                width="20%">U-A
+                            </th>
+                            <th class="sorting" tabindex="0" aria-controls="basic-datatable" rowspan="1" colspan="1"
+                                width="15%">信息
+                            </th>
+                            <th class="sorting" tabindex="0" aria-controls="basic-datatable" rowspan="1" colspan="1"
+                                width="15%">备注
+                            </th>
+                            <th class="sorting" tabindex="0" aria-controls="basic-datatable" rowspan="1" colspan="1"
+                                width="10%">时间
+                            </th>
+                            <th class="sorting" tabindex="0" aria-controls="basic-datatable" rowspan="1" colspan="1"
+                                width="10%">操作
+                            </th>
+                        </tr>
+                        </thead>
 
-</ul>
+                        <tbody>
+                        <#if (datas)??>
+                            <#list datas as item>
+                                <tr role="row" class="odd">
 
+                                    <td>
+                                        <#if (item.ip)??>
+                                            ${item.ip}
+                                        </#if>
+                                    </td>
+                                    <td>
+                                        <#if (item.latitude)??>
+                                            ${item.latitude}
+                                        </#if>
+                                    </td>
+                                    <td>
+                                        <#if (item.longitude)??>
+                                            ${item.longitude}
+                                        </#if>
+                                    </td>
+                                    <td>
+                                        <#if (item.userAgent)??>
+                                            ${item.userAgent}
+                                        </#if>
+                                    </td>
+                                    <td>
+                                        <#if (item.msg)??>
+                                            ${item.msg}
+                                        </#if>
+                                    </td>
+                                    <td>
+                                        <#if (item.remark)??>
+                                            ${item.remark}
+                                        </#if>
+                                    </td>
+                                    <td>${item.date}</td>
+                                    <td>
+                                        <a class="btn btn-icon btn-danger" href="javascript:void(0)" onclick="del(${item.id})">
+                                            <i class="mdi mdi-window-close"></i>
+                                        </a>
+                                    </td>
 
-<h3>数据</h3>
-<#if (datas)??>
+                                </tr>
+                            </#list>
+                        </#if>
 
-    <table border="1">
-        <tr>
-            <th>IP</th>
-            <th>纬度</th>
-            <th>经度</th>
-            <th>user-agent</th>
-            <th>信息</th>
-            <th>备注</th>
-            <th>日期</th>
-            <th>操作</th>
-        </tr>
-        <#list datas as item>
-            <tr>
-                <td>
-                    <#if (item.ip)??>
-                        ${item.ip}
-                    </#if>
-                </td>
-                <td>
-                    <#if (item.latitude)??>
-                        ${item.latitude}
-                    </#if>
-                </td>
-                <td>
-                    <#if (item.longitude)??>
-                        ${item.longitude}
-                    </#if>
-                </td>
-                <td>
-                    <#if (item.userAgent)??>
-                        ${item.userAgent}
-                    </#if>
-                </td>
-                <td>
-                    <#if (item.msg)??>
-                        ${item.msg}
-                    </#if>
-                </td>
-                <td>
-                    <#if (item.remark)??>
-                        ${item.remark}
-                    </#if>
-                </td>
-                <td>${item.date}</td>
-                <td><a href="javascript:void(0)" onclick="del(${item.id})">删除</a></td>
-            </tr>
-        </#list>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div> <!-- end card body-->
+</div>
 
-    </table>
-
-
-
-</#if>
 
 </body>
+
+<#include "/manage/footer_script.html"/>
+
 </html>

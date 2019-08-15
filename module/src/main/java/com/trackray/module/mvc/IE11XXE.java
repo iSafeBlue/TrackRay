@@ -15,7 +15,7 @@ import java.io.IOException;
  * @email blue@ixsec.org
  * @since 2019/5/21 15:37
  */
-@Plugin(title = "IE 11 XXE 文件获取" , value = "ie11XXE" , author = "浅蓝", desc = "需要在 application.properties 中配置 trackray.url(溯光在公网的URL) 和ceye")
+@Plugin(title = "IE11 XXE" , value = "ie11XXE" , author = "浅蓝", desc = "需要在 application.properties 中配置 trackray.url(溯光在公网的URL) 和ceye")
 @Rule
 public class IE11XXE extends MVCPlugin{
 

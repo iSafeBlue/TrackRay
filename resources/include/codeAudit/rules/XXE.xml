@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rules>
+	<vuln name="SAXReader" id="XXE1">
+		<regexp>new\s+SAXReader\(\)</regexp>
+		<decription>SAXReader。</decription>
+		<recommendation>使用XML解析器时需要设置其属性，禁止使用外部实体。</recommendation>
+		<reference>CWE链接:</reference>
+	</vuln>	
+	<vuln name="SAXBuilder" id="XXE2">
+		<regexp>new\s+SAXBuilder\(\)</regexp>
+		<decription>SAXBuilder。</decription>
+		<recommendation>使用XML解析器时需要设置其属性，禁止使用外部实体。</recommendation>
+		<reference>CWE链接:</reference>
+	</vuln>	
+	<vuln name="SAXParser" id="XXE3">
+		<regexp>new\s+SAXParser\(</regexp>
+		<decription>SAXParser。</decription>
+		<recommendation>使用XML解析器时需要设置其属性，禁止使用外部实体。</recommendation>
+		<reference>CWE链接:</reference>
+	</vuln>
+	<vuln name="XMLReader" id="XXE4">
+		<regexp>createXMLReader\(</regexp>
+		<decription>XMLReader。</decription>
+		<recommendation>使用XML解析器时需要设置其属性，禁止使用外部实体。</recommendation>
+		<reference>CWE链接:</reference>
+	</vuln>
+	<vuln name="DocumentBuilder" id="XXE5">
+		<regexp>newDocumentBuilder\(</regexp>
+		<decription>DocumentBuilder。</decription>
+		<recommendation>使用XML解析器时需要设置其属性，禁止使用外部实体。</recommendation>
+		<reference>CWE链接:</reference>
+	</vuln>
+	<vuln name="XMLStreamReader" id="XXE6">
+		<regexp>createXMLStreamReader\(</regexp>
+		<decription>XMLStreamReader。</decription>
+		<recommendation>使用XML解析器时需要设置其属性，禁止使用外部实体。</recommendation>
+		<reference>CWE链接:</reference>
+	</vuln>
+</rules>

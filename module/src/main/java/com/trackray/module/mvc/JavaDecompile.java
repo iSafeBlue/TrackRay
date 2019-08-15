@@ -24,7 +24,7 @@ import java.util.UUID;
  * @email blue@ixsec.org
  * @since 2019/5/22 12:54
  */
-@Plugin(title = "Java 在线反编译" ,value = "javaDecompile", author = "浅蓝" )
+@Plugin(title = "Java反编译" ,value = "javaDecompile", author = "浅蓝" )
 @Rule(auth = true)
 public class JavaDecompile extends MVCPlugin{
 
@@ -36,11 +36,10 @@ public class JavaDecompile extends MVCPlugin{
 
     @Override
     public void index() {
-
+        dirs();
         model.setViewName("index");
     }
 
-    @Function
     public void dirs(){
 
         String path = tmpdir.concat("trackJad");
@@ -63,7 +62,6 @@ public class JavaDecompile extends MVCPlugin{
             }
         }
         model.addObject("dirs",files);
-        model.setViewName("dirs");
     }
 
     @Function

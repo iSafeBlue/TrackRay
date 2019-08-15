@@ -8,6 +8,7 @@ import com.trackray.base.plugin.MVCPlugin;
 import com.sun.jna.Library;
 import com.sun.jna.Native;
 import com.trackray.base.utils.CheckUtils;
+import com.trackray.base.utils.StrUtils;
 import com.trackray.module.inner.JSONPlugin;
 import lombok.Data;
 import net.sf.json.JSONArray;
@@ -28,14 +29,14 @@ import java.util.Set;
  * @since 2019/8/6 10:29
  */
 @Plugin(title = "鲲鹏扫描器" , value = "kunpengScan")
-@Rule
+@Rule(auth = true)
 public class KunpengScan extends MVCPlugin {
 
     public final static String LIB_FILENAME = "kunpeng_%s_v%s.%s";
     public final static String VERSION = "20190527";
 
-    public final static String WIN_LIB =  "E:\\source\\trackray-framework\\resources\\include/kunpengScan/" + String.format(LIB_FILENAME , "win",VERSION,"dll");
-    public final static String LINUX_LIB = "E:\\source\\trackray-framework\\resources\\include/kunpengScan/" + String.format(LIB_FILENAME , "linux",VERSION,"so");
+    public final static String WIN_LIB =  BASE + "/kunpengScan/" + String.format(LIB_FILENAME , "win",VERSION,"dll");
+    public final static String LINUX_LIB = BASE + "/kunpengScan/" + String.format(LIB_FILENAME , "linux",VERSION,"so");
 
     @Value("${ceye.io.identifier}")
     private String identifier;
@@ -86,9 +87,9 @@ public class KunpengScan extends MVCPlugin {
 
     @Function(value = "check" , desc = "检测插件")
     public void check(){
-        JSONArray arr = checkPlugins();
+        String result = checkPlugins();
         try {
-            response.getWriter().print(arr.toString());
+            response.getWriter().print(result);
             response.getWriter().flush();
             response.getWriter().close();
         } catch (IOException e) {
@@ -96,11 +97,11 @@ public class KunpengScan extends MVCPlugin {
         }
     }
 
-    private JSONArray checkPlugins(){
+    private String checkPlugins(){
         JSONObject cfg = new JSONObject();
         cfg.put("timeout",Integer.parseInt(getParam().getOrDefault("timeout","15").toString()));
         cfg.put("aider","http://"+identifier);
-        cfg.put("extra_plugin_path", new File(JSONPlugin.jsonPath).getPath());
+        cfg.put("extra_plugin_path", new File(JSONPlugin.jsonPath).getAbsolutePath());
         Kunpeng.INSTANCE.SetConfig(cfg.toString());
         JSONObject jsonObject = new JSONObject();
         if (getParam().containsKey("netloc"))
@@ -111,8 +112,12 @@ public class KunpengScan extends MVCPlugin {
             jsonObject.put("type",getParam().getOrDefault("type","web"));
         String check_json = jsonObject.toString();
         String checkResult = Kunpeng.INSTANCE.Check(check_json);
-        JSONArray resultJSON = toJSON(checkResult);
-        return resultJSON;
+        if (CheckUtils.isJson(checkResult)){
+            return StrUtils.formatJson(checkResult);
+        }else{
+            String s = Native.toString(Native.toByteArray(checkResult), "UTF-8");
+            return StrUtils.formatJson(s);
+        }
     }
 
     private void loadPlugins() {

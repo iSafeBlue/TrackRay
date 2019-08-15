@@ -11,6 +11,8 @@ import org.javaweb.core.net.HttpResponse;
 import org.javaweb.core.net.HttpURLRequest;
 
 import java.net.MalformedURLException;
+import java.util.HashSet;
+import java.util.Map;
 
 @Rule(enable = false)
 @Plugin(value="fuzzDir",title = "敏感文件扫描" , author = "浅蓝" )
@@ -53,7 +55,20 @@ public class FuzzDir extends InnerPlugin {
                         } catch (MalformedURLException e) {
                             SysLog.error(e.getMessage());
                         }
+                        HashSet<String> page403 = new HashSet<>();
+                        for (Map.Entry<String, Integer> entry : task.getResult().getSystemInfo().getDirs().entrySet()) {
+                            if (entry.getValue()==403)
+                                page403.add(entry.getKey());
+                        }
+                        int dirsize = task.getResult().getSystemInfo().getDirs().size();
+                        if (dirsize > 20  && (dirsize/2) <= page403.size()){
 
+                            //如果403页面大于目录数的一半，则清除这些 无用的403页面
+                            for (String page : page403) {
+                                task.getResult().getSystemInfo().getDirs().remove(page);
+                            }
+
+                        }
                     }
                 };
 

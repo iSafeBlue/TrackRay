@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rules>
+	<vuln name="username" id="UserInfoLeak1">
+		<regexp>^username=|^username:</regexp>
+		<decription>用户名硬编码</decription>
+		<recommendation>如非配置文件中，建议使用其他方式获取用户名，如从配置文件或数据库中获取。</recommendation>
+		<reference>CWE链接：</reference>
+	</vuln>
+	<vuln name="password" id="UserInfoLeak2">
+		<regexp>^password=|^password:</regexp>
+		<decription>密码硬编码</decription>
+		<recommendation>如非配置文件中，建议使用其他方式获取密码，如从配置文件或数据库中获取。</recommendation>
+		<reference>CWE链接：</reference>
+	</vuln>
+	<vuln name="developer" id="UserInfoLeak3">
+		<regexp>add\sby</regexp>
+		<decription>开发者信息泄露</decription>
+		<recommendation>jsp文件中建议使用jsp注释&lt;%--jsp注释--%&gt;，避免输出页面时将注释展示在前端。JavaScript&#x2f;html&#x2f;css等能直接访问的文件，建议去除该信息，xml文件请忽略该缺陷。</recommendation>
+		<reference>CWE链接：</reference>
+	</vuln>
+</rules>

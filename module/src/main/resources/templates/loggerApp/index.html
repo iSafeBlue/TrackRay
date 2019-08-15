@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>系统日志</title>
+    <#include "/manage/header.html"/>
+    <script>
+        $(function () {
+            $("#flush").click(function () {
+                location.reload()
+            })
+            $("#clear").click(function () {
+                $.get(
+                    "clear",
+                    function (e) {
+                        location.reload()
+                    }
+                )
+            })
+        })
+    </script>
+</head>
+
+<body>
+
+<div class="card">
+    <div class="card-body">
+        <h4 class="header-title">系统日志</h4>
+        <p class="text-muted font-13">
+            这里会展示溯光工作目录下的运行日志文件内容，你可以根据日志来监控程序的运行状态
+        </p>
+
+        <button type="button" id="clear" class="btn btn-primary">清理日志</button>
+        <button type="button" id="flush" class="btn btn-primary">刷新日志</button>
+
+
+        <p></p>
+
+        <textarea class="form-control" id="example-textarea" rows="20">${log}</textarea>
+
+    </div> <!-- end card-body -->
+</div>
+
+</body>
+
+<#include "/manage/footer_script.html"/>
+
+</html>

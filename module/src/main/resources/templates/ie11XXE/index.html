@@ -2,25 +2,37 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>IE XXE</title>
+    <#include "/manage/header.html"/>
+    <script>
+    </script>
 </head>
+
 <body>
 
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <form target="_blank" action="gen" method="post">
 
-<form action="gen" method="post">
+                    <div class="form-group mb-3">
+                        <label for="file">要读取的文件</label>
+                        <input type="text" id="file" value="c:/windows/system.ini" name="file" class="form-control">
+                    </div>
 
-    <p>
-        需要在 application.properties 中配置 trackray.url(溯光在公网的URL) 和ceye
-    </p>
 
-    <label for="file">要读取的文件</label>
+                    <button type="submit" class="btn btn-primary">生成</button>
+                </form>
 
-    <input id="file" type="text" name="file" value="c:/windows/system.ini">
+            </div> <!-- end col -->
+        </div> <!-- end row -->
 
-    <input type="submit" value="生成">
-
-</form>
-
+    </div> <!-- end card-body-->
+</div>
 
 </body>
+
+<#include "/manage/footer_script.html"/>
+
 </html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <#include "/manage/header.html"/>
+</head>
+
+<body>
+
+<div class="card">
+    <div class="card-body">
+
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div id="accordion" class="custom-accordion mb-4">
+                    <#if (vulns)??>
+                        <#list vulns as v>
+                            <div class="card mb-0">
+                                <div class="card-header" id="heading${v.id}">
+                                    <h5 class="m-0">
+                                        <a class="custom-accordion-title d-block pt-2 pb-2" data-toggle="collapse" href="#collapse${v.id}" aria-expanded="true" aria-controls="collapse${v.id}">
+                                            ${v.filename}
+                                            <span class="float-right">
+                                                <i class="mdi mdi-chevron-down accordion-arrow"></i>
+                                            </span>
+                                        </a>
+                                    </h5>
+                                </div>
+                                <div id="collapse${v.id}" class="collapse show" aria-labelledby="heading${v.id}" data-parent="#accordion">
+                                    <div class="card-body">
+                                        <p class="text-muted font-14 mb-4">
+                                            ${v.description}
+                                        </p>
+                                        <pre><code>${v.code}</code></pre>
+                                    </div>
+                                </div>
+                            </div> <!-- end card-->
+
+                        </#list>
+                    </#if>
+
+                </div>
+            </div>
+        </div>
+
+    </div> <!-- end card body-->
+</div>
+
+
+</body>
+
+<#include "/manage/footer_script.html"/>
+
+</html>

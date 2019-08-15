@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rules>
+	<vuln name="URLConnection" id="SSRF1">
+		<regexp>URLConnection</regexp>
+		<decription>URLConnection</decription>
+		<recommendation>修复建议</recommendation>
+		<reference>CWE链接：</reference>
+	</vuln>
+	<vuln name="HttpURLConnection" id="SSRF2">
+		<regexp>HttpURLConnection</regexp>
+		<decription>HttpURLConnection</decription>
+		<recommendation>修复建议</recommendation>
+		<reference>CWE链接：</reference>
+	</vuln>
+	<vuln name="HttpsURLConnection" id="SSRF3">
+		<regexp>HttpsURLConnection</regexp>
+		<decription>HttpsURLConnection</decription>
+		<recommendation>修复建议</recommendation>
+		<reference>CWE链接：</reference>
+	</vuln>
+</rules>

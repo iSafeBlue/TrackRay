@@ -2,46 +2,63 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>GPS页面生成</title>
+    <#include "/manage/header.html"/>
+    <script>
+
+
+    </script>
 </head>
+
 <body>
 
-<form>
-    <p>模板：</p>
-    <select name="template">
-        <#if (templates)??>
-            <#list templates as t>
-                <option value="${t}">${t}</option>
-            </#list>
-        </#if>
-    </select>
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <form>
 
-    <br/>
+                    <h4 class="header-title mt-5 mt-sm-0">H5 GPS页面生成</h4>
 
-    <input type="text" name="remark" placeholder="备注">
+                    <div class="form-group mb-3">
+                        <label for="template">页面模板</label>
+                        <select class="form-control" name="template" id="template">
+                            <#if (templates)??>
+                                <#list templates as t>
+                                    <option value="${t}">${t}</option>
+                                </#list>
+                            </#if>
+                        </select>
+                    </div>
 
-    <br/>
+                    <div class="form-group mb-3">
+                        <label for="remark">备注</label>
+                        <input type="text" id="remark" name="remark" class="form-control">
+                    </div>
 
-    <input type="submit" value="生成">
-</form>
+                    <button type="submit" class="btn btn-primary">生成</button>
 
+                </form>
+            </div> <!-- end col -->
 
-<ul>
-    <li>
-        <p>https://met.red/h/location/push?server=rTebRCwJncIfEhTE 访问获取定位</p>
-    </li>
+            <div class="col-md-6">
+                <h4 class="header-title mt-5 mt-sm-0">生成结果</h4>
 
-    <li>
-        <a href="logo.png" target="_blank">通过图片获取IP</a>
-    </li>
+                <div class="form-group mb-3">
+                    <#if (link)??>
+                        <a target="_blank" class="btn btn-link btn-rounded" href="${link}">GPS获取页面</a>
+                        <a target="_blank" class="btn btn-link btn-rounded" href="logo.png">根据图片获取IP</a>
+                        <a target="_blank" class="btn btn-link btn-rounded" href="https://met.red/h/location/push?server=rTebRCwJncIfEhTE">第三方GPS获取页</a>
+                    </#if>
+                </div>
+            </div> <!-- end col -->
+        </div> <!-- end row -->
 
-    <#if (link)??>
-        <li>
-            <a target="_blank" href="${link}">${link}</a>
-        </li>
-    </#if>
-</ul>
-
+    </div> <!-- end card-body-->
+</div>
 
 </body>
+
+<#include "/manage/footer_script.html"/>
+
 </html>

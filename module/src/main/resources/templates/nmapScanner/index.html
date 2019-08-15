@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Nmap 扫描</title>
+    <#include "/manage/header.html"/>
+    <script>
+        function mapToObj(strMap){
+            let obj= Object.create(null);
+            for (let[k,v] of strMap) {
+                obj[k] = v;
+            }
+            return obj;
+        }
+
+        $(function () {
+            $("#view").click(function () {
+                var task = $("#tasks").val()
+                $.post(
+                    "data",
+                    {task:task},
+                    function (e) {
+                        $("#outlog").append(e+"\r\n");
+                    }
+                )
+            })
+            $("#del").click(function () {
+                var task = $("#tasks").val()
+                $.post(
+                    "del",
+                    {task:task},
+                    function (e) {
+                        $("#outlog").append(e+"\r\n");
+                    }
+                )
+            })
+            
+            $("#scan").click(function () {
+
+                var host = $("#host").val();
+                var cusPort = $("#cusPort").val();
+                var map = new Map();
+                map.set("host",host);
+                map.set("cusPort",cusPort);
+
+                $.each($('input:checkbox:checked'),function(){
+                    var val = $(this).val();
+                    var key = $(this).attr("id");
+                    map.set(key,val);
+                });
+
+                $.each($('input:radio:checked'),function(){
+                    var val = $(this).val();
+                    var key = $(this).attr("id");
+                    map.set(key,val);
+                });
+
+                var obj = mapToObj(map);
+
+                $.post(
+                    "scan",
+                    obj,
+                    function (e) {
+                        if (e == ("success")){
+                            alert("正在扫描")
+                            location.reload()
+                        }
+                    }
+                )
+
+            })
+
+        })
+
+    </script>
+</head>
+
+<body>
+
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+
+                <div class="form-group mb-3">
+                    <label for="host">主机地址</label>
+                    <input type="text" id="host" class="form-control">
+                </div>
+                <h4 class="header-title mt-5 mt-sm-0">扫描模式</h4>
+                <div class="mt-3">
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="scanPort" name="customRadio" class="custom-control-input" checked/>
+                        <label class="custom-control-label" for="scanPort">端口扫描</label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="scanHost" name="customRadio" class="custom-control-input" />
+                        <label class="custom-control-label" for="scanHost">主机扫描</label>
+                    </div>
+                </div>
+                <br>
+                <h4 class="header-title mt-5 mt-sm-0">连接模式</h4>
+                <div class="mt-3">
+
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="tcp" name="connectRadio" class="custom-control-input" checked/>
+                        <label class="custom-control-label" for="tcp">TCP</label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="udp" name="connectRadio" class="custom-control-input" />
+                        <label class="custom-control-label" for="udp">UDP</label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="syn" name="connectRadio" class="custom-control-input" />
+                        <label class="custom-control-label" for="syn">SYN</label>
+                    </div>
+
+                </div>
+                <br>
+                <h4 class="header-title mt-5 mt-sm-0">端口参数</h4>
+                <div class="mt-3">
+
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="fast" name="portArgv" class="custom-control-input" checked/>
+                        <label class="custom-control-label" for="fast">快速扫描</label>
+                    </div>
+
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="deep" name="portArgv" class="custom-control-input" />
+                        <label class="custom-control-label" for="deep">全端口扫描</label>
+                    </div>
+
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="cus" name="portArgv" class="custom-control-input" />
+                        <label class="custom-control-label" for="cus">自定义端口</label>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="cusPort">指定端口</label>
+                        <textarea class="form-control" id="cusPort" rows="3" placeholder="80,8000,8000-8888"></textarea>
+                    </div>
+
+                </div>
+                <br>
+                <h4 class="header-title mt-5 mt-sm-0">其他参数</h4>
+                <div class="mt-3">
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="sv">
+                        <label class="custom-control-label" for="sv">版本探测(-sV)</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="o">
+                        <label class="custom-control-label" for="o">系统检测(-O)</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="a">
+                        <label class="custom-control-label" for="a">激烈扫描(-A)</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="t4">
+                        <label class="custom-control-label" for="t4">禁止延迟超10ms(-T4)</label>
+                    </div>
+
+                </div>
+
+
+
+                <button type="button" id="scan" class="btn btn-primary">扫描</button>
+            </div> <!-- end col -->
+
+            <div class="col-md-6">
+
+                <div class="form-group mb-3">
+                    <label for="tasks">任务列表</label>
+                    <select class="form-control" id="tasks">
+                        <#if (tasks)??>
+                            <#list tasks?keys as key>
+                                <option value="${key}">${tasks[key]}</option>
+                            </#list>
+                        </#if>
+                    </select>
+                </div>
+                <button type="button" class="btn btn-primary" id="view">查看</button>
+                <button type="button" class="btn btn-primary" id="del">删除</button>
+
+                <div class="form-group mb-3">
+                    <label for="outlog">输出</label>
+                    <textarea class="form-control" id="outlog" rows="20"></textarea>
+                </div>
+            </div> <!-- end col -->
+        </div> <!-- end row -->
+
+    </div> <!-- end card-body-->
+</div>
+
+</body>
+
+<#include "/manage/footer_script.html"/>
+
+</html>

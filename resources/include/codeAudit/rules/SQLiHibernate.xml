@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rules>
+	<vuln name="SQLiHibernate" id="SQLiHibernate1">
+		<regexp>^((?!(setString|\?)).)*createQuery((?!(setString|\?)).)*$</regexp>
+		<decription>判断该语句上下文是否预编译</decription>
+		<recommendation>通过参数绑定实现预编译：&#x0a;&#x20;1.name parameter&#x0a;&#x20;2.positional parameter</recommendation>
+		<reference>CWE链接：</reference>
+	</vuln>
+</rules>

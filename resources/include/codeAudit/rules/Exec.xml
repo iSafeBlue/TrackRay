@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rules>
+<!--	<vuln name="ProcessBuilder" id="Exec1">
+		<regexp>ProcessBuilder|ProcessBuilder.start\(\)</regexp>
+		<decription>使用ProcessBuilder执行系统命令。</decription>
+		<recommendation>严格过滤传入命令</recommendation>
+		<reference>CWE链接:</reference>
+	</vuln>
+	<vuln name="Runtime" id="Exec2">
+		<regexp>Runtime\.getRuntime\(\)\.exec|Runtime\.getRuntime()</regexp>
+		<decription>使用Runtime执行系统命令。</decription>
+		<recommendation>严格过滤传入命令</recommendation>
+		<reference>CWE链接:</reference>
+	</vuln>-->
+</rules>

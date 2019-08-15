@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<rules>
+	<vuln name="10段内网IP" id="IntranetIPLeak1">
+		<regexp>10(\.([2][0-4]\d|[2][5][0-5]|[01]?\d?\d)){3}</regexp>
+		<decription>10.0.0.0-10.255.255.255</decription>
+		<recommendation>如果内网地址能够获取到（如在html注释中或js代码中），建议将其删除或以其他方式替代。</recommendation>
+		<reference>CWE链接：</reference>
+	</vuln>
+	<vuln name="172段内网IP" id="IntranetIPLeak2">
+		<regexp>172\.([1][6-9]|[2]\d|3[01])(\.([2][0-4]\d|[2][5][0-5]|[01]?\d?\d)){2}</regexp>
+		<decription>172.16.0.0-172.31.255.255</decription>
+		<recommendation>如果内网地址能够获取到（如在html注释中或js代码中），建议将其删除或以其他方式替代。</recommendation>
+		<reference>CWE链接：</reference>
+	</vuln>
+	<vuln name="192段内网IP" id="IntranetIPLeak3">
+		<regexp>192\.168(\.([2][0-4]\d|[2][5][0-5]|[01]?\d?\d)){2}</regexp>
+		<decription>192.168.0.0-192.168.255.255</decription>
+		<recommendation>如果内网地址能够获取到（如在html注释中或js代码中），建议将其删除或以其他方式替代。</recommendation>
+		<reference>CWE链接：</reference>
+	</vuln>
+	<vuln name="所有IP" id="IntranetIPLeak4">
+		<regexp>([1-9]|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])(\.(\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])){3}</regexp>
+		<decription>1-3规则也会匹配到，此正则主要用于查看是否有外网地址泄露。</decription>
+		<recommendation>如果外网地址能够获取到（如在html注释中或js代码中），建议将其删除或以其他方式替代。</recommendation>
+		<reference>CWE链接：</reference>
+	</vuln>
+</rules>

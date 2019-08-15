@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<rules>
+	<vuln name="XSS" id="XSS1">
+		<regexp>&lt;%=</regexp>
+		<decription>JSP页面直接使用&lt;%=输出变量，如未存在全局过滤器情况下，可能导致XSS。</decription>
+		<recommendation>如未存在全局的输出编码过滤器，如为输出到HTML实体，建议使用&lt;c:out&gt;标签进行HTML实体编码，其他按照输出位置进行编码。</recommendation>
+		<reference>CWE链接:</reference>
+	</vuln>
+	<vuln name="XSS" id="XSS2">
+		<regexp>response\.getWriter*</regexp>
+		<decription>直接使用response.getWriter向浏览器写数据，可能导致XSS。</decription>
+		<recommendation>建议使用jsp输出数据。</recommendation>
+		<reference>CWE链接:</reference>
+	</vuln>
+	<vuln name="XSS" id="XSS3">
+		<regexp>response\.getOutputStream*</regexp>
+		<decription>直接使用response.getOutputStream向浏览器写数据，可能导致XSS。</decription>
+		<recommendation>建议使用jsp输出数据。</recommendation>
+		<reference>CWE链接:</reference>
+	</vuln>
+	<vuln name="XSS" id="XSS4">
+		<regexp>^((?!(Cache-Control|Parama)).)*response\.setHeader*((?!(Cache-Control|Parama)).)*$</regexp>
+		<decription>直接使用response.setHeader向浏览器设置header，可能导致XSS。</decription>
+		<recommendation>建议在jsp中设置header。</recommendation>
+		<reference>CWE链接:</reference>
+	</vuln>
+	<vuln name="XSS" id="XSS5">
+		<regexp>getJspContext\(\).getOut\(\)*</regexp>
+		<decription>标签中直接使用getJspContext().getOut()向浏览器写数据，可能导致XSS。</decription>
+		<recommendation>建议。</recommendation>
+		<reference>CWE链接:</reference>
+	</vuln>
+	<vuln name="XSS" id="XSS6">
+		<regexp>^((?!(c:forEach|c:out|pageContext|if|when)).)*\$\{((?!(c:forEach|c:out|pageContext|if|when)).)*$</regexp>
+		<decription>jsp输出变量，未做输出编码，可能导致XSS</decription>
+		<recommendation>如未存在全局的输出编码过滤器，如为输出到HTML实体，建议使用&lt;c:out&gt;标签进行HTML实体编码，其他按照输出位置进行编码。</recommendation>
+		<reference>CWE链接:</reference>
+	</vuln>	
+	<vuln name="XSS" id="XSS7">
+		<regexp>pageContext.getOut\(\)</regexp>
+		<decription>servlet直接向浏览器输出数据，可能导致XSS。</decription>
+		<recommendation>建议使用jsp输出数据。</recommendation>
+		<reference>CWE链接:</reference>
+	</vuln>
+</rules>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rules>
+	<vuln name="MultipartFile" id="FileUpload1">
+		<regexp>\.getOriginalFilename\(|MultipartFile\s</regexp>
+		<decription>使用MultipartFile上传文件，判断是否有文件类型过滤。</decription>
+		<recommendation>使用白名单判断文件类型。</recommendation>
+		<reference>CWE链接:</reference>
+	</vuln>
+</rules>

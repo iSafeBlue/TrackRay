@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rules>
+	<vuln name="FilePathManipulation" id="FilePathManipulation1">
+		<regexp>new\sFile\(|\.getRealPath\(</regexp>
+		<decription>如果传入的路径可控，则攻击者可能控制文件系统路径参数，借此访问或修改其他受保护的文件。</decription>
+		<recommendation>确保传入路径合法并过滤../ ?</recommendation>
+		<reference>CWE链接:</reference>
+	</vuln>
+</rules>

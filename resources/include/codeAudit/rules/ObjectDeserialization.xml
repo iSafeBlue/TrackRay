@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rules>
+	<vuln name="readObject" id="ObjectDeserialization1">
+		<regexp>\.readObject\(</regexp>
+		<decription>如果反序列化的类在运行时对用户控制的对象流进行反序列化，会让攻击者有机会在服务器上执行任意代码、滥用应用程序逻辑或导致Denial of Service。</decription>
+		<recommendation>使用白名单确保能被反序列化的类，通过覆写resolveClass实现。</recommendation>
+		<reference>CWE链接：</reference>
+	</vuln>
+	<vuln name="parseObject" id="ObjectDeserialization2">
+		<regexp>JSON\.parseObject\(</regexp>
+		<decription>如果反序列化的类在运行时对用户控制的对象流进行反序列化，会让攻击者有机会在服务器上执行任意代码、滥用应用程序逻辑或导致Denial of Service。</decription>
+		<recommendation>使用白名单确保能被反序列化的类，通过覆写resolveClass实现。</recommendation>
+		<reference>CWE链接：</reference>
+	</vuln>
+	<vuln name="readValue" id="ObjectDeserialization3">
+		<regexp>ObjectMapper\.readValue</regexp>
+		<decription>如果反序列化的类在运行时对用户控制的对象流进行反序列化，会让攻击者有机会在服务器上执行任意代码、滥用应用程序逻辑或导致Denial of Service。</decription>
+		<recommendation>使用白名单确保能被反序列化的类，通过覆写resolveClass实现。</recommendation>
+		<reference>CWE链接：</reference>
+	</vuln>
+	<vuln name="fromXML" id="ObjectDeserialization4">
+		<regexp>fromXML\(</regexp>
+		<decription>如果反序列化的类在运行时对用户控制的对象流进行反序列化，会让攻击者有机会在服务器上执行任意代码、滥用应用程序逻辑或导致Denial of Service。</decription>
+		<recommendation>使用白名单确保能被反序列化的类，通过覆写resolveClass实现。</recommendation>
+		<reference>CWE链接：</reference>
+	</vuln>
+	<vuln name="readUnshared" id="ObjectDeserialization5">
+		<regexp>readUnshared\(</regexp>
+		<decription>如果反序列化的类在运行时对用户控制的对象流进行反序列化，会让攻击者有机会在服务器上执行任意代码、滥用应用程序逻辑或导致Denial of Service。</decription>
+		<recommendation>使用白名单确保能被反序列化的类，通过覆写resolveClass实现。</recommendation>
+		<reference>CWE链接：</reference>
+	</vuln>
+</rules>

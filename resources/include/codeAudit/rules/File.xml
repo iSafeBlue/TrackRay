@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rules>
+	<vuln name="createNewFile" id="File1">
+		<regexp>\.createNewFile\(|FileOutputStream\(</regexp>
+		<decription>createNewFile。</decription>
+		<recommendation>修复建议</recommendation>
+		<reference>CWE链接：</reference>
+	</vuln>
+	<vuln name="delete" id="File2">
+		<regexp>\.delete\(\)</regexp>
+		<decription>delete。</decription>
+		<recommendation>修复建议</recommendation>
+		<reference>CWE链接：</reference>
+	</vuln>
+	<vuln name="FileInputStream" id="File3">
+		<regexp>new\sFileInputStream\(/</regexp>
+		<decription>FileInputStream。</decription>
+		<recommendation>修复建议</recommendation>
+		<reference>CWE链接：</reference>
+	</vuln>
+</rules>

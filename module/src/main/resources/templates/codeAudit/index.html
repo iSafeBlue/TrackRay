@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>代码审计</title>
+    <#include "/manage/header.html"/>
+    <script>
+        function del(name) {
+            $.get(
+                "delete",
+                {name:name},
+                function () {
+                    location.reload()
+                }
+            )
+        }
+        function view(name){
+            location.href='view?name='+name;
+        }
+        $(function () {
+            $("#change").click(function () {
+                var content = $("#content").val();
+                var rule = $("#rules").val();
+                $.post(
+                    "saveRule",
+                    {file:rule,content:content},
+                    function (e) {
+                        alert(e);
+                    }
+                )
+
+            })
+
+            $("#rules").change(function () {
+
+                var rule = $(this).val()
+                $.post(
+                    "getRule",
+                    {file:rule},
+                    function (e) {
+                        $("#content").val(e);
+                    }
+                )
+
+            })
+
+        })
+
+    </script>
+</head>
+
+<body>
+
+<div class="card">
+    <div class="card-body">
+        <h4 class="header-title">任务</h4>
+        <p class="text-muted font-14 mb-4">
+
+        </p>
+        <div id="basic-datatable_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+            <div class="row">
+                <div class="col-sm-12">
+                    <table class="table dt-responsive nowrap dataTable no-footer dtr-inline" role="grid"
+                           aria-describedby="basic-datatable_info" style="width: 100%; position: relative;"
+                           width="100%">
+
+                        <thead>
+                        <tr role="row">
+                            <th class="sorting_asc" tabindex="0" aria-controls="basic-datatable" rowspan="1" colspan="1"
+                                 aria-sort="ascending">
+                                任务名
+                            </th>
+                            <th class="sorting" tabindex="0" aria-controls="basic-datatable" rowspan="1" colspan="1"
+                                width="30%">操作
+                            </th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <#if (names)??>
+                            <#list names as t>
+                                <tr role="row" class="odd">
+                                    <td>${t}</td>
+                                    <td>
+                                        <button type="button" onclick="view('${t}')" class="btn btn-success">查看</button>
+                                        <button type="button" onclick="del('${t}')" class="btn btn-danger">删除</button>
+                                    </td>
+                                </tr>
+                            </#list>
+                        </#if>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div> <!-- end card body-->
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <h4 class="header-title">上传源码</h4>
+        <p class="text-muted font-14 mb-4">
+            只可以上传 .zip 压缩包，目前只支持java代码审计。
+        </p>
+        <div class="row">
+            <div class="col-lg-6">
+                <form enctype="multipart/form-data" action="upload" method="post" >
+                    <div class="form-group mb-3">
+                        <label for="name">任务名</label>
+                        <input type="text" id="name" name="name" class="form-control">
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="file">源码压缩包</label>
+                        <input type="file" id="file" name="file" class="form-control-file">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">扫描</button>
+                </form>
+            </div>
+        </div>
+
+    </div> <!-- end card body-->
+</div>
+
+
+<div class="card">
+    <div class="card-body">
+        <h4 class="header-title">规则修改</h4>
+        <p class="text-muted font-14 mb-4">
+            只可以上传 .zip 压缩包，目前只支持java代码扫描。
+        </p>
+        <div class="row">
+            <div class="col-lg-6">
+                    <div class="form-group mb-3">
+                        <label for="name">规则文件名</label>
+                        <select class="form-control" id="rules">
+                            <#if (rules)??>
+                                <#list rules as r>
+                                    <option value="${r}">${r}</option>
+                                </#list>
+                            </#if>
+                        </select>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="content">规则代码</label>
+                        <textarea class="form-control" id="content" rows="15" ></textarea>
+                    </div>
+                    <button type="button" class="btn btn-primary" id="change">修改</button>
+            </div>
+        </div>
+
+    </div> <!-- end card body-->
+</div>
+
+
+
+</body>
+
+<#include "/manage/footer_script.html"/>
+
+</html>
