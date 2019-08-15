@@ -23,7 +23,7 @@ import java.util.Map;
 @Plugin(title = "基于爬虫的SQL注入检测插件" , author = "浅蓝")
 public class SQLinjectionByCrawler extends CrawlerPlugin {
 
-    @Value("${sqlmap.root}")
+    @Value("${sqlmap.host}")
     private String sqlmapAPI = "http://127.0.0.1:8775/";
 
     @Override
@@ -37,7 +37,7 @@ public class SQLinjectionByCrawler extends CrawlerPlugin {
 
     @Override
     public void process() {
-        if (!Constant.AVAILABLE_NMAP)
+        if (!Constant.AVAILABLE_SQLMAP)
             return ;
         String url = target.toString();
 
@@ -79,12 +79,12 @@ public class SQLinjectionByCrawler extends CrawlerPlugin {
 
                 sqlmap.dataScan();
 
-                String data = sqlmap.getData();
-                if (data==null)
+                String result = sqlmap.getResult();
+                if (result==null)
                     return;
                 JSONArray payload = new JSONArray();
                 try {
-                    String matchers = RegexUtil.extractStr(data,"\"payload\":\"(.*?)\"}");
+                    String matchers = RegexUtil.extractStr(result,"\"payload\":\"(.*?)\"}");
                     payload.add(matchers);
                     Vulnerable vulnerable = Vulnerable.builder()
                             .type(Vulnerable.Type.SQL_INJECTION.getType())
@@ -119,6 +119,7 @@ public class SQLinjectionByCrawler extends CrawlerPlugin {
         private String referer ;
         private String cookie ;
         private Long date = System.currentTimeMillis();
+        private String result;
 
         private boolean newTask(){
             HttpResponse req = get(this.server + "task/new");
@@ -179,8 +180,8 @@ public class SQLinjectionByCrawler extends CrawlerPlugin {
             if (json.containsKey("data")){
                 JSONArray data = json.getJSONArray("data");
                 if(data.size()>0){
-                    this.data = data.toString();
-                    log.info("存在注入："+ this.data);
+                    this.result = data.toString();
+                    log.info("存在注入："+ this.result);
                 }
             }
         }
