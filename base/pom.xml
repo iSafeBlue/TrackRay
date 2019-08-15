@@ -5,7 +5,7 @@
     <parent>
         <artifactId>framework</artifactId>
         <groupId>com.trackray</groupId>
-        <version>3.0.0-BETA</version>
+        <version>3.1.0-BETA</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
