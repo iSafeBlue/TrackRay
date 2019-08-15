@@ -26,7 +26,7 @@
 
 溯光使用 Java 编写，SpringBoot 作为基础框架，JPA + HSQLDB嵌入式数据库做持久化，Maven 管理依赖，Jython 实现 Python 插件调用，quartz 做任务调度，freemarker 做视图层，Websocket 实现命令行式插件交互。
 
-框架可扩展性高，支持 Java、Python、JSON 等方式编写插件，有“漏洞扫描插件”、“爬虫插件”、“MVC插件”、“内部插件”、“无交互插件”和“可交互插件” 等插件类型。
+框架可扩展性高，支持 Java、Python、JSON 等方式编写插件，有“漏洞扫描插件”、“爬虫插件”、“独立应用插件”、“内部插件”、“无交互插件”和“可交互插件” 等插件类型。
 
 如有任何使用上的问题请提交 issue。
 
@@ -38,11 +38,29 @@
 
 - 提供 WEB 服务接口
 - 使用只需要一个浏览器
-- 集成知名安全工具
+- 集成 AWVS、SQLMap、NMap、Metasploit、Kunpeng、XRay 等安全工具
 - 内置漏洞扫描器
 - 强大、易用、方便、开源
 
+## 快速使用
 
+可以通过源码编译为jar包后运行，或直接运行已编译好的jar包
+
+#### 源代码版本
+1. 在 [releases](https://github.com/iSafeBlue/TrackRay/releases) 下载`trackray-x.x.x.src.zip`解压
+2. 如已安装 maven、jdk 等溯光编译所必备环境可忽略第2-5条
+3. `docker build -t trackray_beta .` 构建镜像
+4. `docker run -dit -p 8080:8080 --name trackray_runtime t trackray_beta` 启动容器，可根据需求自行设定参数
+5. `docker exec -it trackray_runtime /bin/bash` 进入溯光工作目录
+6. 启动有需要的服务，如AWVS、msfprc、SQLMap等。并根据自己的需求修改`application.properties`配置文件
+7. 执行`nohup java -jar trackray.jar &` 或 `java -jar trackray.jar`，若提示未找到文件请先执行一遍`mvn clean package`
+8. 访问`http://127.0.0.1:8080`
+
+#### 已编译版本
+1. 在 [releases](https://github.com/iSafeBlue/TrackRay/releases) 下载`trackray-x.x.x.bin.zip`解压
+2. 启动有需要的服务，如AWVS、msfprc、SQLMap等。并根据自己的需求修改`application.properties`配置文件
+3. 执行`nohup java -jar trackray.jar &` 或 `java -jar trackray.jar`
+4. 访问`http://127.0.0.1:8080`
 
 ## 功能展示
 
@@ -94,12 +112,11 @@
 [功能介绍](/docs/功能.md)
 
 ## 注意
-- 提问前请 **务必!务必!务必!** 阅读一遍[《提问的智慧》](https://github.com/ryanhanwu/How-To-Ask-Questions-The-Smart-Way/blob/master/README-zh_CN.md)。
+- 提问前请阅读一遍[《提问的智慧》](https://github.com/ryanhanwu/How-To-Ask-Questions-The-Smart-Way/blob/master/README-zh_CN.md)。
 - **本项目未做安全防护**，部分代码会存在安全漏洞。
 - **MSF控制台**和**交互式插件控制台**，尽量使用 Firefox 浏览器访问。
 - 开发插件建议使用 `Intellij IDEA`，需要安装 lombok 插件。
 - 登录密码在 `application.properties` 中修改 `trackray.account` 和 `trackray.password`。
-- 如果没有修改 maven 为国内源，在通过`package.sh/bat`编译溯光下载依赖时会很慢，**建议修改为国内的阿里云仓库**。
 
 
 ## ChangeLog
@@ -107,6 +124,7 @@
 
 | 日期 | 描述  |
 | ---- | ---- |
+| 2019-05-14 | 溯光3.1.0更新 |
 | 2019-05-14 | 溯光3更新 |
 | 2019-03-11 | 新增jython支持，可通过`PyScript.java`插件调用python脚本 |
 | 2019-02-02 | 修复在linux环境下相关bug |
