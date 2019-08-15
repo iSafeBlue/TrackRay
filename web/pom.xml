@@ -5,7 +5,7 @@
 	<parent>
 		<artifactId>framework</artifactId>
 		<groupId>com.trackray</groupId>
-		<version>3.0.0-BETA</version>
+		<version>3.1.0-BETA</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -55,34 +55,31 @@
 				<configuration>
 					<encoding>${project.build.sourceEncoding}</encoding>
 				</configuration>
-				<!--<executions>
+				<executions>
 					<execution>
 						<id>copy-spring-boot-resources</id>
-						&lt;!&ndash; here the phase you need &ndash;&gt;
 						<phase>validate</phase>
 						<goals>
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<encoding>utf-8</encoding>
-							<outputDirectory>./../resources/</outputDirectory>
+							<encoding>GBK</encoding>
+							<outputDirectory>./../</outputDirectory>
 							<resources>
 								<resource>
-									<directory>./../module/src/main/resources/</directory>
+									<directory>./src/main/resources/</directory>
 									<includes>
-										<include>json/*.*</include>
-										<include>include/**</include>
-										<include>python/*.*</include>
+										<include>application.properties</include>
 									</includes>
 									<filtering>true</filtering>
 								</resource>
 							</resources>
 						</configuration>
 					</execution>
-				</executions>-->
+				</executions>
 			</plugin>
 
-
+			<!--生成trackray.jar到项目根目录-->
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
@@ -91,6 +88,34 @@
 					<outputDirectory>./../</outputDirectory>
 				</configuration>
 			</plugin>
+
+			<!--删除trackray.jar-->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-clean-plugin</artifactId>
+				<version>3.0.0</version>
+				<configuration>
+					<!--当配置true时,只清理filesets里的文件,构建目录中得文件不被清理.默认是flase.-->
+					<excludeDefaultDirectories>false</excludeDefaultDirectories>
+					<filesets>
+						<fileset>
+							<!--要清理的目录位置-->
+							<directory>../</directory>
+							<followSymlinks>false</followSymlinks>
+							<useDefaultExcludes>true</useDefaultExcludes>
+
+							<includes>
+								<include>trackray.jar</include>
+							</includes>
+
+						</fileset>
+					</filesets>
+				</configuration>
+
+			</plugin>
+
+
+
 		</plugins>
 	</build>
 
