@@ -1,18 +1,14 @@
 package com.trackray.base.bean;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.trackray.base.controller.DispatchController;
-import com.trackray.base.exploit.AbstractExploit;
+import com.trackray.base.plugin.AbstractPOC;
 import com.trackray.base.plugin.AbstractPlugin;
 import com.trackray.base.plugin.CrawlerPlugin;
-import com.trackray.base.utils.CheckUtils;
-import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.WebApplicationContext;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Random;
 
 /**
@@ -24,19 +20,20 @@ import java.util.Random;
 public class Banner {
 
     public static String template =
-            "       =[ trackray v3.0.0                                 ]\n" +
-            "+ -- --=[ %s exploits - %s auxiliary                  ]\n" +
+            "       =[ trackray v%s                                 ]\n" +
+            "+ -- --=[ %s poc      - %s auxiliary                  ]\n" +
             "+ -- --=[ %s plugin   - %s crawler                    ]\n";
 
     @Autowired
     private DispatchController dispatchController;
-
+    @Value("${trackray.version}")
+    private String version;
     public String generate(){
 
 
         int crawler = crawlerCount();
         int plugin = pluginCount()+jsonPluginCount();
-        int exploit = exploitCount();
+        int exploit = pocCount();
         int auxiliary = auxiliaryCount();
 
 
@@ -45,7 +42,7 @@ public class Banner {
         String e = toInt(exploit);
         String a = toInt(auxiliary);
 
-        String format = String.format(template, e, a, p, c);
+        String format = String.format(template,version, e, a, p, c);
         IMG[] imgs = IMG.values();
 
         int rand = new Random().nextInt(imgs.length);
@@ -57,7 +54,7 @@ public class Banner {
     }
 
     public int count(){
-        return auxiliaryCount()+crawlerCount()+exploitCount()+jsonPluginCount()+pluginCount();
+        return auxiliaryCount()+crawlerCount()+pocCount()+jsonPluginCount()+pluginCount();
     }
 
     public int auxiliaryCount() {
@@ -70,8 +67,8 @@ public class Banner {
         return auxiliary;
     }
 
-    public int exploitCount() {
-        return dispatchController.getAppContext().getBeansOfType(AbstractExploit.class).size();
+    public int pocCount() {
+        return dispatchController.getAppContext().getBeansOfType(AbstractPOC.class).size();
     }
 
     public int pluginCount() {
@@ -210,7 +207,7 @@ public class Banner {
                 "                                                           ` ......;;;;... .  ."),
         $6(" ______________________________________________________________________________\n" +
                 " |                                                                              |\n" +
-                " |                   TRACKRAY   CYBER MISSILE COMMAND V3                        |\n" +
+                " |                   TRACKRAY   CYBER MISSILE COMMAND                           |\n" +
                 " |______________________________________________________________________________|\n" +
                 " \\                                  /                      /\n" +
                 " \\     .                          /                      /            x\n" +

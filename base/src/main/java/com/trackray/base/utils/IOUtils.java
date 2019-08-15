@@ -50,7 +50,6 @@ public class IOUtils {
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}finally {
 			br.close();
 		}

@@ -28,6 +28,7 @@ public class Shell {
     private String target = "";
     private boolean enable = false;
     private List<String> commands = new ArrayList<>();
+    private File workdir;
     public Shell(){
     }
     public Shell(boolean enable){
@@ -40,6 +41,13 @@ public class Shell {
     }
     public Shell target(String t){
         target = t;
+        return this;
+    }
+    public Shell workdir(String dir){
+        return workdir(new File(dir));
+    }
+    public Shell workdir(File dir){
+        workdir = dir;
         return this;
     }
     public void exec(String... c) throws IOException {
@@ -58,7 +66,19 @@ public class Shell {
             base.addAll(Arrays.asList(c));
         String path = isWin ? System.getenv().get("Path") : System.getenv().get("PATH");
         String[] bases = base.toArray(new String[]{});
-        process = runtime.exec(bases,new String[]{(isWin?"Path=":"PATH=")+path});
+        process = runtime.exec(bases,new String[]{(isWin?"Path=":"PATH=")+path},workdir);
+    }
+
+    public void destroy(){
+        process.destroy();
+        if (isAlive())
+            destroyForcibly();
+    }
+    public void destroyForcibly(){
+        process.destroyForcibly();
+    }
+    public boolean isAlive(){
+        return process.isAlive();
     }
 
     public void echo(String s){

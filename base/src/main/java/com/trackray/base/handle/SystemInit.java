@@ -4,14 +4,19 @@ import com.trackray.base.attack.Metasploit;
 import com.trackray.base.attack.Payload;
 import com.trackray.base.bean.Banner;
 import com.trackray.base.bean.Constant;
+import com.trackray.base.utils.ExtractUtils;
 import com.trackray.base.utils.PropertyUtil;
 import com.trackray.base.utils.SysLog;
 import net.dongliu.requests.Requests;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.javaweb.core.net.HttpURLRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -46,21 +51,35 @@ public class SystemInit
     static{
         Properties props=System.getProperties();
         String os = props.getProperty("os.name");
+        //识别操作系统类型
         Constant.TRACKRAY_SYSTEMOS = (os.contains("indows") ? Constant.WINDOWS : Constant.LINUX);
+
+        //配置系统常量
+        Constant.RESOURCES_INCLUDE_PATH = Constant.RESOURCES_PATH.concat("include");
+        Constant.SYSTEM_ACCOUNT = PropertyUtil.getProperty("trackray.account");
+        Constant.SYSTEM_PASSWORD= PropertyUtil.getProperty("trackray.password");
+        Constant.CENSYS_APPID = PropertyUtil.getProperty("censys.appid");
+        Constant.CENSYS_SECRET = PropertyUtil.getProperty("censys.secret");
+        Constant.SQLMAP_HOST = PropertyUtil.getProperty("sqlmap.host");
+
+
     }
+    @Value("${temp.dir}")
+    private String tempdir;
+
+    private  void createTempDirs() {
+        File file = new File(tempdir);
+        if (!file.exists()){
+            file.mkdirs();
+        }
+    }
+
 
     private void check() {
 
-        String includePath = Constant.RESOURCES_PATH.concat("include");
-        Constant.RESOURCES_INCLUDE_PATH = includePath;
-
-        Constant.SYSTEM_ACCOUNT = PropertyUtil.getProperty("trackray.account");
-        Constant.SYSTEM_PASSWORD= PropertyUtil.getProperty("trackray.password");
-
-
-        Constant.CENSYS_APPID = PropertyUtil.getProperty("censys.appid");
-        Constant.CENSYS_SECRET = PropertyUtil.getProperty("censys.secret");
-        Constant.SQLMAP_HOST = PropertyUtil.getProperty("sqlmap.root");
+        //创建临时目录
+        createTempDirs();
+        String includePath = Constant.RESOURCES_INCLUDE_PATH;
 
         try {
             //加载字典

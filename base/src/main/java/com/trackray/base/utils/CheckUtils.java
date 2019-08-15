@@ -1,6 +1,8 @@
 package com.trackray.base.utils;
 
 
+import com.alibaba.fastjson.JSON;
+
 /**
  * @author 浅蓝
  * @email blue@ixsec.org
@@ -13,7 +15,11 @@ public class CheckUtils {
         if(org.apache.commons.lang3.StringUtils.isBlank(inputJsonStr)){
             return false;
         }
-
+        try {
+            JSON.parse(inputJsonStr);
+        }catch (Exception e){
+            return false;
+        }
         return true;
 
     }
