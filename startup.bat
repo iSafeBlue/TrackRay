@@ -1,1 +1,0 @@
-java -jar trackray.jar
