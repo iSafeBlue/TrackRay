@@ -66,7 +66,7 @@
 1. 在 [releases](https://github.com/iSafeBlue/TrackRay/releases) 下载`trackray-x.x.x.src.zip`解压
 2. 如已安装 maven、jdk 等溯光编译所必备环境可忽略第2-5条
 3. `docker build -t trackray_beta .` 构建镜像
-4. `docker run -dit -p 8080:8080 --name trackray_runtime t trackray_beta` 启动容器，可根据需求自行设定参数
+4. `docker run -dit -p 8080:8080 --name trackray_runtime trackray_beta` 启动容器，可根据需求自行设定参数
 5. `docker exec -it trackray_runtime /bin/bash` 进入溯光工作目录
 6. 启动有需要的服务，如AWVS、msfprc、SQLMap等。并根据自己的需求修改`application.properties`配置文件
 7. 执行`nohup java -jar trackray.jar &` 或 `java -jar trackray.jar`，若提示未找到文件请先执行一遍`mvn clean package`
