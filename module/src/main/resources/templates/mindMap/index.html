@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>思维导图</title>
+    <#include "/manage/header.html"/>
+
+    <script>
+        function del(id) {
+            $.get(
+                "delete",
+                {id:id},
+                function () {
+                    location.reload()
+                }
+            )
+        }
+        function createProject() {
+            var title = prompt("请输入思维导图项目名称");
+            if (title){
+
+                $.post(
+                    "create",
+                    {title:title},
+                    function (e) {
+                        var id = e.id;
+                        if (id){
+                            view(id);
+                        }else{
+                            alert("创建失败")
+                        }
+                    },
+                    "json"
+                );
+
+            }else{
+                alert("输入不可为空")
+            }
+        }
+
+        function view(id){
+            location.href="mind?id="+id;
+        }
+    </script>
+</head>
+
+<body>
+
+<div class="card">
+    <div class="card-body">
+        <h4 class="header-title">思维导图</h4>
+        <p class="text-muted font-14 mb-4">
+            你可以把在渗透过程中发现的问题、收集的资产总结归纳，使用这个功能制作成一个思维导图，能够有效的帮助你提升效率。
+        </p>
+        <div class="button-list">
+            <button type="button" onclick="createProject()" class="btn btn-primary">创建项目</button>
+        </div>
+        <div id="basic-datatable_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+            <div class="row">
+                <div class="col-sm-12">
+                    <table class="table dt-responsive nowrap dataTable no-footer dtr-inline" role="grid"
+                           aria-describedby="basic-datatable_info" style="width: 100%; position: relative;"
+                           width="100%">
+
+                        <thead>
+                        <tr role="row">
+
+                            <th class="sorting_asc" tabindex="0" aria-controls="basic-datatable" rowspan="1" colspan="1"
+                                width="50%" aria-sort="ascending">
+                                项目名称
+                            </th>
+                            <th class="sorting" tabindex="0" aria-controls="basic-datatable" rowspan="1" colspan="1"
+                                width="30%">创建时间
+                            </th>
+                            <th class="sorting" tabindex="0" aria-controls="basic-datatable" rowspan="1" colspan="1"
+                                width="20%">操作
+                            </th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <#if (datas)??>
+                            <#list datas as item>
+                                <tr role="row" class="odd">
+
+                                    <td>
+                                        <#if (item.title)??>
+                                            ${item.title}
+                                        </#if>
+                                    </td>
+                                    <td>
+                                        <#if (item.date)??>
+                                            ${item.date}
+                                        </#if>
+                                    </td>
+                                    <td>
+                                        <button type="button" onclick="view(${item.id})" class="btn btn-warning"> <i class="mdi mdi-rocket mr-1"></i>
+                                            <span>查看</span>
+                                        </button>
+                                        <a class="btn btn-icon btn-danger" href="javascript:void(0)" onclick="del(${item.id})">
+                                            <i class="mdi mdi-window-close"></i>
+                                        </a>
+                                    </td>
+
+                                </tr>
+                            </#list>
+                        </#if>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div> <!-- end card body-->
+</div>
+
+
+</body>
+
+<#include "/manage/footer_script.html"/>
+
+</html>
