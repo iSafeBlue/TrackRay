@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <#include "/manage/header.html"/>
+
+    <script>
+        function start() {
+            $.ajax({
+                url:"open",
+                type:"post",
+                dataType:'json',
+                data: $('#form').serialize(),
+                success:function (data) {
+                    alert(data.msg);
+                    location.href="index";
+                }
+            });
+        }
+    </script>
+</head>
+
+<body>
+
+<div class="card">
+    <div class="card-body">
+
+        <div class="row">
+            <!-- end col -->
+
+            <div class="col-xl-12">
+                <div class="card">
+
+                    <div class="card-body">
+                        <p class="text-muted">
+                            当前未启动 BurpSuite，请填写参数后启动 BurpSuite。
+                        </p>
+
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <form id="form" >
+
+                                    <div class="form-group mb-3">
+                                        <label for="serverPort">API端口</label>
+                                        <input type="text" id="serverPort" name="serverPort" value="8090" class="form-control" >
+                                    </div>
+
+                                    <div class="custom-control custom-switch">
+                                        <input type="checkbox" name="needLoader" value="true" class="custom-control-input" id="needLoader" checked>
+                                        <label class="custom-control-label" for="needLoader">开启加载器(Loader-Keygen)</label>
+                                    </div>
+
+                                    <div class="custom-control custom-switch">
+                                        <input type="checkbox" name="headlessMode" value="true" class="custom-control-input" id="headlessMode" checked>
+                                        <label class="custom-control-label" for="headlessMode">开启无头模式</label>
+                                    </div>
+
+                                    <button type="button" onclick="start()" class="btn btn-primary">启动</button>
+                                </form>
+                            </div> <!-- end col -->
+
+                            <!-- end col -->
+                        </div>
+                        <!-- end row-->
+
+                    </div>
+
+                </div> <!-- end card-->
+            </div> <!-- end col -->
+        </div>
+
+    </div> <!-- end card body-->
+</div>
+
+
+</body>
+
+<#include "/manage/footer_script.html"/>
+
+</html>

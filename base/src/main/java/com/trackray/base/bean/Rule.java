@@ -11,6 +11,7 @@ import lombok.Data;
 public class Rule {
 
     public boolean crawler = false; //爬虫
+    public boolean crawlergo = false;//crawlergo爬虫
     public boolean sense = false;   //信息泄露
     public boolean port = false;    //端口
     public boolean finger = false;  //指纹识别

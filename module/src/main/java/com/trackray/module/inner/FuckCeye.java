@@ -17,7 +17,7 @@ import java.util.Map;
  * @email blue@ixsec.org
  * @since 2019/5/10 12:56
  */
-@Plugin(title = "ceye.io 插件" ,desc = "ceye.io DNSlog 回显插件，可以查询http和dns日志",author = "浅蓝")
+@Plugin(value = "fuckCeye",title = "ceye.io 插件" ,desc = "ceye.io DNSlog 回显插件，可以查询http和dns日志",author = "浅蓝")
 public class FuckCeye extends InnerPlugin<Boolean> {
     @Value("${ceye.io.token}")
     public String token;
@@ -32,9 +32,12 @@ public class FuckCeye extends InnerPlugin<Boolean> {
 
     public static String template = "http://api.ceye.io/v1/records?token=%s&type=%s&filter=%s";
 
+
+
     public String formatURL(String type , String keyword){
         return String.format(template,token,type,keyword);
     }
+
     public JSONObject get(String url){
         try {
             return JSONObject.fromObject(requests.url(url).get().body());
@@ -51,7 +54,7 @@ public class FuckCeye extends InnerPlugin<Boolean> {
         JSONObject obj = null;
         try {
             obj = JSONObject.fromObject(new HttpURLRequest().url(url).get().body());
-        } catch (MalformedURLException e) {
+        } catch (Exception e) {
             obj = new JSONObject();
         }
         return !obj.isNullObject() && obj.has("meta") && obj.getJSONObject("meta").getInt("code") ==200;

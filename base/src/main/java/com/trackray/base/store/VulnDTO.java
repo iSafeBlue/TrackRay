@@ -28,12 +28,21 @@ public class VulnDTO implements Serializable {
     @JSONField(name = "漏洞等級")
     private Integer level =0;  //漏洞等级
 
+    @JSONField(name = "漏洞详情")
+    @Column(columnDefinition = "LONGVARCHAR" , length = 65536)
+    private String detail = ""; //攻击载荷
+
     @JSONField(name = "漏洞载荷")
     @Column(columnDefinition = "LONGVARCHAR" , length = 65536)
     private String payload = ""; //攻击载荷
+
+    @JSONField(name = "请求信息")
+    @Column(columnDefinition = "LONGVARCHAR" , length = 65536)
+    private String request = ""; //请求信息
+
     @JSONField(name = "响应信息")
     @Column(columnDefinition = "LONGVARCHAR" , length = 65536)
-    private String message = ""; //响应信息
+    private String response = ""; //响应信息
 
     @JSONField(name = "修复建议")
     private String repair  = "";  //修复建议

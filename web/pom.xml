@@ -5,7 +5,7 @@
 	<parent>
 		<artifactId>framework</artifactId>
 		<groupId>com.trackray</groupId>
-		<version>3.1.0-BETA</version>
+		<version>3.2.0</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -16,6 +16,17 @@
 	<description>Demo project for Spring Boot</description>
 
 	<packaging>jar</packaging>
+
+	<repositories>
+		<repository>
+			<id>aliyunmaven</id>
+			<url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+		</repository>
+		<repository>
+			<id>jitpack.io</id>
+			<url>https://jitpack.io</url>
+		</repository>
+	</repositories>
 
 	<dependencies>
 
@@ -28,6 +39,11 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>-->
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-loader</artifactId>
+		</dependency>
 
 
 
@@ -42,13 +58,29 @@
 			<version>${trackray.version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.github.core-lib</groupId>
+			<artifactId>loadkit</artifactId>
+			<version>v1.0.1</version>
+		</dependency>
+
 
 	</dependencies>
+
+
+	<!-- 设置 jitpack.io 插件仓库 -->
+	<pluginRepositories>
+		<pluginRepository>
+			<id>jitpack.io</id>
+			<url>https://jitpack.io</url>
+		</pluginRepository>
+	</pluginRepositories>
+	<!-- 添加 Slot Maven 插件 -->
 
 	<build>
 		<plugins>
 			<!-- 复制插件资源到指定目录 -->
-			<plugin>
+			<!--<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
 				<version>2.4.3</version>
@@ -79,7 +111,7 @@
 				</executions>
 			</plugin>
 
-			<!--生成trackray.jar到项目根目录-->
+			&lt;!&ndash;生成trackray.jar到项目根目录&ndash;&gt;
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
@@ -89,17 +121,17 @@
 				</configuration>
 			</plugin>
 
-			<!--删除trackray.jar-->
+			&lt;!&ndash;删除trackray.jar&ndash;&gt;
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-clean-plugin</artifactId>
 				<version>3.0.0</version>
 				<configuration>
-					<!--当配置true时,只清理filesets里的文件,构建目录中得文件不被清理.默认是flase.-->
+					&lt;!&ndash;当配置true时,只清理filesets里的文件,构建目录中得文件不被清理.默认是flase.&ndash;&gt;
 					<excludeDefaultDirectories>false</excludeDefaultDirectories>
 					<filesets>
 						<fileset>
-							<!--要清理的目录位置-->
+							&lt;!&ndash;要清理的目录位置&ndash;&gt;
 							<directory>../</directory>
 							<followSymlinks>false</followSymlinks>
 							<useDefaultExcludes>true</useDefaultExcludes>
@@ -113,7 +145,100 @@
 				</configuration>
 
 			</plugin>
+-->
 
+			<!-- 复制依赖库到 lib 目录 -->
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-dependencies</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>./../release/lib</outputDirectory>
+							<overWriteReleases>false</overWriteReleases>
+							<overWriteSnapshots>false</overWriteSnapshots>
+							<overWriteIfNewer>true</overWriteIfNewer>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- 复制application.properties配置文件和其他资源文件到release -->
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-properties-resources</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>./../release/</outputDirectory>
+							<resources>
+								<resource>
+									<directory>./src/main/resources/</directory>
+									<includes>
+										<include>application.properties</include>
+									</includes>
+									<filtering>true</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy-spring-boot-resources</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>./../release/classes/</outputDirectory>
+							<resources>
+								<resource>
+									<directory>./src/main/resources/</directory>
+									<includes>
+										<include>**/*.xml</include>
+										<include>**/*.txt</include>
+										<include>templates/**</include>
+										<include>static/**</include>
+									</includes>
+									<filtering>true</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- 打包trackray，指定classpath到lib和classes目录 -->
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+                    <outputDirectory>./../release/</outputDirectory>
+					<finalName>trackray</finalName>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<classpathPrefix>lib/</classpathPrefix>
+							<mainClass>com.trackray.WebApplication</mainClass>
+						</manifest>
+						<manifestEntries>
+							<Class-Path>classes/</Class-Path>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
 
 
 		</plugins>

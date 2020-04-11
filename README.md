@@ -7,7 +7,7 @@
 <br/>
 
 ![](https://img.shields.io/badge/KCon-%E5%85%B5%E5%99%A8%E8%B0%B1-red)
-![](https://img.shields.io/badge/version-3.1.0-success)
+![](https://img.shields.io/badge/version-3.2.0-success)
 ![](https://img.shields.io/github/stars/iSafeBlue/Trackray.svg)
 ![](https://img.shields.io/github/forks/iSafeBlue/Trackray.svg)
 ![](https://img.shields.io/github/license/iSafeBlue/Trackray.svg)
@@ -24,25 +24,20 @@
 
 **溯光**，英文名“**TrackRay**”，意为逆光而行，追溯光源。同时致敬安全圈前辈开发的“溯雪”，“流光”。
 
-溯光是一个开源的插件化渗透测试框架，框架自身实现了漏洞扫描功能，集成了知名安全工具：Metasploit、Nmap、Sqlmap、AWVS等。
+溯光是一个开源渗透测试框架，框架自身实现了漏洞扫描功能，集成了知名安全工具：Metasploit、Nmap、Sqlmap、AWVS、Burpsuite等。
 
-溯光使用 Java 编写，SpringBoot 作为基础框架，JPA + HSQLDB嵌入式数据库做持久化，Maven 管理依赖，Jython 实现 Python 插件调用，quartz 做任务调度，freemarker 做视图层，Websocket 实现命令行式插件交互。
+溯光使用 Java 编写，SpringBoot 作为基础框架，JPA + HSQLDB嵌入式数据库做持久化，Maven 管理依赖，Jython 管理 Python 插件，quartz 做任务调度，freemarker 做视图层，Websocket 实现命令行式插件交互。
 
-框架可扩展性高，支持 Java、Python、JSON 等方式编写插件，有“漏洞扫描插件”、“爬虫插件”、“独立应用插件”、“内部插件”、“无交互插件”和“可交互插件” 等插件类型。
+如有任何使用上的问题请提交 issue。如果你具备插件开发的能力，希望你也能一起来维护这个项目。
 
-如有任何使用上的问题请提交 issue。
-
-如果你具备插件开发的能力，希望你也能一起来维护这个项目。
-
-项目开发不易，如果可以的话请留下你的 star 表示对我的鼓励。
+项目开发不易，如果对你有帮助请下 star 以示鼓励。
 
 ## ⭐️特点 
 
-- 提供 WEB 服务接口
 - 使用只需要一个浏览器
-- 集成 AWVS、SQLMap、NMap、Metasploit、Kunpeng、XRay 等安全工具
-- 内置漏洞扫描器
-- 强大、易用、方便、开源
+- 集成 AWVS、SQLMap、NMap、Metasploit、Burpsuite、Crawlergo、Kunpeng、XRay 等安全工具
+- 内置多个渗透测试辅助插件
+- 方便、开源
 
 ## ❗️申明 
 
@@ -60,32 +55,30 @@
 
 ## ⚡️快速使用 
 
-可以通过源码编译为jar包后运行，或直接运行已编译好的jar包
+#### docker启动
+1. `git clone --depth=1 https://github.com/iSafeBlue/TrackRay.git` 或下载 [releases](https://github.com/iSafeBlue/TrackRay/releases) 最新版本源码
+2. `docker build -t trackray_beta .` 构建镜像
+3. `docker run -dit -p 80:80 --name trackray_v3 trackray_beta` 启动容器，可根据需求自行设定参数
+4. `docker exec -it trackray_v3 /bin/bash` 进入溯光工作目录
+5. 启动有需要的服务，如 AWVS、msfprc、SQLMap 等。并根据自己的需求修改`application.properties`配置文件
+6. 下载溯光依赖资源文件，将文件移动到 `/release/` 目录
+7. 进入发布目录 `cd release/`，运行溯光`nohup java -jar trackray.jar &` 或 `java -jar trackray.jar`，若提示未找到文件请先执行一遍`mvn clean package`
+8. 访问`http://127.0.0.1`
 
-#### 源代码版本
-1. 在 [releases](https://github.com/iSafeBlue/TrackRay/releases) 下载`trackray-x.x.x.src.zip`解压
-2. 如已安装 maven、jdk 等溯光编译所必备环境可忽略第2-5条
-3. `docker build -t trackray_beta .` 构建镜像
-4. `docker run -dit -p 8080:8080 --name trackray_runtime trackray_beta` 启动容器，可根据需求自行设定参数
-5. `docker exec -it trackray_runtime /bin/bash` 进入溯光工作目录
-6. 启动有需要的服务，如AWVS、msfprc、SQLMap等。并根据自己的需求修改`application.properties`配置文件
-7. 执行`nohup java -jar trackray.jar &` 或 `java -jar trackray.jar`，若提示未找到文件请先执行一遍`mvn clean package`
-8. 访问`http://127.0.0.1:8080`
-
-#### 已编译版本
-1. 在 [releases](https://github.com/iSafeBlue/TrackRay/releases) 下载`trackray-x.x.x.bin.zip`解压
-2. 启动有需要的服务，如AWVS、msfprc、SQLMap等。并根据自己的需求修改`application.properties`配置文件
-3. 执行`nohup java -jar trackray.jar &` 或 `java -jar trackray.jar`
-4. 访问`http://127.0.0.1:8080`
+#### 本地启动
+1. `git clone --depth=1 https://github.com/iSafeBlue/TrackRay.git` 或下载 [releases](https://github.com/iSafeBlue/TrackRay/releases) 最新版本源码
+2. 启动有需要的服务，如AWVS、msfprc、SQLMap等。并根据自己的需求修改`application.properties`配置文件或直接通过启动参数配置
+3. 下载溯光依赖资源文件，将文件移动到 `/release/` 目录
+4. 执行 Maven 编译命令 `mvn clean package` 
+5. 进入发布目录 `cd release/`，运行溯光`nohup java -jar trackray.jar &` 或 `java -jar trackray.jar`
+6. 访问`http://127.0.0.1`
 
 
-## 📘文档
+#### 溯光依赖资源
 
-[安装说明](/docs/安装说明.md)
+> 链接: https://pan.baidu.com/s/1lVAcB1r4gLJxzYXWtSs5xg 提取码: eexr
 
-[插件开发](/docs/扩展开发.md)
-
-[功能介绍](/docs/功能.md)
+下载资源文件解压后将“resource”目录移动到“release”目录下。
 
 ## ❤️注意
 
@@ -100,6 +93,7 @@
 
 | 日期 | 描述  |
 | ---- | ---- |
+| 2020-04-11 | 溯光3.2.0更新 |
 | 2019-08-16 | 溯光3.1.0更新 |
 | 2019-05-14 | 溯光3更新 |
 | 2019-03-11 | 新增jython支持，可通过`PyScript.java`插件调用python脚本 |

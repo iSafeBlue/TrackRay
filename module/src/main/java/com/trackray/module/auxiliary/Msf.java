@@ -32,16 +32,16 @@ public class Msf extends WebSocketPlugin {
 
     @Override
     public Object start() {
-        send(metasploit.banner());
+        println(metasploit.banner());
         while (true){
 
-            send(metasploit.getConsole());
+            println(metasploit.getConsole());
             String input = getInput();
             if (input.equals("quit")){
                 break;
             }
             String response = metasploit.execute(metasploit.list(input));
-            send(response);
+            println(response);
         }
         return "bye!";
     }

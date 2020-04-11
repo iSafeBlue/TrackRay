@@ -1,6 +1,5 @@
 package com.trackray.base.plugin;
 
-import com.trackray.base.utils.Message;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -34,10 +33,10 @@ public abstract class WebSocketPlugin extends  AbstractPlugin implements Runnabl
             before();
             result = start();
 
-            if (session.isOpen())
-                send("result="+result);
+            if (session.isOpen() && result!=null)
+                println(result.toString());
         }else{
-            send(errorMsg);
+            println(errorMsg);
         }
     }
 
@@ -62,7 +61,15 @@ public abstract class WebSocketPlugin extends  AbstractPlugin implements Runnabl
         }
     }
 
-    public void send(String text){
+    public void print(String text){
+        sendMessage(text);
+    }
+
+    public void println(String text){
+        sendMessage("\n"+text);
+    }
+
+    private void sendMessage(String text){
         TextMessage msg = new TextMessage(text);
         if (session!=null &&  session.isOpen())
         {

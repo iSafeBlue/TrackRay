@@ -1,0 +1,73 @@
+<meta charset="UTF-8">
+<title>插件配置</title>
+<#include "/manage/header.html"/>
+<script>
+
+    $(function () {
+        $("#button").click(function () {
+            $.ajax({
+                url:"doSetting",
+                type:"post",
+                dataType:'json',
+                data: $('#form').serialize(),
+                success:function (data) {
+                    alert(data.msg);
+                    location.reload()
+                }
+            });
+
+        });
+    })
+
+</script>
+</head>
+
+<body>
+
+<div class="card">
+    <div class="card-body">
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="header-title">插件配置</h4>
+                        <#if (msg)??>
+                            <p class="text-muted font-14">
+                                ${msg}
+                            </p>
+                        </#if>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <form id="form" >
+                                    <#if (attrs)??>
+                                        <#list attrs as item>
+                                                <div class="form-group">
+                                                    <label>${item.name}</label>
+                                                    <input type="text" class="form-control" name="${item.formName}" value="${item.value}">
+                                                    <span class="font-13 text-muted">e.g "${item.description}"</span>
+                                                </div>
+                                        </#list>
+                                    </#if>
+                                    <button id="button" type="button" class="btn btn-primary">Submit</button>
+
+                                </form>
+                            </div> <!-- end col -->
+                            <!-- end col -->
+                        </div>
+                        <!-- end row -->
+
+                    </div> <!-- end card-body -->
+                </div> <!-- end card -->
+            </div> <!-- end col -->
+        </div>
+
+    </div> <!-- end card-body-->
+</div>
+
+</body>
+
+<#include "/manage/footer_script.html"/>
+
+</html>

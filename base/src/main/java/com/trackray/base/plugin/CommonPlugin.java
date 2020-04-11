@@ -57,6 +57,22 @@ public abstract class CommonPlugin<E> extends AbstractPlugin<E> {
     public HttpServletRequest request;
     public HttpServletResponse response;
 
+    public HttpServletRequest getRequest() {
+        return request;
+    }
+
+    public void setRequest(HttpServletRequest request) {
+        this.request = request;
+    }
+
+    public HttpServletResponse getResponse() {
+        return response;
+    }
+
+    public void setResponse(HttpServletResponse response) {
+        this.response = response;
+    }
+
     public boolean isNone(String o){
         return StringUtils.isBlank(o);
     }

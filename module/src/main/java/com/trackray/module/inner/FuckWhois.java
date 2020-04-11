@@ -5,7 +5,6 @@ import com.trackray.base.bean.HostInfo;
 import com.trackray.base.httpclient.HttpClient;
 import com.trackray.base.httpclient.ResponseStatus;
 import com.trackray.base.plugin.InnerPlugin;
-import com.trackray.base.utils.ApiUtils;
 import com.trackray.base.utils.DomainUtils;
 import com.trackray.base.utils.SysLog;
 import org.javaweb.core.net.HttpRequest;

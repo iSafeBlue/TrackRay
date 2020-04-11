@@ -23,6 +23,7 @@ public @interface Rule {
             @Param( key = "PATH" , desc = "远程路径" , defaultValue = "/"),
             @Param( key = "SSL" , desc = "是否开启SSL" , defaultValue = "false"),
     }; // 插件参数
+    Option[] options() default {};  // MVC配置项
     boolean defParam() default false; // 是否使用默认的参数
     CommonPlugin.Type type() default CommonPlugin.Type.JSON;    //当使用commonplugin时返回给浏览器的文本类型
     CommonPlugin.Charset charset() default CommonPlugin.Charset.UTF8;   //使用commonplugin时返回给浏览器的文本编码

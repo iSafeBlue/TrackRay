@@ -53,9 +53,9 @@ public class HtmlController {
     private DispatchController dispatchController;
     @GetMapping("/")
     public String index(Model model){
-        String banner = this.banner.generate();
-        model.addAttribute("banner",banner);
-        return "index";
+        //String banner = this.banner.generate();
+        //model.addAttribute("banner",banner);
+        return "redirect:/manage";
     }
 
     @GetMapping("/api")
@@ -82,9 +82,13 @@ public class HtmlController {
         {
 
             Map<String, MVCPlugin> mvcPlugins = pluginService.findMVCPlugins();
-            HashMap<String, String> param = new HashMap<>();
+            HashMap<String, Object> param = new HashMap<>();
             for (Map.Entry<String, MVCPlugin> entry : mvcPlugins.entrySet()) {
-                param.put(entry.getKey(),entry.getValue().currentPlugin().title());
+                if (entry.getValue().currentRule().options().length>0){//如果用到了配置功能
+                    param.put(entry.getKey(),new String[]{entry.getValue().currentPlugin().title()});
+                }else {
+                    param.put(entry.getKey(),entry.getValue().currentPlugin().title());
+                }
             }
             session.setAttribute("menu",param);
             session.setAttribute("user",account);

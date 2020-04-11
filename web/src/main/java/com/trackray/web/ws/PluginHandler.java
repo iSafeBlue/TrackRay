@@ -81,9 +81,9 @@ public class PluginHandler extends TextWebSocketHandler {
                         }
                     }
                     if (flag)
-                        session.sendMessage(Message.YELLOW("[-]plugin not found!"));
+                        session.sendMessage(Message.YELLOW("\n[-]plugin not found!"));
                     else
-                        session.sendMessage(Message.WHITE(formatPluginsToTable(temp).replaceAll(ex,"<b><font color='red'>"+ex+"</font></b>")));
+                        session.sendMessage(Message.WHITE("\n"+formatPluginsToTable(temp).replaceAll(ex,"<b><font color='red'>"+ex+"</font></b>")));
                 }
 
             } else if (payload.startsWith("use ")){
@@ -102,7 +102,7 @@ public class PluginHandler extends TextWebSocketHandler {
                 if (StringUtils.isNoneBlank(param,value,(key = uses.get(id))) ){
                     sets.get(id).put(param,value);
                 }
-            }else if (payload.equals("build")){
+            }else if (payload.equals("run")||payload.equals("build")){
                 if (StringUtils.isNotBlank(uses.get(id))){ //  && sets.get(id).size()>0
                     Map<String, String> map = sets.get(id);
                     String key = uses.get(id);
@@ -135,7 +135,7 @@ public class PluginHandler extends TextWebSocketHandler {
                     session.sendMessage(Message.NORMAL("command not found"));
                 }
 */
-                session.sendMessage(Message.NORMAL("command not found"));
+                session.sendMessage(Message.NORMAL("\ncommand not found"));
 
             }
 

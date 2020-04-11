@@ -1,6 +1,5 @@
 package com.trackray.module.auxiliary;
 
-import com.trackray.base.annotation.Plugin;
 import com.trackray.base.annotation.Param;
 import com.trackray.base.annotation.Rule;
 import com.trackray.base.attack.Payload;
@@ -44,7 +43,7 @@ public class AssetsScan extends WebSocketPlugin{
         {
             service = Executors.newFixedThreadPool(thread);
         }else{
-            send("thread不可以大于5");
+            println("thread不可以大于5");
             return false;
         }
         return true;
@@ -55,7 +54,7 @@ public class AssetsScan extends WebSocketPlugin{
     @Override
     public Object start() {
         String root = ExtractUtils.extract(domain , ExtractUtils.DOMAIN);
-        send("扫描初始化中，你的目标是："+root);
+        println("扫描初始化中，你的目标是："+root);
         for (String prefix : Payload.domainPayload) {
             if (StringUtils.isNotBlank(prefix)) {
                 service.execute(new Runnable() {
@@ -67,7 +66,7 @@ public class AssetsScan extends WebSocketPlugin{
                         asset.setDomain(domain);
                         if (ReUtils.isIp(ip) && !ip.matches("(127\\.|192\\.|10\\.|172\\.)")){
                             CrawlerPage page = new CrawlerPage();
-                            page.getRequest().setUrl("https://tools.ipip.net/ping.php?v=4&a=send&host="+domain+"&area[]=china");
+                            page.getRequest().setUrl("https://tools.ipip.net/ping.php?v=4&a=println&host="+domain+"&area[]=china");
                             page.getRequest().setHttpMethod(HttpMethod.POST);
                             page.getRequest().setTimeout(40000);
                             page.getRequest().addHttpHeader("Connection","keep-alive");
@@ -103,7 +102,7 @@ public class AssetsScan extends WebSocketPlugin{
                                 asset.setSegment(nmap.executor().result().toString());
                             }
 
-                            send(asset.toString());
+                            println(asset.toString());
                             assets.add(asset);
                         }
 

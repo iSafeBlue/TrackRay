@@ -56,7 +56,6 @@ public class Awvs {
 
     private Header[] headers;
 
-    @PostConstruct
     public void initCheck(){
         headers = new Header[]{
                 new BasicHeader("X-Auth",apikey),
@@ -71,9 +70,10 @@ public class Awvs {
         int statusCode = page.getResponse().getStatus().getStatusCode();
         if (statusCode>=200 && statusCode<300){
             ok = true;
+            SysLog.info("[AWVS] AWVS配置正常");
         }else {
             ok = false;
-            SysLog.error("AWVS配置异常请检查。");
+            SysLog.error("[AWVS] AWVS配置异常请检查");
         }
 
     }

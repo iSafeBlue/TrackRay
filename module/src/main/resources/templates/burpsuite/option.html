@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <#include "/manage/header.html"/>
+
+    <script>
+        function updateSocks() {
+            $.ajax({
+                url:"doSocks",
+                type:"post",
+                dataType:'json',
+                data: $("#socks_form").serialize(),
+                success:function (data) {
+                    alert(data.msg);
+                    location.reload()
+                }
+            });
+        }
+
+        function updateProxy() {
+            $.ajax({
+                url:"doProxy",
+                type:"post",
+                dataType:'json',
+                data: $("#proxy_form").serialize(),
+                success:function (data) {
+                    alert(data.msg);
+                    location.reload()
+                }
+            });
+        }
+    </script>
+</head>
+
+<body>
+
+<div class="card">
+    <div class="card-body">
+
+        <div class="row">
+            <!-- end col -->
+
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body">
+
+                        <ul class="nav nav-pills bg-nav-pills nav-justified mb-3">
+                            <li class="nav-item">
+                                <a href="#index" onclick="location.href='index'" data-toggle="tab" aria-expanded="false" class="nav-link rounded-0">
+                                    <i class="mdi mdi-home-variant d-lg-none d-block mr-1"></i>
+                                    <span class="d-none d-lg-block">Dashboard</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#history" onclick="location.href='history'"  data-toggle="tab" aria-expanded="false" class="nav-link rounded-0">
+                                    <i class="mdi mdi-account-circle d-lg-none d-block mr-1"></i>
+                                    <span class="d-none d-lg-block">HTTP history</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#option" onclick="location.href='option'"  data-toggle="tab" aria-expanded="true" class="nav-link rounded-0 active">
+                                    <i class="mdi mdi-settings-outline d-lg-none d-block mr-1"></i>
+                                    <span class="d-none d-lg-block">Option</span>
+                                </a>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="option">
+                                <div class="card-body">
+                                    <h4 class="header-title">Socks代理</h4>
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <form id="socks_form">
+
+                                                <div class="custom-control custom-switch">
+                                                    <input type="checkbox" class="custom-control-input" name="useProxy" value="true" id="useProxy" <#if socksProxy.useProxy>checked=""</#if>>
+                                                    <label class="custom-control-label" for="useProxy">启用Socks代理</label>
+                                                </div>
+
+                                                <div class="custom-control custom-switch">
+                                                    <input type="checkbox" class="custom-control-input" name="dnsOverSocks" value="true" id="dnsOverSocks" <#if socksProxy.dnsOverSocks>checked=""</#if>>
+                                                    <label class="custom-control-label" for="dnsOverSocks">DNS使用Socks代理</label>
+                                                </div>
+
+                                                <div class="custom-control custom-switch">
+                                                    <input type="checkbox" class="custom-control-input" name="useUserOptions"  value="true" id="useUserOptions" <#if socksProxy.useUserOptions>checked=""</#if>>
+                                                    <label class="custom-control-label" for="useUserOptions">优先使用User options的配置</label>
+                                                </div>
+
+                                                <div class="form-group mb-3">
+                                                    <label for="host">代理主机名</label>
+                                                    <input type="text" id="host" name="host"  class="form-control" value="${socksProxy.host}">
+                                                </div>
+
+                                                <div class="form-group mb-3">
+                                                    <label for="host">代理主机端口</label>
+                                                    <input type="text" id="port" name="port"  class="form-control" value="${socksProxy.port?c}">
+                                                </div>
+
+                                                <div class="form-group mb-3">
+                                                    <label for="host">用户名</label>
+                                                    <input type="text" id="username" name="username" class="form-control" value="${socksProxy.username}">
+                                                </div>
+
+                                                <div class="form-group mb-3">
+                                                    <label for="host">密码</label>
+                                                    <input type="text" id="password" name="password"  class="form-control" value="${socksProxy.password}">
+                                                </div>
+
+                                                <button type="button" onclick="updateSocks()" class="btn btn-primary">修改</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card-body">
+
+                                    <h4 class="header-title">HTTP上游代理</h4>
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <form id="proxy_form">
+
+                                                <#if upstreamProxy?size == 0>
+                                                    <p class="text-muted">
+                                                        你没有配置上游HTTP代理。
+                                                    </p>
+                                                    <div class="custom-control custom-switch">
+                                                        <input type="checkbox" class="custom-control-input" name="enabled" value="true" id="enabled" >
+                                                        <label class="custom-control-label" for="enabled">启用HTTP代理</label>
+                                                    </div>
+
+                                                    <div class="form-group mb-3">
+                                                        <label for="destination_host">目标主机</label>
+                                                        <input type="text" id="destination_host" name="destination_host"  class="form-control" value="*" placeholder="*">
+                                                    </div>
+                                                    <div class="form-group mb-3">
+                                                        <label for="proxy_host">代理主机名</label>
+                                                        <input type="text" id="proxy_host" name="proxy_host"  class="form-control" value="" placeholder="127.0.0.1">
+                                                    </div>
+
+                                                    <div class="form-group mb-3">
+                                                        <label for="proxy_port">代理主机端口</label>
+                                                        <input type="text" id="proxy_port" name="proxy_port"  class="form-control" value="" placeholder="7777">
+                                                    </div>
+
+                                                <#else>
+
+                                                    <#list upstreamProxy as proxy>
+
+                                                    <div class="custom-control custom-switch">
+                                                        <input type="checkbox" class="custom-control-input" name="enabled" value="true" id="enabled" <#if proxy.enabled>checked=""</#if>>
+                                                        <label class="custom-control-label" for="enabled">启用HTTP代理</label>
+                                                    </div>
+                                                    <div class="form-group mb-3">
+                                                            <label for="destination_host">目标主机</label>
+                                                            <input type="text" id="destination_host" name="destination_host"  class="form-control" value="*" placeholder="*">
+                                                    </div>
+                                                    <div class="form-group mb-3">
+                                                        <label for="proxy_host">代理主机名</label>
+                                                        <input type="text" id="proxy_host" name="proxy_host"  class="form-control" value="${proxy.proxy_host}">
+                                                    </div>
+
+                                                    <div class="form-group mb-3">
+                                                        <label for="proxy_port">代理主机端口</label>
+                                                        <input type="text" id="proxy_port" name="proxy_port"  class="form-control" value="${proxy.proxy_port?c}">
+                                                    </div>
+
+                                                    </#list>
+                                                </#if>
+
+                                                <button type="button" onclick="updateProxy()" class="btn btn-primary">修改</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <p>配置实在懒得写</p>
+                                <textarea class="form-control" id="config" rows="20" >${config}</textarea>
+
+
+                            </div>
+
+                        </div>
+
+                    </div> <!-- end card-body-->
+                </div> <!-- end card-->
+            </div> <!-- end col -->
+        </div>
+
+    </div> <!-- end card body-->
+</div>
+
+
+</body>
+
+<#include "/manage/footer_script.html"/>
+
+</html>

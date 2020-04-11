@@ -1,4 +1,4 @@
-FROM b1u3r/trackray:3.0.0
+FROM b1u3r/trackray:3.2.0
 
 MAINTAINER b1u3r "blue@ixsec.org"
 
@@ -8,7 +8,12 @@ COPY . .
 
 RUN mvn clean package
 
+EXPOSE 80
 EXPOSE 8080
+EXPOSE 7777
+EXPOSE 8888
+EXPOSE 8888
+EXPOSE 8090
 EXPOSE 10000
 EXPOSE 10001
 EXPOSE 10002

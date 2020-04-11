@@ -7,7 +7,8 @@
         <module>base</module>
 		<module>module</module>
 		<module>web</module>
-	</modules>
+		<module>plugin</module>
+    </modules>
 
     <parent>
 		<groupId>org.springframework.boot</groupId>
@@ -18,13 +19,13 @@
 
 	<groupId>com.trackray</groupId>
 	<artifactId>framework</artifactId>
-	<version>3.1.0-BETA</version>
+	<version>3.2.0</version>
 	<name>trackray framework</name>
 	<description>trackray pentest framework</description>
 
 	<properties>
 		<java.version>1.8</java.version>
-		<trackray.version>3.1.0-BETA</trackray.version>
+		<trackray.version>3.2.0</trackray.version>
 	</properties>
 
 	<dependencies>
@@ -49,11 +50,21 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/com.alibaba/fastjson -->
 		<dependency>
-			<groupId>com.alibaba</groupId>
-			<artifactId>fastjson</artifactId>
-			<version>1.2.59</version>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.module</groupId>
+			<artifactId>jackson-module-jaxb-annotations</artifactId>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/net.java.dev.jna/jna -->
@@ -119,6 +130,12 @@
 			<groupId>org.javaweb</groupId>
 			<artifactId>javaweb-utils</artifactId>
 			<version>1.1.0</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>fastjson</artifactId>
+					<groupId>com.alibaba</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<!-- 内存数据库hsqldb -->
@@ -133,6 +150,12 @@
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-exec</artifactId>
+			<version>LATEST</version>
+		</dependency>
+
 
 	</dependencies>
 
@@ -141,6 +164,7 @@
 			<id>aliyunmaven</id>
 			<url>http://maven.aliyun.com/nexus/content/groups/public/</url>
 		</repository>
+
 	</repositories>
 
 </project>

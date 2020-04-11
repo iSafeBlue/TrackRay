@@ -185,7 +185,7 @@
         };
 
         ws.onmessage = function(evt) {
-            console.append("\n"+evt.data);
+            console.append(evt.data);
 
             var ele = $('.console')[0];
             ele.scrollTop = ele.scrollHeight;
@@ -201,7 +201,8 @@
             console.append("search\t查找插件\t1.查询所有:search * 2:模糊查询:search nmap\n");
             console.append("use\t使用插件\tuse plugin\n");
             console.append("set\t设置插件参数\tset key value\n");
-            console.append("build\t构建插件\n");
+            console.append("run\t运行插件\n");
+            console.append("build\t运行插件\n");
             console.append("kill\t结束插件线程\tkill pluginid\n");
             console.append("clear\t清屏\n");
             console.append("help\t命令帮助\n");
@@ -223,7 +224,7 @@
             }
 
             if (!isValid){
-                console.append("<font color='red'>[blue@trackray ~] $ </font>"+command);
+                console.append("<font color='red'>[${user}@trackray ~] $ </font>"+command+"\n");
                 ws.send(command);
             }
 
@@ -249,7 +250,7 @@
         });
 
         // Set the window title
-        title.text("bluer@trackray: ~ (bash)")
+        title.text("${user}@trackray: ~ (bash)")
 
         // Get the date for our fake last-login
         var date = new Date().toString();
