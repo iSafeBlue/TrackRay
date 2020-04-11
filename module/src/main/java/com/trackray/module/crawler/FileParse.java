@@ -1,5 +1,6 @@
 package com.trackray.module.crawler;
 
+import com.trackray.base.annotation.Plugin;
 import com.trackray.base.bean.Vulnerable;
 import com.trackray.base.enums.Language;
 import com.trackray.base.enums.WEBServer;
@@ -13,6 +14,7 @@ import java.net.MalformedURLException;
  * @email blue@ixsec.org
  * @since 2019/6/24 18:11
  */
+@Plugin(title = "文件解析漏洞",author = "浅蓝")
 public class FileParse extends CrawlerPlugin {
     @Override
     public boolean check() {

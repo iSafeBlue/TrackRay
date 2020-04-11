@@ -26,5 +26,4 @@ public class MindMapData  {
     private String data;
     private Date date = new Date();
 
-
 }

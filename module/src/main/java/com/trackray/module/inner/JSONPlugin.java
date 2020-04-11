@@ -40,7 +40,7 @@ import java.util.UUID;
 @Plugin(value = "json", title = "鲲鹏JSON插件调用" ,author = "浅蓝")
 public class JSONPlugin extends MVCPlugin{
 
-    public static String jsonPath = Constant.RESOURCES_PATH.concat("json/");
+    public static String jsonPath = BASE.concat("json/");
 
     @Override
     public void index() {

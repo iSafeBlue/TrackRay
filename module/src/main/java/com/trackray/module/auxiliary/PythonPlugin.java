@@ -1,7 +1,5 @@
 package com.trackray.module.auxiliary;
 
-import com.trackray.base.annotation.Plugin;
-import com.trackray.base.annotation.Rule;
 import com.trackray.base.attack.Python;
 import com.trackray.base.plugin.WebSocketPlugin;
 import com.trackray.base.utils.CheckUtils;
@@ -73,8 +71,8 @@ public class PythonPlugin extends WebSocketPlugin {
     @Override
     public String start() {
 
-        send("插件列表:");
-        send("==================");
+        println("插件列表:");
+        println("==================");
 
         if (strems.isEmpty()){
             for (File f : file.listFiles()) {
@@ -94,12 +92,12 @@ public class PythonPlugin extends WebSocketPlugin {
         }
 
 
-        send("使用方法：");
-        send("plugin.py");
+        println("使用方法：");
+        println("plugin.py");
 
 
-            send("==================");
-            send("请输入:");
+            println("==================");
+            println("请输入:");
 
 
             String input = getInput();

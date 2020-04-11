@@ -6,7 +6,6 @@ import com.trackray.base.annotation.Rule;
 import com.trackray.base.plugin.WebSocketPlugin;
 import org.javaweb.core.utils.HexUtils;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Map;
@@ -56,13 +55,13 @@ public class MS12020 extends WebSocketPlugin {
                 out.close();
                 socket.close();
 
-                send("第"+i+"次请求已发送");
+                println("第"+i+"次请求已发送");
 
             }catch (Exception e){
                 if (max == 0){
-                    send("可能不存在漏洞");
+                    println("可能不存在漏洞");
                 }else{
-                    send("主机已拒绝服务");
+                    println("主机已拒绝服务");
                 }
                 break;
             }

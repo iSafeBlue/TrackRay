@@ -4,7 +4,6 @@ import com.trackray.base.annotation.Plugin;
 import com.trackray.base.httpclient.HttpClient;
 import com.trackray.base.httpclient.ResponseStatus;
 import com.trackray.base.plugin.InnerPlugin;
-import com.trackray.base.utils.ApiUtils;
 import com.trackray.base.utils.DomainUtils;
 import com.trackray.base.utils.RegexUtil;
 import com.trackray.base.utils.SysLog;

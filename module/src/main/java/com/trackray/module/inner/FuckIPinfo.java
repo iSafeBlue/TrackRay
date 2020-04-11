@@ -1,5 +1,6 @@
 package com.trackray.module.inner;
 
+import com.trackray.base.annotation.Plugin;
 import com.trackray.base.bean.HostInfo;
 import com.trackray.base.bean.Task;
 import com.trackray.base.enums.HttpMethod;
@@ -28,6 +29,7 @@ import java.util.*;
  * @email blue@ixsec.org
  * @since 2019/4/24 16:37
  */
+@Plugin(title = "FuckIPinfo",value = "fuckIPinfo")
 public class FuckIPinfo extends InnerPlugin {
     @Override
     public void process() {
@@ -176,7 +178,7 @@ public class FuckIPinfo extends InnerPlugin {
     private Set<String> fuckOhterIP(String domain) {
         Set<String> r = new HashSet<>();
         CrawlerPage page = new CrawlerPage();
-        page.getRequest().setUrl("https://tools.ipip.net/ping.php?v=4&a=send&host="+domain+"&area[]=china");
+        page.getRequest().setUrl("https://tools.ipip.net/ping.php?v=4&a=println&host="+domain+"&area[]=china");
         page.getRequest().setHttpMethod(HttpMethod.POST);
         page.getRequest().setTimeout(40000);
         page.getRequest().addHttpHeader("Connection","keep-alive");

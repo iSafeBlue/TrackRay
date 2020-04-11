@@ -29,4 +29,6 @@ public class GpsData  implements Serializable {
     private String msg = "";
     private String remark = "";
 
+    public GpsData() {
+    }
 }

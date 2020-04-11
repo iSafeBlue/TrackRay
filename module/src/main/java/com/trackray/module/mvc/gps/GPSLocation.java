@@ -165,5 +165,3 @@ public class GPSLocation extends MVCPlugin {
 
 }
 
-interface GPSRepository extends CrudRepository<GpsData, Long> {
-}

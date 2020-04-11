@@ -1,5 +1,7 @@
 package com.trackray.base.bean;
 
+import com.trackray.base.utils.PropertyUtil;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,7 +14,12 @@ public class Constant {
 
     public static String USER_DIR = System.getProperty("user.dir"); // 当前程序工作目录
 
-    public static String RESOURCES_PATH = USER_DIR.concat("/resources/");
+    public static String RESOURCES_PATH = USER_DIR + (
+                    USER_DIR.contains("release")?
+                    ( PropertyUtil.getProperty("trackray.resource") ):
+                    ( "/release"+PropertyUtil.getProperty("trackray.resource") )
+
+    );
 
     public static String RESOURCES_INCLUDE_PATH; //插件包含资源文件路径
 

@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Value;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +27,7 @@ import java.util.UUID;
 @Rule
 public class XRayInner extends InnerPlugin<XRayInner> {
 
-    public final static String VERSION = "0.9.1";
+    public final static String VERSION = "0.18.2";
 
     public final static String LINUX_PATH = BASE + "/xray/linux/xray_linux_amd64";
     public final static String WIN_PATH = BASE + "/xray/windows/xray_windows_amd64.exe";
@@ -96,6 +99,32 @@ public class XRayInner extends InnerPlugin<XRayInner> {
 
 
     }
+
+    public  boolean isLocalPortUsing(int port){
+        boolean flag = false;
+        try {
+            flag = isPortUsing("127.0.0.1", port);
+        } catch (Exception e) {
+        }
+        return flag;
+    }
+    /***
+     * 测试主机Host的port端口是否被使用
+     * @param host
+     * @param port
+     * @throws UnknownHostException
+     */
+    private boolean isPortUsing(String host,int port) throws UnknownHostException {
+        boolean flag = false;
+        InetAddress Address = InetAddress.getByName(host);
+        try {
+            Socket socket = new Socket(Address,port);  //建立一个Socket连接
+            flag = true;
+        } catch (IOException e) {
+
+        }
+        return flag;
+    }
     public XRayInner setCommand(String command){
         this.command.add(command);
         return this;
@@ -104,6 +133,10 @@ public class XRayInner extends InnerPlugin<XRayInner> {
     public XRayInner setListen(String ip ,int port) {
         String host = (ip+":"+port);
         command.add("--listen "+host);
+        return this;
+    }
+    public XRayInner setBasicCrawler(String url) {
+        command.add("--basic-crawler "+url);
         return this;
     }
     public XRayInner setPlugins(String... plugins){
@@ -128,6 +161,11 @@ public class XRayInner extends InnerPlugin<XRayInner> {
         output("text",filename);
         return this;
     }
+    public XRayInner outputHTML(String filename){
+        output("html",filename);
+        return this;
+    }
+
     private void output(String type , String filename){
         setOutfileFlag = true;
         File file = new File(tempdir.concat("xray/"));

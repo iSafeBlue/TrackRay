@@ -31,7 +31,7 @@ public class Python {
 
     private PythonInterpreter interpreter;
 
-    public PythonInterpreter interpreter(){
+    public synchronized PythonInterpreter interpreter(){
 
         if (this.interpreter!=null){
             return interpreter;

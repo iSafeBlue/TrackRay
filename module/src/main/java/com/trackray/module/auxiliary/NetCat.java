@@ -39,8 +39,8 @@ public class NetCat extends WebSocketPlugin {
             e.printStackTrace();
         }
         pool = Executors.newSingleThreadExecutor();
-        send("port:"+port);
-        send("等待客户端连接");
+        println("port:"+port);
+        println("等待客户端连接");
         listen();
     }
 
@@ -48,7 +48,7 @@ public class NetCat extends WebSocketPlugin {
         try {
             client = server.accept();
             if (client.isConnected()){
-                send("客户端已连接:"+client.getInetAddress().getHostAddress());
+                println("客户端已连接:"+client.getInetAddress().getHostAddress());
                 os = client.getOutputStream();
                 pw = new PrintWriter(os, true);
             }
@@ -75,15 +75,15 @@ public class NetCat extends WebSocketPlugin {
                 String temp;
                 while ((temp = bri.readLine())!=null && !"".equals(temp)) {
                     //msg=msg.concat(temp);
-                    send(temp);
+                    println(temp);
                 }
                 /*if (StringUtils.isNotBlank(msg)){
-                    send(msg);
+                    println(msg);
                 }*/
 
             }
         }catch (Exception e){
-            send(e.getMessage());
+            println(e.getMessage());
         }
     }
 
@@ -96,7 +96,7 @@ public class NetCat extends WebSocketPlugin {
                 pw.println(input);
             }
         }
-        send("主机已下线");
+        println("主机已下线");
         return null;
     }
 

@@ -54,7 +54,7 @@ public abstract class CrawlerPlugin implements Runnable {
         if (StringUtils.isBlank(vulnerable.getPayload())){
             vuln.setPayload(vulnerable.getAddress());
         }
-        vuln.setMessage(vulnerable.getDetail());
+        vuln.setDetail(vulnerable.getDetail());
         vuln.setPayload(vulnerable.getPayload());
         if (vulnerable.getReferences()!=null)
             vuln.setReference((String[]) vulnerable.getReferences().toArray());
@@ -78,5 +78,33 @@ public abstract class CrawlerPlugin implements Runnable {
 
     public void setTask(Task task) {
         this.task = task;
+    }
+
+    public HttpURLRequest getRequests() {
+        return requests;
+    }
+
+    public void setRequests(HttpURLRequest requests) {
+        this.requests = requests;
+    }
+
+    public HttpResponse getResponse() {
+        return response;
+    }
+
+    public void setResponse(HttpResponse response) {
+        this.response = response;
+    }
+
+    public URL getTarget() {
+        return target;
+    }
+
+    public void setTarget(URL target) {
+        this.target = target;
+    }
+
+    public Task getTask() {
+        return task;
     }
 }

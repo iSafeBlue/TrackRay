@@ -14,6 +14,8 @@ public class Vulnerable {
     private Integer level = Level.INFO.getLevel();//漏洞等级
     private Integer type = Type.UNKNOWN.getType(); //漏洞类型
     private String payload = "";//攻击载荷
+    private String request = "";
+    private String response = "";
     private List<String> vulnId ;//漏洞ID
     private List<String> risk;    //存在的风险
     private String repair ;  //修复建议

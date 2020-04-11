@@ -79,7 +79,7 @@ public class Banner {
         return dispatchController.getAppContext().getBeansOfType(CrawlerPlugin.class).size();
     }
     public int jsonPluginCount(){
-        String jsonPath = Constant.RESOURCES_PATH.concat("json/");
+        String jsonPath = Constant.RESOURCES_INCLUDE_PATH.concat("/json/");
 
         File file = new File(jsonPath);
         if (file.isDirectory()){

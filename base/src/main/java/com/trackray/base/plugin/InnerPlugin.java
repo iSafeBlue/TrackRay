@@ -34,6 +34,8 @@ public abstract class InnerPlugin<E> extends AbstractPlugin<E>{
         vuln.setAddress(vulnerable.getAddress());
         vuln.setLevel(vulnerable.getLevel());
         //vuln.setMessage(vulnerable.);
+        vuln.setRequest(vulnerable.getRequest());
+        vuln.setResponse(vulnerable.getResponse());
         vuln.setPayload(vulnerable.getPayload());
         if (vulnerable.getReferences()!=null)
             vuln.setReference(vulnerable.getReferences().toArray(new String[]{}));

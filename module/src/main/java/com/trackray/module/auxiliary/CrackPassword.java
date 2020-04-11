@@ -59,17 +59,17 @@ public class CrackPassword extends WebSocketPlugin {
     public void before() {
 
         for (String k : servers.keySet()) {
-            send(k);
+            println(k);
         }
-        send("[!]请选您要破解的服务");
+        println("[!]请选您要破解的服务");
         String serverName = getInput();
         if (StringUtils.isNotBlank(serverName) && servers.containsKey(serverName)){
-            send("你选择的是"+serverName);
+            println("你选择的是"+serverName);
             this.protocol=serverName;
         }else{
             return;
         }
-        send("[!]请输入主机名与端口，如：127.0.0.1:3306 不填写端口则使用默认端口");
+        println("[!]请输入主机名与端口，如：127.0.0.1:3306 不填写端口则使用默认端口");
         String host = getInput();
         if (StringUtils.isNotBlank(host)){
             if (host.contains(":")){
@@ -82,13 +82,13 @@ public class CrackPassword extends WebSocketPlugin {
             }
         }
         
-        send("[!]是否使用默认用户名字典[y/n]");
+        println("[!]是否使用默认用户名字典[y/n]");
         String yn = getInput();
         if (yn.equals("n")){
-            send("[!]请输入用户名字典 ");
-            send("1:[\"admin\",\"username\",\"root\"] 一般模式");
-            send("2:dict.txt 相对路径模式");
-            send("3:http://host/dict.txt 远程文件模式");
+            println("[!]请输入用户名字典 ");
+            println("1:[\"admin\",\"username\",\"root\"] 一般模式");
+            println("2:dict.txt 相对路径模式");
+            println("3:http://host/dict.txt 远程文件模式");
             String dict = getInput();
             this.udict = this.inputToDict(dict);
         }else{
@@ -96,13 +96,13 @@ public class CrackPassword extends WebSocketPlugin {
         }
 
 
-        send("[!]是否使用默认密码字典[y/n]");
+        println("[!]是否使用默认密码字典[y/n]");
         yn = getInput();
         if (yn.equals("n")){
-            send("[!]请输入密码字典 ");
-            send("1:[\"123\",\"password\",\"admin888\"] 一般模式");
-            send("2:dict.txt 相对路径模式");
-            send("3:http://host/dict.txt 远程文件模式");
+            println("[!]请输入密码字典 ");
+            println("1:[\"123\",\"password\",\"admin888\"] 一般模式");
+            println("2:dict.txt 相对路径模式");
+            println("3:http://host/dict.txt 远程文件模式");
             String dict = getInput();
             this.pdict = this.inputToDict(dict);
         }else{
@@ -178,7 +178,7 @@ public class CrackPassword extends WebSocketPlugin {
                 }
             }
 
-            send("正在破解中请耐心等待");
+            println("正在破解中请耐心等待");
         } catch (Exception e) {
             SysLog.error(e.getMessage());
         }
@@ -244,7 +244,7 @@ public class CrackPassword extends WebSocketPlugin {
         }
 
         resultMap.put(username,password);
-        send("[+]破解成功："+resultMap);
+        println("[+]破解成功："+resultMap);
         onClose();
     }
 

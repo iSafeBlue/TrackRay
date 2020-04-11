@@ -4,6 +4,7 @@ import com.trackray.base.attack.Metasploit;
 import com.trackray.base.bean.Constant;
 import com.trackray.base.utils.Message;
 import com.trackray.base.utils.StrUtils;
+import org.apache.commons.exec.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +15,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import java.io.*;
 import java.util.*;
 
 
@@ -32,7 +34,12 @@ public class MsfHandler extends TextWebSocketHandler {
     private Metasploit metasploit;
 
     private Map<String, Thread> sessions = Collections.synchronizedMap(new HashMap<String,Thread>());
+
     private boolean flag;
+
+    private OutputStream outputStream ;
+    private DefaultExecutor defaultExecutor;
+    private PrintWriter inputWriter;
     @Override
     public  void afterConnectionEstablished(WebSocketSession session)
             throws Exception {
@@ -43,7 +50,23 @@ public class MsfHandler extends TextWebSocketHandler {
             String banner = metasploit.banner();
             session.sendMessage(Message.RED(banner));
         }else{
-            session.sendMessage(Message.RED("[-]metasploit配置有误，请检查!"));
+            session.sendMessage(Message.RED("[-]msf远程接口配置有误\n"));
+            /*outputStream = new WebsocketOutputStream(new ByteArrayOutputStream() , session);
+            CommandLine commandLine = CommandLine.parse("E:\\Hack\\PenTools\\metasploit\\metasploit-framework\\bin\\msfconsole.bat");
+            defaultExecutor = new DefaultExecutor();
+            ExecuteWatchdog watchdog = new ExecuteWatchdog(Integer.MAX_VALUE);
+            DefaultExecuteResultHandler resultHandler = new DefaultExecuteResultHandler();
+            PluginDataOutputStream websocketSendMessageOutputStream = new PluginDataOutputStream();
+            BufferedInputStream bufferedInputStream = new BufferedInputStream(new PipedInputStream(websocketSendMessageOutputStream));
+            PumpStreamHandler pumpStreamHandler = new PumpStreamHandler(outputStream,outputStream,bufferedInputStream);
+            inputWriter = new PrintWriter(websocketSendMessageOutputStream);
+            inputWriter.println();
+            inputWriter.flush();
+
+            defaultExecutor.setStreamHandler(pumpStreamHandler);
+            defaultExecutor.setWatchdog(watchdog);
+            defaultExecutor.execute(commandLine,resultHandler);
+*/
         }
         sessions.put(session.getId(),null);
         super.afterConnectionEstablished(session);
@@ -52,24 +75,29 @@ public class MsfHandler extends TextWebSocketHandler {
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         String payload = message.getPayload();
+        if (outputStream==null){
 
-        if (flag){
-            String response = metasploit.execute(metasploit.list(payload));
-            String console = metasploit.getConsole();
-            session.sendMessage(Message.NORMAL("c0nso1e##!##"+console));
-            session.sendMessage(Message.NORMAL(response));
-            while (metasploit.isBusy()) {
-                Thread.sleep(1200);
-                Map map = metasploit.readResult();
-                boolean busy = (boolean) map.get("busy");
-                metasploit.setBusy(busy);
-                String data = StrUtils.unicodeToString(map.get("data").toString());
-                if (StringUtils.isNotEmpty(data)){
-                    session.sendMessage(Message.NORMAL(data));
+            if (flag){
+                String response = metasploit.execute(metasploit.list(payload));
+                String console = metasploit.getConsole();
+                session.sendMessage(Message.NORMAL("c0nso1e##!##"+console));
+                session.sendMessage(Message.NORMAL(response));
+                while (metasploit.isBusy()) {
+                    Thread.sleep(1200);
+                    Map map = metasploit.readResult();
+                    boolean busy = (boolean) map.get("busy");
+                    metasploit.setBusy(busy);
+                    String data = StrUtils.unicodeToString(map.get("data").toString());
+                    if (StringUtils.isNotEmpty(data)){
+                        session.sendMessage(Message.NORMAL(data));
+                    }
                 }
             }
-        }
 
+        }else {
+            inputWriter.println(payload);
+            inputWriter.flush();
+        }
         super.handleTextMessage(session, message);
     }
 
@@ -82,6 +110,10 @@ public class MsfHandler extends TextWebSocketHandler {
             remove.interrupt();
         if (flag)
             metasploit.close();
+        if (defaultExecutor!=null){
+            inputWriter.close();
+            defaultExecutor.getWatchdog().destroyProcess();
+        }
         super.afterConnectionClosed(session, closeStatus);
 
     }

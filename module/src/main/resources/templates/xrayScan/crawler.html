@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>XRay扫描</title>
+    <#include "/manage/header.html"/>
+    <script>
+        function scan() {
+            var address = $("#address").val();
+
+            $.post(
+                "doCrawler",
+                {"address":address},
+                function (e) {
+                    alert(e);
+                    location.reload();
+                }
+            )
+        }
+
+    </script>
+</head>
+
+<body>
+
+
+
+<div class="card">
+    <div class="card-body">
+
+        <div class="row">
+            <!-- end col -->
+
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body">
+
+                        <ul class="nav nav-pills bg-nav-pills nav-justified mb-3">
+                            <li class="nav-item">
+                                <a href="#index" onclick="location.href='index'" data-toggle="tab" aria-expanded="false" class="nav-link rounded-0 ">
+                                    <i class="mdi mdi-home-variant d-lg-none d-block mr-1"></i>
+                                    <span class="d-none d-lg-block">单个网址扫描</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#passive" onclick="location.href='passive'" data-toggle="tab" aria-expanded="false" class="nav-link rounded-0 ">
+                                    <i class="mdi mdi-account-circle d-lg-none d-block mr-1"></i>
+                                    <span class="d-none d-lg-block">扫描报告</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#crawler" onclick="location.href='crawler'"  data-toggle="tab" aria-expanded="true" class="nav-link rounded-0 active">
+                                    <i class="mdi mdi-settings-outline d-lg-none d-block mr-1"></i>
+                                    <span class="d-none d-lg-block">爬虫扫描</span>
+                                </a>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="crawler">
+
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <label for="address" class="col-form-label">扫描地址</label>
+                                        <input type="text" class="form-control" id="address" placeholder="http://xxxx/">
+                                    </div>
+                                    <button onclick="scan()" type="button" class="btn btn-block btn-primary">扫描</button>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div> <!-- end card-body-->
+                </div> <!-- end card-->
+            </div> <!-- end col -->
+        </div>
+
+    </div> <!-- end card body-->
+</div>
+
+
+</body>
+
+<#include "/manage/footer_script.html"/>
+
+</html>

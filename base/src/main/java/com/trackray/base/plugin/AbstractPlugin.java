@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -28,10 +29,25 @@ public abstract class AbstractPlugin<E> implements Callable<AbstractPlugin<E>> {
 
     public final Logger log = LoggerFactory.getLogger(this.getClass());
 
+    public File pluginResourcePath = null;// 当前插件对应的resource外部资源绝对路径
 
     protected final static String BASE = Constant.RESOURCES_INCLUDE_PATH;   // resource外部资源文件的绝对路径
 
     protected E result;                     // 插件返回对象
+
+    {
+        if (pluginResourcePath!=null ){
+            if (pluginResourcePath.exists()){
+                //...
+            }else{
+                pluginResourcePath.mkdirs();
+            }
+        }
+    }
+
+    public AbstractPlugin() {
+        pluginResourcePath = new File(BASE + File.separator + this.currentPlugin().value() + File.separator);
+    }
 
     @Deprecated
     public Fetcher fetcher = new Fetcher(); // 执行请求类 已过时
@@ -140,4 +156,39 @@ public abstract class AbstractPlugin<E> implements Callable<AbstractPlugin<E>> {
         return plugin;
     }
 
+    public File getPluginResourcePath() {
+        return pluginResourcePath;
+    }
+
+    public E getResult() {
+        return result;
+    }
+
+    public void setResult(E result) {
+        this.result = result;
+    }
+
+    public HttpURLRequest getRequests() {
+        return requests;
+    }
+
+    public void setRequests(HttpURLRequest requests) {
+        this.requests = requests;
+    }
+
+    public String getErrorMsg() {
+        return errorMsg;
+    }
+
+    public void setErrorMsg(String errorMsg) {
+        this.errorMsg = errorMsg;
+    }
+
+    public HackKit getHackKit() {
+        return hackKit;
+    }
+
+    public void setHackKit(HackKit hackKit) {
+        this.hackKit = hackKit;
+    }
 }

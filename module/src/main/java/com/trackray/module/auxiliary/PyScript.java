@@ -19,12 +19,8 @@ import org.springframework.web.util.HtmlUtils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.net.URL;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 
 /**
  * @author 浅蓝
@@ -49,8 +45,8 @@ public class PyScript extends WebSocketPlugin {
     @Override
     public String start() {
 
-        send("插件列表:");
-        send("==================");
+        println("插件列表:");
+        println("==================");
 
         for (File f : file.listFiles()) {
 
@@ -62,13 +58,13 @@ public class PyScript extends WebSocketPlugin {
 
         }
 
-        send("==================");
+        println("==================");
 
-        send("请输入文件名 如:plugin.py");
+        println("请输入文件名 如:plugin.py");
 
 
-            send("==================");
-            send("请输入:");
+            println("==================");
+            println("请输入:");
 
 
             String input = getInput();

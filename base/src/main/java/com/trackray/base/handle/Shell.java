@@ -51,6 +51,13 @@ public class Shell {
         return this;
     }
     public void exec(String... c) throws IOException {
+        String[] strings = new String[c.length];
+        for (int i = 0; i <c.length ; i++) {
+            strings[i] = c[i];
+        }
+        exec(strings,true);
+    }
+    public void exec(String[] c,boolean useEnvp) throws IOException {
         Properties props = System.getProperties();
         String os = props.getProperty("os.name");
         boolean isWin = os.contains("indows");
@@ -64,12 +71,13 @@ public class Shell {
         commands = base;
         if (c!=null&&c.length>0)
             base.addAll(Arrays.asList(c));
-        String path = isWin ? System.getenv().get("Path") : System.getenv().get("PATH");
         String[] bases = base.toArray(new String[]{});
-        process = runtime.exec(bases,new String[]{(isWin?"Path=":"PATH=")+path},workdir);
+        String path = isWin ? System.getenv().get("Path") : System.getenv().get("PATH");
+        process = runtime.exec(bases,useEnvp?(new String[]{(isWin?"Path=":"PATH=")+path}):null,workdir);
     }
 
-    public void destroy(){
+
+        public void destroy(){
         process.destroy();
         if (isAlive())
             destroyForcibly();

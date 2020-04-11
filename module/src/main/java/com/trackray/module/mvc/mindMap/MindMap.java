@@ -6,7 +6,6 @@ import com.trackray.base.annotation.Plugin;
 import com.trackray.base.annotation.Rule;
 import com.trackray.base.plugin.MVCPlugin;
 import com.trackray.base.utils.CheckUtils;
-import com.trackray.module.mvc.gps.GpsData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
 
@@ -97,7 +96,4 @@ public class MindMap extends MVCPlugin {
 
 
 }
-interface MindMapRepository extends CrudRepository<MindMapData, Long> {
 
-
-}

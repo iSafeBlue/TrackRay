@@ -120,8 +120,11 @@ public class ScannerJob implements InterruptableJob {
 
         saveData(task,1);
 
-        if (task.getRule().crawler)
+        if (task.getRule().crawlergo){
+            fuckCrawlergo();
+        }else if (task.getRule().crawler) {
             fuckCrawler();
+        }
 
         if (task.getRule().fuzzdir)
             fuckDir();
@@ -306,12 +309,24 @@ public class ScannerJob implements InterruptableJob {
      * 网页爬虫
      */
     private void fuckCrawler() {
-        log.info(taskinfo()+"开始网页爬虫");
+        log.info(taskinfo()+"开始简单网页爬虫");
         FuckCrawler crawler = dispatchController.getAppContext().getBean(FuckCrawler.class);
         crawler.setTask(task);
         threadPool.submit(crawler);
-        log.info(taskinfo()+"网页爬虫结束");
+        log.info(taskinfo()+"简单网页爬虫结束");
     }
+
+    /**
+     * Crawlergo爬虫
+     */
+    private void fuckCrawlergo() {
+        log.info(taskinfo()+"开始crawlergo爬虫");
+        FuckCrawlergo crawler = dispatchController.getAppContext().getBean(FuckCrawlergo.class);
+        crawler.setTask(task);
+        threadPool.submit(crawler);
+        log.info(taskinfo()+"crawlergo爬虫结束");
+    }
+
 
     /**
      * 指纹识别

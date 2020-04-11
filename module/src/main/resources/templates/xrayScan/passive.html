@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>XRay扫描</title>
+    <#include "/manage/header.html"/>
+    <script>
+
+        function view(file){
+            location.href="doView?file="+file;
+        }
+
+        function del(file){
+            $.post(
+                "doDel",
+                {"file":file},
+                function (e) {
+                    alert(e);
+                    location.reload();
+                }
+            )
+        }
+
+    </script>
+</head>
+
+<body>
+
+
+
+<div class="card">
+    <div class="card-body">
+
+        <div class="row">
+            <!-- end col -->
+
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body">
+
+                        <ul class="nav nav-pills bg-nav-pills nav-justified mb-3">
+                            <li class="nav-item">
+                                <a href="#index" onclick="location.href='index'" data-toggle="tab" aria-expanded="false" class="nav-link rounded-0 ">
+                                    <i class="mdi mdi-home-variant d-lg-none d-block mr-1"></i>
+                                    <span class="d-none d-lg-block">单个网址扫描</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#passive" onclick="location.href='passive'" data-toggle="tab" aria-expanded="true" class="nav-link rounded-0 active">
+                                    <i class="mdi mdi-account-circle d-lg-none d-block mr-1"></i>
+                                    <span class="d-none d-lg-block">扫描报告</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#crawler" onclick="location.href='crawler'"  data-toggle="tab" aria-expanded="false" class="nav-link rounded-0 ">
+                                    <i class="mdi mdi-settings-outline d-lg-none d-block mr-1"></i>
+                                    <span class="d-none d-lg-block">爬虫扫描</span>
+                                </a>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="passive">
+
+                                <div id="basic-datatable_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <table id="selection-datatable" class="table dt-responsive nowrap" width="100%">
+
+                                                <thead>
+                                                <tr>
+                                                    <th>
+                                                        报告文件名
+                                                    </th>
+                                                    <th>
+                                                        最后更新时间
+                                                    </th>
+                                                    <th>
+                                                        操作
+                                                    </th>
+
+                                                </tr>
+                                                </thead>
+
+                                                <tbody>
+                                                <#if (files)??>
+                                                    <#list files?keys as key>
+                                                        <tr data-toggle="modal" >
+                                                            <#if key==current_report>
+                                                                <td ><font color="red">${key}[当前进程报告]</font></td>
+                                                            <#else>
+                                                                <td >${key}</td>
+                                                            </#if>
+
+                                                            <td >${files[key]}</td>
+                                                            <td>
+                                                                <button type="button" onclick="view('${key}')" class="btn btn-primary">查看</button>
+                                                                <button type="button" onclick="del('${key}')" class="btn btn-danger">删除</button>
+                                                            </td>
+
+                                                        </tr>
+                                                    </#list>
+                                                </#if>
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+                        </div>
+
+                    </div> <!-- end card-body-->
+                </div> <!-- end card-->
+            </div> <!-- end col -->
+        </div>
+
+    </div> <!-- end card body-->
+</div>
+
+
+</body>
+
+<#include "/manage/footer_script.html"/>
+
+</html>
