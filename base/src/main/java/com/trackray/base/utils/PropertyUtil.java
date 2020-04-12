@@ -7,7 +7,11 @@ import org.slf4j.LoggerFactory;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 配置文件读取
@@ -49,8 +53,41 @@ public class PropertyUtil {
         if(null == props) {
             loadProps();
         }
-        return props.getProperty(key);
+
+        String property = props.getProperty(key);
+
+        if (property.contains("${")){
+            property = getPropertyVar(property);
+        }
+
+        return property;
     }
+
+    private static String getPropertyVar(String property) {
+        for (String var : RegexUtil.getMatchers("\\$\\{([a-zA-Z0-9\\.]+)\\}", property)) {
+            String varNmae = "${" + var + "}";
+            String varValue = props.getProperty(var);
+            if (varValue == null || varValue.isEmpty()) {
+                varValue = System.getProperty(var);
+            }
+            property = property.replace(varNmae, varValue);
+        }
+        if (property.contains("${")) {
+            property = getPropertyVar(property);
+        }
+        return property;
+    }
+
+    public static List<String> extractVar(String regex,String source){
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(source);
+        List<String> list = new ArrayList<>();
+        while (matcher.find()) {
+            list.add(matcher.group(1));
+        }
+        return list;
+    }
+
 
     public static String getProperty(String key, String defaultValue) {
         if(null == props) {

@@ -1,7 +1,9 @@
 package com.trackray.base.bean;
 
 import com.trackray.base.utils.PropertyUtil;
+import org.springframework.beans.factory.annotation.Value;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,30 +16,22 @@ public class Constant {
 
     public static String USER_DIR = System.getProperty("user.dir"); // 当前程序工作目录
 
-    public static String RESOURCES_PATH = USER_DIR + (
-                    USER_DIR.contains("release")?
-                    ( PropertyUtil.getProperty("trackray.resource") ):
-                    ( "/release"+PropertyUtil.getProperty("trackray.resource") )
+    public static String RESOURCES_PATH = PropertyUtil.getProperty("trackray.resource.dir");
 
-    );
-
-    public static String RESOURCES_INCLUDE_PATH; //插件包含资源文件路径
-
+    public static String RESOURCES_INCLUDE_PATH = PropertyUtil.getProperty("trackray.plugin.include.dir"); //插件包含资源文件路径
 
     public static final String WINDOWS = "WINDOWS";
     public static final String LINUX = "LINUX";
     public static String TRACKRAY_SYSTEMOS = WINDOWS;   //溯光操作系统
 
 
-    public static String SYSTEM_ACCOUNT = "";
-    public static String SYSTEM_PASSWORD = "";
+    public static String SYSTEM_ACCOUNT = PropertyUtil.getProperty("trackray.account");
+    public static String SYSTEM_PASSWORD= PropertyUtil.getProperty("trackray.password");
 
     /* Task任务目标类型 */
     public static final int URL_TYPE = 1;
     public static final int IP_TYPE = 2;
-    public static String CENSYS_APPID = "";
-    public static String CENSYS_SECRET = "";
-    public static String SQLMAP_HOST = "";
+    public static String SQLMAP_HOST = PropertyUtil.getProperty("sqlmap.host");
 
     public static boolean AVAILABLE_SQLMAP = false;
     public static boolean AVAILABLE_NMAP = false;
@@ -48,17 +42,6 @@ public class Constant {
     public static boolean AVAILABLE_METASPLOIT = false;
 
     public static String LINE = System.getProperty("line.separator");
-
-
-    public static final int VULN_TYPE_XSS = 1;
-    public static final int VULN_TYPE_SQLINJECTION = 2;
-    public static final int VULN_TYPE_FILE_HANDLE = 3;
-
-    public static class SQLMap{
-        public static final int STATUS_CREATED = 0;
-        public static final int STATUS_RUNNING = 2;
-        public static final int STATUS_END = 1;
-    }
 
     public static class Vuln{
         public static final String FILE_READ_VULN_REGEX = "\\?\\S+=(\\S+/\\S+\\.\\S+|\\S+\\.\\S+)";

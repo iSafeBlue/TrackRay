@@ -63,12 +63,7 @@ public class TrackrayConfiguration {
         //识别操作系统类型
         Constant.TRACKRAY_SYSTEMOS = (os.contains("indows") ? Constant.WINDOWS : Constant.LINUX);
 
-        //配置系统常量
-        Constant.RESOURCES_INCLUDE_PATH = Constant.RESOURCES_PATH.concat("include");
-        Constant.SYSTEM_ACCOUNT = PropertyUtil.getProperty("trackray.account");
-        Constant.SYSTEM_PASSWORD= PropertyUtil.getProperty("trackray.password");
 
-        Constant.SQLMAP_HOST = PropertyUtil.getProperty("sqlmap.host");
     }
 
 
