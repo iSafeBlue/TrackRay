@@ -2,6 +2,7 @@ package com.trackray;
 
 import com.trackray.base.configuration.BurpSuiteConfiguration;
 import com.trackray.base.configuration.TrackrayConfiguration;
+import com.trackray.base.utils.PropertyUtil;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.DefaultApplicationArguments;
 import org.springframework.boot.SpringApplication;
@@ -38,6 +39,13 @@ public class WebApplication {
 				args);
 
 
+		String releaseDir = PropertyUtil.getProperty("trackray.release.dir");
+		String root = System.getProperty("user.dir");
+
+		if (!root.contains(releaseDir)){
+			System.err.println("请检查工作目录是否在配置文件指定的 "+releaseDir+" 发布目录");
+			System.exit(0);
+		}
 
 		if (applicationArguments.containsOption("help")){
 			help(applicationArguments);
