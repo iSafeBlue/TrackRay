@@ -19,13 +19,13 @@
 
 	<groupId>com.trackray</groupId>
 	<artifactId>framework</artifactId>
-	<version>3.2.0</version>
+	<version>3.2.1</version>
 	<name>trackray framework</name>
 	<description>trackray pentest framework</description>
 
 	<properties>
 		<java.version>1.8</java.version>
-		<trackray.version>3.2.0</trackray.version>
+		<trackray.version>3.2.1</trackray.version>
 	</properties>
 
 	<dependencies>
