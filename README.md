@@ -7,7 +7,7 @@
 <br/>
 
 ![](https://img.shields.io/badge/KCon-%E5%85%B5%E5%99%A8%E8%B0%B1-red)
-![](https://img.shields.io/badge/version-3.2.0-success)
+![](https://img.shields.io/badge/version-3.2.1-success)
 ![](https://img.shields.io/github/stars/iSafeBlue/Trackray.svg)
 ![](https://img.shields.io/github/forks/iSafeBlue/Trackray.svg)
 ![](https://img.shields.io/github/license/iSafeBlue/Trackray.svg)
@@ -78,7 +78,7 @@
 
 > 链接: https://pan.baidu.com/s/1lVAcB1r4gLJxzYXWtSs5xg 提取码: eexr
 
-下载资源文件解压后将“resource”目录移动到“release”目录下。
+下载资源文件解压后将对应版本的“resource”目录移动到“release”目录下。
 
 ## ❤️注意
 
@@ -93,6 +93,7 @@
 
 | 日期 | 描述  |
 | ---- | ---- |
+| 2020-04-11 | 溯光3.2.1更新 |
 | 2020-04-11 | 溯光3.2.0更新 |
 | 2019-08-16 | 溯光3.1.0更新 |
 | 2019-05-14 | 溯光3更新 |
