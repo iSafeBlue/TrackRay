@@ -1,4 +1,4 @@
-FROM b1u3r/trackray:3.2.0
+FROM b1u3r/trackray:3.0.0
 
 MAINTAINER b1u3r "blue@ixsec.org"
 
