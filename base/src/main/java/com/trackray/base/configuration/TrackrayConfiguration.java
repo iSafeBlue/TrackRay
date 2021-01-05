@@ -28,11 +28,11 @@ import java.util.concurrent.ConcurrentHashMap;
 public class TrackrayConfiguration {
 
     public enum Function{
-        awvs(true),
-        burpsuite(true),
-        sqlmap(true),
-        msf(true),
-        xray(true),
+        awvs(false),
+        burpsuite(false),
+        sqlmap(false),
+        msf(false),
+        xray(false),
         ;
         private boolean enable;
         Function(boolean b) {
