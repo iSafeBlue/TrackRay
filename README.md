@@ -58,11 +58,11 @@
 #### docker启动
 1. `git clone --depth=1 https://github.com/iSafeBlue/TrackRay.git` 或下载 [releases](https://github.com/iSafeBlue/TrackRay/releases) 最新版本源码
 2. `docker build -t trackray_beta .` 构建镜像
-3. `docker run -dit -p 80:80 --name trackray_v3 trackray_beta` 启动容器，可根据需求自行设定参数
+3. `docker run -dit -p 80:8002 --name trackray_v3 trackray_beta` 启动容器，可根据需求自行设定参数
 4. `docker exec -it trackray_v3 /bin/bash` 进入溯光工作目录
 5. 启动有需要的服务，如 AWVS、msfprc、SQLMap 等。并根据自己的需求修改`application.properties`配置文件
 6. 下载溯光依赖资源文件，将文件移动到 `/release/` 目录
-7. 进入发布目录 `cd release/`，运行溯光`nohup java -jar trackray.jar &` 或 `java -jar trackray.jar`，若提示未找到文件请先执行一遍`mvn clean package`
+7. 进入发布目录 `cd /root/trackray-framework/release/`，运行溯光`nohup java -jar trackray.jar &` 或 `java -jar trackray.jar`，若提示未找到文件请先执行一遍`mvn clean package`
 8. 访问`http://127.0.0.1`
 
 #### 本地启动
