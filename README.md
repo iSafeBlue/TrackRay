@@ -15,8 +15,6 @@
 
 <br/>
 
-[TRACKRAY.CN](https://trackray.cn)
-
 </div>
 
 
